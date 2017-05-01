@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- style libraries for the app (onsen ui) -->
+    <link rel="stylesheet" href="css/onsenui.css">
+    <link rel="stylesheet" href="css/onsen-css-components.css">
+    <link rel="stylesheet" href="css/font_awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="css/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+    <!-- app custom font icons -->
+    <link rel="stylesheet" href="css/saveup-font-icons/css/saveup-font-style.css">
+
+    <!--- style library used for materialize-css -->
+    <link rel="stylesheet" href="css/materialize.css">
+    <!--- style library used for animate.css -->
+    <link rel="stylesheet" href="css/animate.min.css">
+    <!--- style library used for hint.css -->
+    <link rel="stylesheet" href="css/hint.min.css">
+
+    <!-- custom style library for app -->
+    <link rel="stylesheet" href="css/app-custom-styles.css">
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Content-Security-Policy tag -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' wss: ws: data: http: https: blob: gap 'unsafe-inline' 'unsafe-eval'">
+
+    <script src="js/polyfill.min.js"></script>
+    <script src="js/jquery-2.1.4.min.js"></script>
+
+    <!-- kendo libraries -->
+    <script src="js/kendo.core.min.js"></script>
+
+    <!-- script library for onsen ui -->
+    <script src="js/onsenui.2.2.4.min.js"></script>
+
+    <!-- script library for materialize-css -->
+    <script src="js/materialize-0.98.2.min.js"></script>
+
+    <!-- script library for parsley -->
+    <script src="js/parsley-2.7.0.min.js"></script>
+
+    <!-- script library for random.js -->
+    <script src="js/random.min.js"></script>
+
+    <!-- hybrid script libraries for intel xdk and cordova -->
+    <script src="cordova.js"></script>
+
+    <!-- app script -->
+    <script src="js/compiled-js/base-compiled.js"></script>
+    <script src="js/compiled-js/controller-compiled.js"></script>
+    <script src="js/compiled-js/model-compiled.js"></script>
+
+    <!-- special script for triggering the intel xdk special device ready event i.e. "app.Ready" -->
+    <script src="xdk/init-dev.js"></script>
+
+</head>
+<body>
+
+<!-- splitter container housing the app -->
+<ons-splitter>
+    <ons-splitter-side id="side-menu" side="left" collapse>
+        <ons-page id="side-menu-page">
+            <ons-toolbar>
+                <div id="side-menu-username" class="center" style="font-size: 0.7em; text-transform: capitalize"></div>
+            </ons-toolbar>
+            <ons-list id="side-menu-list">
+                <ons-list-item data-laundrymart-listitem="referral id">
+                    <span style="color: #54c143;">My Referral ID: &nbsp;</span> <span id="side-menu-referral" style="color: #54c143;"></span>
+                </ons-list-item>
+                <ons-list-item data-laundrymart-listitem="home" tappable
+                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
+                    Home
+                </ons-list-item>
+                <ons-list-item data-laundrymart-listitem="settings" tappable
+                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
+                    Settings
+                </ons-list-item>
+                <ons-list-item data-laundrymart-listitem="laundry basket" tappable
+                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
+                    Laundry Basket
+                </ons-list-item>
+                <ons-list-item data-laundrymart-listitem="about" tappable
+                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
+                    About
+                </ons-list-item>
+                <ons-list-item data-laundrymart-listitem="contact us" tappable
+                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
+                    Contact Us
+                </ons-list-item>
+                <ons-list-item style="visibility: hidden" data-laundrymart-listitem="merchant inbox" tappable
+                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
+                    <div class="center">
+                        Merchant Inbox
+                    </div>
+                    <div class="right">
+                        <ons-icon icon="ion-email-unread" style="color: red; visibility: hidden;"
+                                  class="list__item__icon laundrymart-merchant-message-notification"></ons-icon>
+                    </div>
+                </ons-list-item>
+            </ons-list>
+        </ons-page>
+    </ons-splitter-side>
+    <ons-splitter-content id="splitter-content"></ons-splitter-content>
+</ons-splitter>
+
+<!-- login template page -->
+<ons-template id="login-template">
+    <!-- login tabbar -->
+    <ons-tabbar id="login-tabbar" animation="slide" position="top">
+        <ons-tab label="Sign In" icon="md-saveup-icon-saveup-sign-in" page="sign-in-page.html" active></ons-tab>
+        <ons-tab label="Sign Up" icon="md-saveup-icon-saveup-sign-up" page="create-account-page.html"></ons-tab>
+        <ons-tab label="Reset PIN" icon="md-saveup-icon-saveup-reset-pin" page="reset-pin-page.html"></ons-tab>
+    </ons-tabbar>
+</ons-template>
+
+<!-- onboarding navigator template page -->
+<ons-template id="onboarding-template">
+    <!-- onboarding navigator -->
+    <ons-navigator id="onboarding-navigator" page="onboarding-page.html"></ons-navigator>
+</ons-template>
+
+<!-- app-main navigator template page -->
+<ons-template id="app-main-template">
+    <!-- app-main navigator -->
+    <ons-navigator id="app-main-navigator" page="main-menu-page.html"></ons-navigator>
+</ons-template>
+
+<!-- this dialog is used to display loading messages -->
+<ons-dialog id="loader-modal" disable-auto-styling modifier="material">
+    <div id="loader-modal-container" style="color: #ffffff; width: 100%;
+    position: relative; top: 0; bottom: 0; left: 0; height: 100%;">
+        <div id="loader-modal-icon" style="padding-left: 1em; padding-top: 1em;">
+            <ons-progress-circular indeterminate></ons-progress-circular>
+        </div>
+        <div id="loader-modal-message" style="padding-top: 1em;">
+            Loading...
+        </div>
+    </div>
+</ons-dialog>
+
+<!-- create modal for displaying phone number verification messages -->
+<ons-modal id="phone-verification-modal" direction="up">
+    <div style="text-align: center">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+
+            <div class="spinner-layer spinner-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+
+            <div class="spinner-layer spinner-yellow">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+
+            <div class="spinner-layer spinner-green">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-message" style="text-align: center"></div>
+</ons-modal>
+
+</body>
+</html>

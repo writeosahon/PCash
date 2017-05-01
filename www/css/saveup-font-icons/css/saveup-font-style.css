@@ -1,0 +1,262 @@
+/** CUSTOM FONT ICONS FOR APP **/
+@font-face {
+  font-family: 'saveup-font-icons';
+  src: url('../fonts/saveup-font-icons.woff') format('woff'), url('../fonts/saveup-font-icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.saveup-icon {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.saveup-icon-hc-lg {
+  font-size: 1.33333333em;
+  line-height: 0.75em;
+  vertical-align: -15%;
+}
+.saveup-icon-hc-2x {
+  font-size: 2em;
+}
+.saveup-icon-hc-3x {
+  font-size: 3em;
+}
+.saveup-icon-hc-4x {
+  font-size: 4em;
+}
+.saveup-icon-hc-5x {
+  font-size: 5em;
+}
+.saveup-icon-hc-fw {
+  width: 1.28571429em;
+  text-align: center;
+}
+.saveup-icon-hc-ul {
+  padding-left: 0;
+  margin-left: 2.14285714em;
+  list-style-type: none;
+}
+.saveup-icon-hc-ul > li {
+  position: relative;
+}
+.saveup-icon-hc-li {
+  position: absolute;
+  left: -2.14285714em;
+  width: 2.14285714em;
+  top: 0.14285714em;
+  text-align: center;
+}
+.saveup-icon-hc-li.saveup-icon-hc-lg {
+  left: -1.85714286em;
+}
+.saveup-icon-hc-border {
+  padding: .1em .25em;
+  border: solid 0.1em #9e9e9e;
+  border-radius: 2px;
+}
+.saveup-icon-hc-border-circle {
+  padding: .1em .25em;
+  border: solid 0.1em #9e9e9e;
+  border-radius: 50%;
+}
+.saveup-icon.pull-left {
+  float: left;
+  margin-right: .15em;
+}
+.saveup-icon.pull-right {
+  float: right;
+  margin-left: .15em;
+}
+.saveup-icon-hc-spin {
+  -webkit-animation: saveup-spin 1.5s infinite linear;
+  animation: saveup-spin 1.5s infinite linear;
+}
+.saveup-icon-hc-spin-reverse {
+  -webkit-animation: saveup-spin-reverse 1.5s infinite linear;
+  animation: saveup-spin-reverse 1.5s infinite linear;
+}
+@-webkit-keyframes saveup-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes saveup-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes saveup-spin-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(-359deg);
+    transform: rotate(-359deg);
+  }
+}
+@keyframes saveup-spin-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(-359deg);
+    transform: rotate(-359deg);
+  }
+}
+.saveup-icon-hc-rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.saveup-icon-hc-rotate-180 {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.saveup-icon-hc-rotate-270 {
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+.saveup-icon-hc-flip-horizontal {
+  -webkit-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+.saveup-icon-hc-flip-vertical {
+  -webkit-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+.saveup-icon-hc-stack {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  vertical-align: middle;
+}
+.saveup-icon-hc-stack-1x,
+.saveup-icon-hc-stack-2x {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.saveup-icon-hc-stack-1x {
+  line-height: inherit;
+}
+.saveup-icon-hc-stack-2x {
+  font-size: 2em;
+}
+.saveup-icon-hc-inverse {
+  color: #ffffff;
+}
+
+/** DEFINE FONT ICONS **/
+.zmdi-saveup-icon-saveup-sign-in:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #ffffff !important;
+
+  content: '\e900';
+}
+.zmdi-saveup-icon-saveup-sign-up:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e901';
+}
+.zmdi-saveup-icon-saveup-reset-pin:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e902';
+}
+.zmdi-saveup-icon-saveup-phone:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e903';
+}
+.zmdi-saveup-icon-saveup-my-savings:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e904';
+}
+.zmdi-saveup-icon-saveup-make-savings:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e905';
+}
+.zmdi-saveup-icon-saveup-saving-group:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e906';
+}
+.zmdi-saveup-icon-saveup-contactus:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e907';
+}
+.zmdi-saveup-icon-saveup-figure-1:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e908';
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<!-- main-menu-page -->
+<ons-page id="main-menu-page">
+    <ons-toolbar>
+        <!--<div class="left">
+            <ons-toolbar-button>
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+        </div>-->
+        <div class="center" style="text-align: center">Main Menu</div>
+        <div class="right">
+            <ons-toolbar-button><ons-icon icon="md-more-vert"></ons-icon></ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <div class="row">
+        <div class="col s6 m4">
+            <div class="card" style="background-color: #d1c4e9;"
+                 onclick="utopiasoftware.saveup.controller.mainMenuPageViewModel.mainMenuButtonsClicked('join savings group')">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-saveup-icon-saveup-saving-group" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 3.5em; max-height: 3.5em;">Join Savings Group</div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6 m4">
+            <div class="card" style="background-color: #d1c4e9;">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-saveup-icon-saveup-make-savings" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 3.5em; max-height: 3.5em;">
+                        Make Savings</div>
+                </div>
+            </div>
+        </div>
+        <!-- this column is displayed for only mobile devices -->
+        <div class="col s6 m4 hide-on-med-and-up">
+            <div class="card" style="background-color: #d1c4e9;">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-saveup-icon-saveup-my-savings" size="36px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 2.1em; max-height: 2.1em;">
+                        My Savings
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- this column is display for only tablets -->
+        <div class="col s6 m4 hide-on-small-only">
+            <div class="card" style="background-color: #d1c4e9;">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-saveup-icon-saveup-my-savings" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 3.5em; max-height: 3.5em;">
+                        My Savings
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s6 m4">
+            <div class="card" style="background-color: #d1c4e9;">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-settings-square" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 2.1em; max-height: 2.1em;">
+                        Settings
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6 m4">
+            <div class="card" style="background-color: #d1c4e9;"
+                 onclick="utopiasoftware.saveup.controller.mainMenuPageViewModel.mainMenuButtonsClicked('intro')">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-tv-list" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 2.1em; max-height: 2.1em;">
+                        Intro
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6 m4">
+            <div class="card" style="background-color: #d1c4e9;">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-saveup-icon-saveup-contactus" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 2.1em; max-height: 2.1em;">
+                        Contact Us
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6 m4">
+            <div class="card" style="background-color: #d1c4e9;">
+                <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                <div class="card-content" style="color: #311b92; text-align: center">
+                    <ons-icon icon="md-info" size="40px"></ons-icon>
+                </div>
+                <div class="card-action" style="color: #311b92; text-align: center">
+                    <div style="font-weight: bold; min-height: 2.1em; max-height: 2.1em;">
+                        App Info
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</ons-page>
+</body>
+</html>

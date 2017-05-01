@@ -1,0 +1,99 @@
+
+/** STYLE FOR PARSLEY VALIDATION LIBRARY **/
+.parsley-errors-list {
+    display: none !important;
+}
+/** STYLE FOR VALIDATION TOOLTIP **/
+[data-hint]:after {
+    font-size: 0.8em !important;
+}
+
+
+/** MODAL LOADER STYLE BEGINS **/
+#loader-modal-container {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+    -webkit-align-items: center;
+    align-items: center;
+}
+#loader-modal-icon {
+    -webkit-flex-grow: 3;
+    flex-grow: 3;
+    -webkit-flex-basis: auto;
+    flex-basis: auto;
+    width: 30%;
+}
+#loader-modal-message {
+    -webkit-flex-grow: 7;
+    flex-grow: 7;
+    -webkit-flex-basis: auto;
+    flex-basis: auto;
+    width: 70%;
+}
+#loader-modal .dialog-container--material {
+    background-color: #000000;
+}
+/** MODAL LOADER STYLE ENDS **/
+
+
+/** STYLE FOR THE USER SIGIN-IN PAGE INPUT FIELD BEGINS **/
+#user-phone .text-input--material{
+    text-align: center;
+    color: #311b92;
+}
+#secure-pin .text-input--material{
+    -webkit-text-security: disc;
+    text-align: center;
+    color: #311b92;
+}
+/** STYLE FOR THE USER SIGIN-IN PAGE INPUT FIELD ENDS **/
+
+
+/** STYLE FOR THE SIGN-IN PAGE ICON ANIMATION BEGINS **/
+#sign-in-page ons-icon.first {
+    -webkit-animation-delay: 1s;
+    -webkit-animation-iteration-count: 3;
+}
+#sign-in-page ons-icon.second {
+    -webkit-animation-delay: 1.4s;
+    -webkit-animation-iteration-count: 4;
+}
+/** STYLE FOR THE SIGN-IN PAGE ICON ANIMATION ENDS **/
+
+
+/** STYLE FOR CREATE ACCOUNT PAGE BEGINS **/
+#create-account-page #create-secure-pin {
+    -webkit-text-security: disc;
+}
+/** STYLE FOR CREATE ACCOUNT PAGE ENDS **/
+
+
+/** STYLE FOR THE USER RESET-PIN PAGE INPUT FIELD BEGINS **/
+#reset-user-phone .text-input--material{
+    text-align: center;
+    color: #311b92;
+}
+#reset-master-code .text-input--material{
+    -webkit-text-security: disc;
+    text-align: center;
+    color: #311b92;
+}
+/** STYLE FOR THE USER SIGIN-IN PAGE INPUT FIELD ENDS **/
+
+
+/** STYLE FOR ONBOARDING PAGE BEGINS **/
+#onboarding-page .page--material__background {
+    background-image: -webkit-linear-gradient(top, #EDE7F6 0%, #cebfff 35%, #EDE7F6 37%, #b388ff 100%);
+}
+/** STYLE FOR ONBOARDING PAGE ENDS **/
+
+
+/** STYLE FOR MAIN MENU PAGE BEGINS **/
+#main-menu-page .page--material__background {
+    background-color: #EDE7F6;
+}
+/** STYLE FOR MAIN MENU PAGE ENDS **/
