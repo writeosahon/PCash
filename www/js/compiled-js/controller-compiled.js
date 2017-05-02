@@ -206,9 +206,9 @@ utopiasoftware.saveup.controller = {
         /**
          * method is triggered when forgot pin button is clicked
          */
-        forgotPinButtonClicked: function forgotPinButtonClicked() {
+        forgotPinButtonClicked: function forgotPinButtonClicked(element) {
             // move the tab view to the Reset PIN tab
-            $('#login-tabbar').get(0).setActiveTab(2, { animation: "slide" });
+            $('#forgot-pin-popover').get(0).show(element, {});
         }
 
     },
@@ -327,6 +327,9 @@ utopiasoftware.saveup.controller = {
                     }
                 });
             }).then(function () {
+                // display the loader message to indicate that account is being created;
+                $('#loader-modal-message').html("Creating New Account...");
+                $('#loader-modal').get(0).show(); // show loader
                 return null;
                 //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
             }).then(function () {

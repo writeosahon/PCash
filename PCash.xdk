@@ -5,14 +5,22 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "",
       "projectGuid": "e2ac2577-2622-40cb-8c33-fa2deaa69045",
-      "lastModifiedDate": 1493652906841,
+      "lastModifiedDate": 1493659739594,
       "creationDate": 1493652905142
     },
     "testDirectory": "test",
     "projectTags": [
       "XDK-disallow-legacy-whitelist"
     ],
-    "projectFiles": {},
+    "projectFiles": {
+      "xdk-publish-meta-data.json": {
+        "settings": {
+          "project": {
+            "XDK-not-deployed": "True"
+          }
+        }
+      }
+    },
     "projectDirectories": {
       "xdk": {
         "settings": {
@@ -28,31 +36,42 @@
         "runtime_": "Crosswalk with Cordova 3.x",
         "name_": "Android",
         "preferences_": {
-          "android-minSdkVersion": "14",
-          "android-targetSdkVersion": "23",
+          "android-minSdkVersion": "15",
+          "android-targetSdkVersion": "21",
           "android-installLocation": "auto",
-          "android-signed": true
+          "android-signed": true,
+          "Orientation": "portrait"
         },
         "isActive_": true,
-        "certificateId_": "",
+        "certificateId_": "vBCrkrrZO0S__PkxYsT4pw2",
         "appName_": "PCash",
-        "appID_": "not.yet.specified",
+        "appID_": "utopiasoftware.writeosahon.postcash",
         "appAccess_": {
           "mode": "whitelist",
           "network": [
             "*"
           ],
-          "intents": [],
-          "navigation": []
+          "intents": [
+            "http://*/*",
+            "https://*/*",
+            "tel:*",
+            "sms:*",
+            "mailto:*",
+            "market:*"
+          ],
+          "navigation": [],
+          "properties": {}
         },
         "addlPermissions_": "",
         "icons_": [],
         "splashes_": [],
-        "appVersion_": "0.0.1",
+        "appVersion_": "1.0.0",
         "appVersionCode_": "1",
         "signed_": true,
         "crosswalkVersion_": "19",
-        "cordovaCLIVersion_": "6.2.0"
+        "cordovaCLIVersion_": "6.2.0",
+        "appDescription_": "nothing yet",
+        "appAuthor_": "Utopia Software"
       },
       "iOS": {
         "platform_": "ios",
@@ -170,7 +189,176 @@
     },
     "serviceMethods": [],
     "cordovaPluginsDirectory": "plugins",
-    "cordovaPlugins": [],
+    "cordovaPlugins": [
+      {
+        "id": "cordova-plugin-statusbar",
+        "name": "StatusBar",
+        "version": "2.1.3",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-statusbar",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-statusbar",
+        "selectedState": "Included",
+        "checksum": "c0146fbc",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "permissions": {},
+        "description": "Cordova StatusBar Plugin",
+        "data": {},
+        "dependedBy": []
+      },
+      {
+        "id": "cordova-plugin-device",
+        "name": "Device",
+        "version": "1.1.2",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-device",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-device",
+        "selectedState": "Included",
+        "checksum": "2373ccea",
+        "dependsOn": [],
+        "topLevel": true,
+        "permissions": {},
+        "description": "Cordova Device Plugin",
+        "data": {},
+        "dependedBy": []
+      },
+      {
+        "id": "cordova-plugin-splashscreen",
+        "name": "Splashscreen",
+        "version": "3.2.2",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-splashscreen",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-splashscreen",
+        "selectedState": "Included",
+        "checksum": "47137083",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "permissions": {},
+        "description": "Cordova Splashscreen Plugin",
+        "data": {},
+        "dependedBy": []
+      },
+      {
+        "id": "cordova-plugin-screen-orientation",
+        "name": "Screen Orientation",
+        "version": "1.4.2",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-screen-orientation",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-screen-orientation",
+        "selectedState": "Included",
+        "checksum": "1834c9de",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "permissions": {},
+        "description": "Adds Screen Orientation API lock and unlock functions to the global screen object in android, iOS, WP8, W8.1, and BB10.",
+        "data": {},
+        "dependedBy": []
+      },
+      {
+        "id": "cordova-plugin-network-information",
+        "name": "Network Information",
+        "version": "1.2.1",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-network-information",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-network-information",
+        "selectedState": "Included",
+        "checksum": "9d8331a4",
+        "dependsOn": [],
+        "topLevel": true,
+        "permissions": {
+          "android:name": [
+            "android.permission.ACCESS_NETWORK_STATE"
+          ]
+        },
+        "description": "Cordova Network Information Plugin",
+        "data": {},
+        "dependedBy": []
+      },
+      {
+        "id": "cordova-plugin-x-toast",
+        "name": "Toast",
+        "version": "2.6.0",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-x-toast",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-x-toast",
+        "selectedState": "Included",
+        "checksum": "b382e36f",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "author": "Eddy Verbruggen",
+        "permissions": {},
+        "description": "\n    This plugin allows you to show a Toast.\n    A Toast is a little non intrusive buttonless popup which automatically disappears.\n  ",
+        "data": {},
+        "dependedBy": [],
+        "custom": "true"
+      },
+      {
+        "id": "cordova-plugin-sms",
+        "name": "SMS",
+        "version": "1.0.5",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-sms",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-sms",
+        "selectedState": "Included",
+        "checksum": "46d56f77",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "author": "Liming Xie",
+        "permissions": {
+          "android:name": [
+            "android.permission.READ_PHONE_STATE",
+            "android.permission.RECEIVE_SMS",
+            "android.permission.RECEIVE_WAP_PUSH",
+            "android.permission.RECEIVE_MMS",
+            "android.permission.READ_SMS",
+            "android.permission.WRITE_SMS",
+            "android.permission.SEND_SMS"
+          ]
+        },
+        "description": "Cordova plugin to operate SMS, send/list/intercept/delete/restore",
+        "data": {},
+        "dependedBy": [],
+        "custom": "true"
+      },
+      {
+        "id": "cordova-plugin-privacyscreen",
+        "name": "PrivacyScreenPlugin",
+        "version": "0.3.1",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-privacyscreen",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-privacyscreen",
+        "selectedState": "Included",
+        "checksum": "ff258198",
+        "dependsOn": [],
+        "topLevel": true,
+        "permissions": {},
+        "description": "Secures your app from displaying a screenshot in task switchers under Android and iOS. Keeps sensitive information private.",
+        "data": {},
+        "dependedBy": [],
+        "custom": "true"
+      }
+    ],
     "sourceDirectory": "www",
     "startFile": "index.html",
     "projectSettingsVersion": "3.0.0"

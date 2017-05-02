@@ -112,8 +112,7 @@
     <!-- login tabbar -->
     <ons-tabbar id="login-tabbar" animation="slide" position="top">
         <ons-tab label="Sign In" icon="md-saveup-icon-saveup-sign-in" page="sign-in-page.html" active></ons-tab>
-        <ons-tab label="Sign Up" icon="md-saveup-icon-saveup-sign-up" page="create-account-page.html"></ons-tab>
-        <ons-tab label="Reset PIN" icon="md-saveup-icon-saveup-reset-pin" page="reset-pin-page.html"></ons-tab>
+        <ons-tab label="Create Account" icon="md-saveup-icon-saveup-sign-up" page="create-account-page.html"></ons-tab>
     </ons-tabbar>
 </ons-template>
 
@@ -141,6 +140,18 @@
         </div>
     </div>
 </ons-dialog>
+
+<!-- popver for forgot-pin message -->
+<ons-popover direction="up" id="forgot-pin-popover" cancelable>
+    <div style="padding: 10px; text-align: center;">
+        <h5 style="font-size: 0.9em; font-weight: bold;">
+            Forgot your Secure PIN?
+        </h5>
+        <p style="text-align: left; font-size: 0.9em">
+            No Problem! Just create a new account. Remember all your data are securely stored on your device
+        </p>
+    </div>
+</ons-popover>
 
 <!-- create modal for displaying phone number verification messages -->
 <ons-modal id="phone-verification-modal" direction="up">

@@ -64,6 +64,11 @@
 }
 /** STYLE FOR THE SIGN-IN PAGE ICON ANIMATION ENDS **/
 
+#forgot-pin-popover .popover--material__content {
+    background-color: rgb(237, 231, 246);
+    color: #311b92;
+}
+
 
 /** STYLE FOR CREATE ACCOUNT PAGE BEGINS **/
 #create-account-page #create-secure-pin {
