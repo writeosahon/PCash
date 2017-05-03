@@ -253,7 +253,29 @@ utopiasoftware.saveup.controller = {
         /**
          * method is triggered when sign-in form is successfully validated
          */
-        signinFormValidated: function(){},
+        signinFormValidated: function(){
+            // display the loader message to indicate is being signed in;
+            $('#loader-modal-message').html("Signing In...");
+            $('#loader-modal').get(0).show(); // show loader
+
+            if($('#login-form #secure-pin').val() === utopiasoftware.saveup.model.appUserDetails.securePin){ // user can sign in
+
+                $('#loader-modal').get(0).hide(); // hide loader
+                // update the first name being displayed in the side menu
+                $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);
+                $('ons-splitter').get(0).content.load("app-main-template"); // move to the main menu
+                // show a toast welcoming user
+                Materialize.toast('Welcome ' + utopiasoftware.saveup.model.appUserDetails.firstName, 4000);
+            }
+            else{ // user cannot sign in authentication failed
+                $('#loader-modal').get(0).hide(); // hide loader
+                ons.notification.alert({title: "Sign In Failed",
+                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                    'style="color: red;"></ons-icon> <span>' + 'Invalid Credentials' + '</span>',
+                    cancelable: false
+                });
+            }
+        },
 
         /**
          * method is triggered when create account button is clicked
@@ -382,7 +404,7 @@ utopiasoftware.saveup.controller = {
 
             // tell the user that phoe number verification is necessary
             new Promise(function(resolve, reject){
-                ons.notification.confirm('To complete account creation, your phone number must be verified. <br>' +
+                ons.notification.confirm('To complete sign up, your phone number must be verified. <br>' +
                     'Usual SMS charge from your phone network provider will apply', {title: 'Verify Phone Number',
                         buttonLabels: ['Cancel', 'Ok']}) // Ask for confirmation
                     .then(function(index) {
@@ -397,11 +419,11 @@ utopiasoftware.saveup.controller = {
             then(function(){
 
                 return null;
-               //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
+                //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
             }).
             then(function(){
                 // display the loader message to indicate that account is being created;
-                $('#loader-modal-message').html("Creating New Account...");
+                $('#loader-modal-message').html("Completing Sign Up...");
                 $('#loader-modal').get(0).show(); // show loader
 
                 // create the app user details object and persist it
@@ -418,13 +440,11 @@ utopiasoftware.saveup.controller = {
                 return utopiasoftware.saveup.model.appUserDetails;
             }).// DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
             then(function(newUser){
-                console.log("USER 1");
                 // create a cypher data of the user details
                 return Promise.resolve(intel.security.secureData.
                 createFromData({"data": JSON.stringify(newUser)}));
             }).
             then(function(instanceId){
-                console.log("USER 2");
                     // store the cyphered data in secure persistent storage
                     return Promise.resolve(
                         intel.security.secureStorage.write({"id": "postcash-user-details", "instanceID": instanceId})
@@ -438,11 +458,14 @@ utopiasoftware.saveup.controller = {
                 $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);
                 $('ons-splitter').get(0).content.load("app-main-template"); // move to the main menu
                 // show a toast informing user that account has been created
-                Materialize.toast('Account Created! Welcome', 4000);
+                Materialize.toast('Sign Up completed! Welcome', 4000);
             }).
             catch(function(err){
+                if(typeof err !== "string"){ // if err is NOT a String
+                    err = "Sorry. Sign Up could not be completed"
+                }
                 $('#loader-modal').get(0).hide(); // hide loader
-                ons.notification.alert({title: "Account Creation Failed",
+                ons.notification.alert({title: "Sign Up Failed",
                     messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                     'style="color: red;"></ons-icon> <span>' + err + '</span>',
                     cancelable: false
@@ -467,122 +490,6 @@ utopiasoftware.saveup.controller = {
                 $(buttonElement).find('ons-icon').attr("icon", "md-eye"); // change the icon associated with the input
                 $(buttonElement).attr("data-saveup-visible", "no"); // flag the pin is now invisible
             }
-        }
-
-    },
-
-    /**
-     * object is view-model for reset-pin page
-     */
-    resetPinPageViewModel: {
-
-        /**
-         * used to hold the parsley form validation object for the sign-in page
-         */
-        formValidator: null,
-
-        /**
-         * event is triggered when page is initialised
-         */
-        pageInit: function(event){
-
-            var $thisPage = $(event.target); // get the current page shown
-            // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
-            $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
-
-            // call the function used to initialise the app page if the app is fully loaded
-            loadPageOnAppReady();
-
-            //function is used to initialise the page if the app is fully ready for execution
-            function loadPageOnAppReady(){
-                // check to see if onsen is ready and if all app loading has been completed
-                if(!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false){
-                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
-                    return;
-                }
-
-                // listen for the back button event
-                $thisPage.get(0).onDeviceBackButton = function(){
-                    // move to the first tab in the tab bar i.e sign-in page
-                    $('#login-tabbar').get(0).setActiveTab(0, {animation: "slide"});
-                };
-
-                // initialise the reset-pin form validation
-                utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator = $('#reset-pin-form').parsley();
-
-                // attach listener for the reset button on the reset-pin page
-                $('#reset-pin-reset').get(0).onclick = function(){
-                    // run the validation method for the sign-in form
-                    utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator.whenValidate();
-                };
-
-                // listen for log in form field validation failure event
-                utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator.on('field:error', function(fieldInstance) {
-                    // get the element that triggered the field validation error and use it to display tooltip
-                    // display tooltip
-                    $(fieldInstance.$element).addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                    $(fieldInstance.$element).attr("data-hint", fieldInstance.getErrorsMessages()[0]);
-                });
-
-                // listen for log in form field validation success event
-                utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator.on('field:success', function(fieldInstance) {
-                    // remove tooltip from element
-                    $(fieldInstance.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                    $(fieldInstance.$element).removeAttr("data-hint");
-                });
-
-                // listen for log in form validation success
-                utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator.on('form:success',
-                    utopiasoftware.saveup.controller.resetPinPageViewModel.resetPinFormValidated);
-
-                // hide the loader
-                $('#loader-modal').get(0).hide();
-
-            }
-
-        },
-
-        /**
-         * method is triggered when the page is hidden
-         * @param event
-         */
-        pageHide: (event) => {
-            try {
-                // remove any tooltip being displayed on all forms in the page
-                $('#reset-pin-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#reset-pin-page [data-hint]').removeAttr("data-hint");
-                // reset the form validator object in the page
-                utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator.reset();
-            }
-            catch(err){}
-        },
-
-        /**
-         * method is triggered when the page is destroyed
-         * @param event
-         */
-        pageDestroy: (event) => {
-            try{
-                // remove any tooltip being displayed on all forms in the page
-                $('#reset-pin-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#reset-pin-page [data-hint]').removeAttr("data-hint");
-                // destroy the form validator objects in the page
-                utopiasoftware.saveup.controller.resetPinPageViewModel.formValidator.destroy();
-            }
-            catch(err){}
-        },
-
-        /**
-         * method is triggered when reset-pin form is successfully validated
-         */
-        resetPinFormValidated: function(){},
-
-        /**
-         * method is triggered when back to Sign In button is clicked
-         */
-        signInButtonClicked: function(){
-            // move the tab view to the Sign In tab
-            $('#login-tabbar').get(0).setActiveTab(0, {animation: "slide"});
         }
 
     },

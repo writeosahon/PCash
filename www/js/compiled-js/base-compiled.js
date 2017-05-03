@@ -28,7 +28,7 @@ var utopiasoftware = {
 
             var smsWatcherTimer = null; // holds the timer used to stop the sms watcher
 
-            var rejectPromise = null;
+            var rejectPromise = null; // holds the reject function of the main Promise object
 
             if (phoneNumber.startsWith("0")) {
                 // the phone number starts with 0, replace it with international dialing code
@@ -47,21 +47,25 @@ var utopiasoftware = {
                 new Promise(function (resolve2, reject2) {
                     SMS.startWatch(resolve2, reject2);
                 }).then(function () {
+                    // intercept any incoming sms
+                    return new Promise(function (res, rej) {
+                        SMS.enableIntercept(true, res, rej);
+                    });
+                }).then(function () {
                     // sms watch of the user's inbox has been started
                     // add listener for new arriving sms
                     document.addEventListener('onSMSArrive', function (smsEvent) {
-                        console.log("GOT SMS");
                         var sms = smsEvent.data;
-                        console.log("DATA", sms);
                         if (sms.address == phoneNumber && sms.body == "PostCash " + randomNumber) {
-                            console.log("SMS VERIFIED");
                             clearTimeout(smsWatcherTimer); // stop the set timer
                             SMS.stopWatch(function () {}, function () {}); // stop sms watch
+                            SMS.enableIntercept(false, function () {}, function () {}); // stop sms intercept
                             document.removeEventListener('onSMSArrive'); // remove sms arrival listener
                             $('#phone-verification-modal').get(0).hide(); // hide loader
                             resolve(); // resolve promise
                         }
                     });
+
                     // return a Promise object whaich sends sms to the phoneNumber parameter
                     return new Promise(function (resolve3, reject3) {
 
@@ -75,6 +79,7 @@ var utopiasoftware = {
                 }).then(function () {
                     smsWatcherTimer = setTimeout(function () {
                         SMS.stopWatch(function () {}, function () {});
+                        SMS.enableIntercept(false, function () {}, function () {}); // stop sms intercept
                         document.removeEventListener('onSMSArrive');
                         $('#phone-verification-modal').get(0).hide(); // hide loader
                         rejectPromise("phone number verification failed"); // reject the promise i.e. verification failed
@@ -84,6 +89,7 @@ var utopiasoftware = {
                         clearTimeout(smsWatcherTimer);
                     } catch (err) {}
                     SMS.stopWatch(function () {}, function () {});
+                    SMS.enableIntercept(false, function () {}, function () {}); // stop sms intercept
                     document.removeEventListener('onSMSArrive');
                     $('#phone-verification-modal').get(0).hide(); // hide loader
                     reject("phone number verification failed");

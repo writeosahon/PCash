@@ -260,3 +260,63 @@
 
   content: '\e908';
 }
+.zmdi-saveup-icon-saveup-transfer-cash:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e909';
+}
+.zmdi-saveup-icon-saveup-verify-account2:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e90e';
+}
+.zmdi-saveup-icon-saveup-my-accounts:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e90d';
+}
+.zmdi-saveup-icon-saveup-my-cards:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e90c';
+}
+.zmdi-saveup-icon-saveup-recipients:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e90b';
+}
+.zmdi-saveup-icon-saveup-transaction-history:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e90a';
+}

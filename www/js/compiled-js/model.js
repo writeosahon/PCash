@@ -55,15 +55,6 @@ $(document).on("hide", "#create-account-page", utopiasoftware.saveup.controller.
 // listen for the destroy event of the Create Account page
 $(document).on("destroy", "#create-account-page", utopiasoftware.saveup.controller.createAccountPageViewModel.pageDestroy);
 
-// listen for the initialisation of the Reset-Pin page
-$(document).on("init", "#reset-pin-page", utopiasoftware.saveup.controller.resetPinPageViewModel.pageInit);
-
-// listen for the hide event of the Reset-Pin page
-$(document).on("hide", "#reset-pin-page", utopiasoftware.saveup.controller.resetPinPageViewModel.pageHide);
-
-// listen for the destroy event of the Reset-Pin page
-$(document).on("destroy", "#reset-pin-page", utopiasoftware.saveup.controller.resetPinPageViewModel.pageDestroy);
-
 // listen for the initialisation of the Onboarding page
 $(document).on("init", "#onboarding-page", utopiasoftware.saveup.controller.onboardingPageViewModel.pageInit);
 
