@@ -53,7 +53,7 @@ var utopiasoftware = {
                         console.log("GOT SMS");
                         var sms = smsEvent.data;
                         console.log("DATA", sms);
-                        if (sms.address == phoneNumber && sms.body == "SaveUp " + randomNumber) {
+                        if (sms.address == phoneNumber && sms.body == "PostCash " + randomNumber) {
                             console.log("SMS VERIFIED");
                             clearTimeout(smsWatcherTimer); // stop the set timer
                             SMS.stopWatch(function () {}, function () {}); // stop sms watch
@@ -70,7 +70,7 @@ var utopiasoftware = {
                         for (var i = 0; i < 6; i++) {
                             randomNumber += "" + randomGen.integer(0, 9);
                         }
-                        SMS.sendSMS(phoneNumber, "SaveUp " + randomNumber, resolve3, reject3);
+                        SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, reject3);
                     });
                 }).then(function () {
                     smsWatcherTimer = setTimeout(function () {

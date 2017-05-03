@@ -26,6 +26,8 @@
 <plugin name="cordova-plugin-x-toast" spec="2.6.0"/>
 <plugin name="cordova-plugin-sms" spec="1.0.5"/>
 <plugin name="cordova-plugin-privacyscreen" spec="0.3.1"/>
+<plugin name="cordova-plugin-uniquedeviceid" spec="1.3.2"/>
+<plugin name="com-intel-security-cordova-plugin" spec="https://github.com/AppSecurityApi/com-intel-security-cordova-plugin.git"/>
 <plugin name="cordova-plugin-whitelist" spec="1.2.2"/>
 
 <preference  name="AutoHideSplashScreen" value="true"/>

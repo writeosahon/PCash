@@ -23,7 +23,17 @@ utopiasoftware.saveup.model = {
    *
    * @type {boolean} flag for if the hybrid plugins and DOM content are ready for execution
    */
-  isAppReady: false
+  isAppReady: false,
+
+  /**
+   * property holds the UUID for the mobile device
+   */
+  deviceUUID: null,
+
+  /**
+   * holds details about the currently logged in user
+   */
+  appUserDetails: null
 };
 
 // register the event listener for when all Hybrid plugins and document DOM are ready

@@ -34,18 +34,8 @@ utopiasoftware.saveup.controller = {
                 $('#loader-modal').get(0).show(); // show loader
             }
 
-            // check if the user has previously logged in to the app
-            if (!window.localStorage.getItem("app-status") || window.localStorage.getItem("app-status") == "") { // user has not logged in
-                //set the first page to be displayed to be the login page
-                $('ons-splitter').get(0).content.load("login-template");
-            }
-            else { // user is already logged in
-                // load the main tabbar for the app
-                $('ons-splitter').get(0).content.load("laundry-mart-tabbar-template");
-
-                // enable the swipeable feature for the app splitter
-                $('ons-splitter-side').attr("swipeable", true);
-            }
+            //set the first page to be displayed to be the login page
+            $('ons-splitter').get(0).content.load("login-template");
 
         });
 
@@ -76,8 +66,70 @@ utopiasoftware.saveup.controller = {
         // set status bar color
         StatusBar.backgroundColorByHexString("#000000");
 
-        // set app ready flag to true
-        utopiasoftware.saveup.model.isAppReady = true;
+        // use Promises to load the other cordova plugins
+        new Promise(function(resolve, reject){
+            // Get device UUID
+            window.plugins.uniqueDeviceID.get(resolve, reject);
+        }).
+        then(function(deviceUUID){
+            utopiasoftware.saveup.model.deviceUUID = deviceUUID;
+            return;
+        }).
+        then(function(){ // load the securely stored / encrypted data into the app
+            // check if the user is currently logged in
+            if(! window.localStorage.getItem("app-status") || window.localStorage.getItem("app-status") == ""){ // user is not logged in
+                return null;
+            }
+
+            return Promise.resolve(intel.security.secureStorage.read({"id": "postcash-user-details"}));
+        }).then(function(instanceId){
+            if(instanceId == null){ // user is not logged in
+                return null;
+            }
+
+            return Promise.resolve(intel.security.secureData.getData(instanceId));
+        }).
+        then(function(secureData){
+
+            if(secureData == null){ // user is not logged in
+                return null;
+            }
+
+            utopiasoftware.saveup.model.appUserDetails = JSON.parse(secureData); // transfer the collected user details to the app
+            // update the first name being displayed in the side menu
+            $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);
+            return null;
+        }).
+        then(function(){
+            // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
+            utopiasoftware.saveup.model.isAppReady = true;
+            // hide the splash screen
+            navigator.splashscreen.hide();
+        }).
+        catch(function(){
+            console.log("GOT HERE 2");
+            // provide an empty device uuid
+            utopiasoftware.saveup.model.deviceUUID = "";
+            // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
+            utopiasoftware.saveup.model.isAppReady = true;
+            // hide the splash screen
+            navigator.splashscreen.hide();
+
+            // display a toast message to let user no there is no Internet connection
+            window.plugins.toast.showWithOptions({
+                message: "Startup Error. App functionality may be limited. Always update the app to " +
+                "get the best secure experience. Please contact us if problem continues",
+                duration: 5000, // 5000 ms
+                position: "bottom",
+                styling: {
+                    opacity: 1,
+                    backgroundColor: '#000000',
+                    textColor: '#FFFFFF',
+                    textSize: 14
+                }
+            });
+        });
+
     },
 
     /**
@@ -122,6 +174,12 @@ utopiasoftware.saveup.controller = {
                             }
                         });
                 };
+
+                // check if the user is currently logged in
+                if(window.localStorage.getItem("app-status") && window.localStorage.getItem("app-status") != ""){ // user is logged in
+                    // display the user's save phone number on the login page phonenumber input
+                    $('#login-form #user-phone').val(utopiasoftware.saveup.model.appUserDetails.phoneNumber);
+                }
 
                 // initialise the sign-in form validation
                 utopiasoftware.saveup.controller.signInPageViewModel.formValidator = $('#login-form').parsley();
@@ -337,16 +395,53 @@ utopiasoftware.saveup.controller = {
                     });
             }).
             then(function(){
-                // display the loader message to indicate that account is being created;
-                $('#loader-modal-message').html("Creating New Account...");
-                $('#loader-modal').get(0).show(); // show loader
+
                 return null;
                //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
             }).
             then(function(){
-                $('ons-splitter').get(0).content.load("onboarding-template");
+                // display the loader message to indicate that account is being created;
+                $('#loader-modal-message').html("Creating New Account...");
+                $('#loader-modal').get(0).show(); // show loader
+
+                // create the app user details object and persist it
+                utopiasoftware.saveup.model.appUserDetails = {
+                    firstName: $('#create-account-form #create-first-name').val(),
+                    lastName: $('#create-account-form #create-last-name').val(),
+                    phoneNumber: $('#create-account-form #create-phone').val(),
+                    phoneNumber_intlFormat: $('#create-account-form #create-phone').val().startsWith("0") ?
+                        $('#create-account-form #create-phone').val().replace("0", "+234") :
+                        $('#create-account-form #create-phone').val(),
+                securePin: $('#create-account-form #create-secure-pin').val()
+                };
+
+                return utopiasoftware.saveup.model.appUserDetails;
+            }).// DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
+            then(function(newUser){
+                console.log("USER 1");
+                // create a cypher data of the user details
+                return Promise.resolve(intel.security.secureData.
+                createFromData({"data": JSON.stringify(newUser)}));
+            }).
+            then(function(instanceId){
+                console.log("USER 2");
+                    // store the cyphered data in secure persistent storage
+                    return Promise.resolve(
+                        intel.security.secureStorage.write({"id": "postcash-user-details", "instanceID": instanceId})
+                    );
+                }).
+            then(function(){
+                $('#loader-modal').get(0).hide(); // hide loader
+                // set app-status local storage (as user phone number)
+                window.localStorage.setItem("app-status", utopiasoftware.saveup.model.appUserDetails.phoneNumber);
+                // update the first name being displayed in the side menu
+                $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);
+                $('ons-splitter').get(0).content.load("app-main-template"); // move to the main menu
+                // show a toast informing user that account has been created
+                Materialize.toast('Account Created! Welcome', 4000);
             }).
             catch(function(err){
+                $('#loader-modal').get(0).hide(); // hide loader
                 ons.notification.alert({title: "Account Creation Failed",
                     messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                     'style="color: red;"></ons-icon> <span>' + err + '</span>',

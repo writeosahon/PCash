@@ -5,7 +5,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "",
       "projectGuid": "e2ac2577-2622-40cb-8c33-fa2deaa69045",
-      "lastModifiedDate": 1493659739594,
+      "lastModifiedDate": 1493720905325,
       "creationDate": 1493652905142
     },
     "testDirectory": "test",
@@ -354,6 +354,49 @@
         "topLevel": true,
         "permissions": {},
         "description": "Secures your app from displaying a screenshot in task switchers under Android and iOS. Keeps sensitive information private.",
+        "data": {},
+        "dependedBy": [],
+        "custom": "true"
+      },
+      {
+        "id": "cordova-plugin-uniquedeviceid",
+        "name": "UniqueDeviceID",
+        "version": "1.3.2",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-uniquedeviceid",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-uniquedeviceid",
+        "selectedState": "Included",
+        "checksum": "654e5a9d",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "permissions": {
+          "android:name": [
+            "android.permission.READ_PHONE_STATE"
+          ]
+        },
+        "description": "\n        PhoneGap / Cordova unique device id (UUID) plugin for Android, iOS and Windows Phone 8. Remains the same after app uninstall.\n    ",
+        "data": {},
+        "dependedBy": []
+      },
+      {
+        "id": "com-intel-security-cordova-plugin",
+        "name": "APP Security API",
+        "version": "2.0.3",
+        "originType": "repo",
+        "origin": "https://github.com/AppSecurityApi/com-intel-security-cordova-plugin.git",
+        "gitref": "",
+        "subdir": ".",
+        "paramvals": {},
+        "sourceLocation": "plugins/com-intel-security-cordova-plugin",
+        "selectedState": "Included",
+        "checksum": "e657a560",
+        "dependsOn": [],
+        "topLevel": true,
+        "permissions": {},
+        "description": "App Security API plugin",
         "data": {},
         "dependedBy": [],
         "custom": "true"
