@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<!-- verify-account page -->
+<ons-page id="verify-account-page">
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button onclick="$('#side-menu').get(0).toggle()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+            Verify Account
+        </div>
+        <div class="right">
+            <ons-toolbar-button class="page-options-button"
+                                onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#secondary-menu-options', this)"><ons-icon icon="md-more-vert"></ons-icon></ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <div class="progress">
+        <div class="indeterminate"></div>
+    </div>
+
+    <form id="verify-account-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
+          data-parsley-excluded="input[type=button], input[type=submit],
+                              input[type=reset], input[type=hidden], [disabled], :hidden" style="display: none">
+
+        <ons-list>
+            <ons-list-header style="font-size: 1.3em; margin:0; text-align: center; background-color: #ede7f6; color: #b388ff">
+                Verify Bank Account <span id="verify-account-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+            onclick="$('.tap-target', $('#verify-account-page')).tapTarget('open');">
+                    <ons-icon icon="fa-question"></ons-icon>
+                </span>
+            </ons-list-header>
+            <div class="row">
+                <div class="col s2" style="text-align: center;">
+                    <ons-icon icon="md-saveup-icon-saveup-saving-group" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                </div>
+                <div class="col s8 input-field">
+                    <select id="verify-account-choose-bank">
+                        <option value="" disabled selected>Choose Bank</option>
+                    </select>
+                    <label for="verify-account-choose-bank" class="hint--top"></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s2" style="text-align: center;">
+                    <ons-icon icon="md-account" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                </div>
+                <div class="col s8 input-field">
+                    <input id="verify-account-number" type="number" required placeholder="NUBAN" data-length="10"
+                           data-parsley-type="digits"
+                           data-parsley-minlength="10"
+                           data-parsley-maxlength="10"
+                           data-parsley-required-message="enter an account number"
+                           data-parsley-digits-message="account number must contain only numbers"
+                           data-parsley-minlength-message="account number cannot be less than 10 numbers"
+                           data-parsley-maxlength-message="account number cannot be more than 10 numbers">
+                    <label for="verify-account-number" class="active hint--top">Account Number</label>
+                </div>
+            </div>
+
+
+            <div class="row verify-account-success" style="border-top: 1px solid #cccccc; display: none;">
+                <div class="col s2" style="text-align: center;">
+                    <ons-icon icon="md-saveup-icon-saveup-verify-account2" size="28px" style="color: green; padding-top: 1em;"></ons-icon>
+                </div>
+                <div class="col s7 input-field">
+                    <input id="verify-account-name" type="text" disabled value="">
+                    <label for="verify-account-name" class="active hint--top">Account Name</label>
+                </div>
+                <div class="col s3" style="padding-top: 0.2em;">
+                    <ons-button modifier="quiet" data-saveup-visible="no" style="font-size: 1.2em"
+                                onclick="utopiasoftware.saveup.controller.createAccountPageViewModel.pinVisibilityButtonClicked(this);">
+                        <ons-icon icon="md-more"></ons-icon></ons-button>
+                </div>
+            </div>
+
+            <div class="row verify-account-failed" style="border-top: 1px solid #cccccc; display: none;">
+                <div class="col s2" style="text-align: center;">
+                    <ons-icon icon="md-saveup-icon-saveup-account-warning" size="28px" style="color: red; padding-top: 1em;"></ons-icon>
+                </div>
+                <div class="col s8 input-field">
+                    <input id="verify-account-message" type="text" disabled style="color: red;" value="">
+                </div>
+            </div>
+
+        </ons-list>
+    </form>
+
+    <ons-bottom-toolbar>
+        <ons-row>
+            <ons-col width="100%" style="text-align: center;">
+                <ons-button id="verify-account-button" modifier="quiet" disabled>Verify Account</ons-button>
+            </ons-col>
+        </ons-row>
+    </ons-bottom-toolbar>
+
+    <div class="tap-target" data-activates="verify-account-help-1" style="background-color: #82b1ff; color: #ffffff">
+        <div class="tap-target-content">
+            <h5>Verify Account</h5>
+            <p style="width: 60%;">Simply pick the bank and account number you want verified; we'll fetch the the name of the account holder</p>
+        </div>
+    </div>
+</ons-page>
+</body>
+</html>

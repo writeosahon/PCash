@@ -320,3 +320,23 @@
 
   content: '\e90a';
 }
+.zmdi-saveup-icon-saveup-signout:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e90f';
+}
+.zmdi-saveup-icon-saveup-account-warning:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e910';
+}

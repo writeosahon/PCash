@@ -153,6 +153,32 @@
     </div>
 </ons-popover>
 
+<!-- secondary menu options for the app -->
+<ons-popover id="secondary-menu-options" modifier="material" direction="down" cover-target cancelable disable-auto-styling>
+    <ons-list>
+
+        <ons-list-item modifier="nodivider" tappable style="color: #311b92"
+                       onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('share app');">
+            <div class="left">
+                <ons-icon icon="md-share" class="list-item__icon"></ons-icon>
+            </div>
+            <div class="center">
+                Share App
+            </div>
+        </ons-list-item>
+
+        <ons-list-item modifier="nodivider" tappable style="color: #311b92"
+                       onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('sign out');">
+            <div class="left">
+                <ons-icon icon="md-saveup-icon-saveup-signout" class="list-item__icon"></ons-icon>
+            </div>
+            <div class="center">
+                Sign Out
+            </div>
+        </ons-list-item>
+    </ons-list>
+</ons-popover>
+
 <!-- create modal for displaying phone number verification messages -->
 <ons-modal id="phone-verification-modal" direction="up">
     <div style="text-align: center">

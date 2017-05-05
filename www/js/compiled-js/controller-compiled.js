@@ -128,6 +128,28 @@ utopiasoftware.saveup.controller = {
     },
 
     /**
+     * method is used to create secondary menus for some app pages.
+     * The secondary menus are onsen ui popover elements
+     *
+     * @param popOverQuerySelector {String} a query selector string that identifies the onsen ui popover element
+     *
+     * @param targetElem {HTMLElement} HTML element that identifies the
+     * target element of the app secondary menu
+     */
+    createAppSecondaryMenus: function createAppSecondaryMenus(popOverQuerySelector, targetElem) {
+
+        // show the specified popover element
+        $(popOverQuerySelector).get(0).show(targetElem);
+    },
+
+    /**
+     * method is triggered when an item on the App Secondary Popup Menu is clicked
+     *
+     * @param label {String} label represents clicked list item in the menu
+     */
+    appSecondaryMenuListClicked: function appSecondaryMenuListClicked(label) {},
+
+    /**
      * object is view-model for sign-in page
      */
     signInPageViewModel: {
@@ -253,7 +275,7 @@ utopiasoftware.saveup.controller = {
             $('#loader-modal-message').html("Signing In...");
             $('#loader-modal').get(0).show(); // show loader
 
-            if ($('#login-form #secure-pin').val() === utopiasoftware.saveup.model.appUserDetails.securePin) {
+            if ($('#login-form #user-phone').val() === utopiasoftware.saveup.model.appUserDetails.phoneNumber && $('#login-form #secure-pin').val() === utopiasoftware.saveup.model.appUserDetails.securePin) {
                 // user can sign in
 
                 $('#loader-modal').get(0).hide(); // hide loader
@@ -593,10 +615,18 @@ utopiasoftware.saveup.controller = {
          * @param label
          */
         mainMenuButtonsClicked: function mainMenuButtonsClicked(label) {
-            if (label == "join savings group") {
-                // 'join saving group' button was clicked
+            if (label == "transfer cash") {
+                // 'transfer cash' button was clicked
 
-                $('#app-main-navigator').get(0).pushPage("join-savings-groups-page.html", {}); // navigate to the onboarding presentation
+                $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {}); // navigate to the transfer cash page
+
+                return;
+            }
+
+            if (label == "verify account") {
+                // 'verify account' button was clicked
+
+                $('#app-main-navigator').get(0).pushPage("verify-account-page.html", {}); // navigate to the verify account page
 
                 return;
             }
@@ -761,6 +791,135 @@ utopiasoftware.saveup.controller = {
                 $(buttonElement).attr("data-saveup-visible", "no"); // flag the pin is now invisible
             }
         }
+
+    },
+
+    /**
+     * object is view-model for verify-account page
+     */
+    verifyAccountPageViewModel: {
+
+        /**
+         * used to hold the parsley form validation object for the page
+         */
+        formValidator: null,
+
+        /**
+         * event is triggered when page is initialised
+         */
+        pageInit: function pageInit(event) {
+
+            var $thisPage = $(event.target); // get the current page shown
+            // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+            $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
+
+            // call the function used to initialise the app page if the app is fully loaded
+            loadPageOnAppReady();
+
+            //function is used to initialise the page if the app is fully ready for execution
+            function loadPageOnAppReady() {
+                // check to see if onsen is ready and if all app loading has been completed
+                if (!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false) {
+                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
+                    return;
+                }
+
+                // listen for the back button event
+                $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function () {
+                    $('#app-main-navigator').get(0).popPage({ refresh: false });
+                };
+
+                // initialise the form validation
+                utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator = $('#verify-account-form').parsley();
+
+                // attach listener for the create account button on the create account page
+                $('#verify-account-button').get(0).onclick = function () {
+                    // run the validation method for the create account form
+                    utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.whenValidate();
+                };
+
+                // listen for log in form field validation failure event
+                utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.on('field:error', function (fieldInstance) {
+                    // get the element that triggered the field validation error and use it to display tooltip
+                    // display tooltip
+                    $(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                    $(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint", fieldInstance.getErrorsMessages()[0]);
+                });
+
+                // listen for log in form field validation success event
+                utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.on('field:success', function (fieldInstance) {
+                    // remove tooltip from element
+                    $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                    $(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");
+                });
+
+                // listen for log in form validation success
+                utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.on('form:success', utopiasoftware.saveup.controller.verifyAccountPageViewModel.verifyAccountFormValidated);
+
+                // retrieve the list of banks
+                Promise.resolve($.ajax({
+                    url: "banks.json",
+                    type: "get",
+                    dataType: "json",
+                    timeout: 240000 // wait for 4 minutes before timeout of request
+
+                })).then(function (bankData) {
+                    var optionTags = "";
+                    // update the banks select element
+                    for (var prop in bankData) {
+                        optionTags += '<option value="' + prop + '">' + bankData[prop] + '</option>';
+                    }
+                    $('#verify-account-choose-bank', $thisPage).append(optionTags); // append all the created option tags
+                    // initilise the select element
+                    $('#verify-account-choose-bank', $thisPage).material_select();
+                    // initialise the character counter plugin
+                    $('#verify-account-number', $thisPage).characterCounter();
+                    // hide the progress indeterminate loader
+                    $('.progress', $thisPage).css("display", "none");
+                    // make the verify account form visible
+                    $('#verify-account-form', $thisPage).css("display", "block");
+                    // enable the 'Verify Account' button
+                    $('#verify-account-button', $thisPage).removeAttr("disabled");
+                    // hide the loader
+                    $('#loader-modal').get(0).hide();
+                }).catch();
+            }
+        },
+
+        /**
+         * method is triggered when the create-account page is hidden
+         * @param event
+         */
+        pageHide: function pageHide(event) {
+            try {
+                // remove any tooltip being displayed on all forms on the page
+                $('#verify-account-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#verify-account-page [data-hint]').removeAttr("data-hint");
+                // reset the form validator object on the page
+                utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.reset();
+            } catch (err) {}
+        },
+
+        /**
+         * method is triggered when the sign-in page is destroyed
+         * @param event
+         */
+        pageDestroy: function pageDestroy(event) {
+            try {
+                // remove any tooltip being displayed on all forms on the page
+                $('#verify-account-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#verify-account-page [data-hint]').removeAttr("data-hint");
+                // destroy the form validator objects on the page
+                utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.destroy();
+            } catch (err) {}
+        },
+
+        /**
+         * method is triggered when verify account form is successfully validated
+         */
+        verifyAccountFormValidated: function verifyAccountFormValidated() {}
 
     }
 };

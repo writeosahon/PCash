@@ -61,5 +61,5 @@ $(document).on("init", "#onboarding-page", utopiasoftware.saveup.controller.onbo
 // listen for the initialisation of the Main-Menu page
 $(document).on("init", "#main-menu-page", utopiasoftware.saveup.controller.mainMenuPageViewModel.pageInit);
 
-// listen for the initialisation of the Join-Savings Group page
-$(document).on("init", "#join-savings-group-page", utopiasoftware.saveup.controller.joinSavingsGroupsViewModel.pageInit);
+// listen for the initialisation of the Verify Account page
+$(document).on("init", "#verify-account-page", utopiasoftware.saveup.controller.verifyAccountPageViewModel.pageInit);
