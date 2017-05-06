@@ -148,7 +148,7 @@
             Forgot your Secure PIN?
         </h5>
         <p style="text-align: left; font-size: 0.9em">
-            No Problem! Just Sign Up again. Remember all your data is securely stored on your device
+            No Problem! Just 'Sign Up' again. Remember all your data is securely stored on your device
         </p>
     </div>
 </ons-popover>
@@ -157,7 +157,7 @@
 <ons-popover id="secondary-menu-options" modifier="material" direction="down" cover-target cancelable disable-auto-styling>
     <ons-list>
 
-        <ons-list-item modifier="nodivider" tappable style="color: #311b92"
+        <ons-list-item modifier="longdivider" tappable style="color: #311b92"
                        onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('share app');">
             <div class="left">
                 <ons-icon icon="md-share" class="list-item__icon"></ons-icon>
@@ -167,7 +167,7 @@
             </div>
         </ons-list-item>
 
-        <ons-list-item modifier="nodivider" tappable style="color: #311b92"
+        <ons-list-item modifier="longdivider" tappable style="color: #311b92"
                        onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('sign out');">
             <div class="left">
                 <ons-icon icon="md-saveup-icon-saveup-signout" class="list-item__icon"></ons-icon>
@@ -226,6 +226,45 @@
     </div>
     <div class="modal-message" style="text-align: center"></div>
 </ons-modal>
+
+<!-- bottom sheet modal. This is not directly visible on the page  -->
+<div id="verify-account-bottom-sheet" class="modal bottom-sheet">
+    <div class="modal-content">
+        <ons-list id="verify-account-bottom-sheet-list">
+            <ons-list-header>Bank Account actions...</ons-list-header>
+            <ons-list-item modifier="nodivider" tappable
+                           onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('share app');">
+                <div class="left">
+                    <ons-icon icon="md-saveup-icon-saveup-transfer-cash" class="list-item__icon" size="28px"></ons-icon>
+                </div>
+                <div class="center">
+                    Transfer Cash to account</span>
+                </div>
+            </ons-list-item>
+
+            <ons-list-item modifier="nodivider" tappable
+                           onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('share app');">
+                <div class="left">
+                    <ons-icon icon="md-saveup-icon-saveup-my-accounts" class="list-item__icon"></ons-icon>
+                </div>
+                <div class="center">
+                    add account to 'My Accounts'</span>
+                </div>
+            </ons-list-item>
+
+            <ons-list-item modifier="nodivider" tappable
+                           onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('share app');">
+                <div class="left">
+                    <ons-icon icon="md-saveup-icon-saveup-recipients" class="list-item__icon"></ons-icon>
+                </div>
+                <div class="center">
+                    add account to 'Saved Recipients'
+                </div>
+            </ons-list-item>
+
+        </ons-list>
+    </div>
+</div>
 
 </body>
 </html>

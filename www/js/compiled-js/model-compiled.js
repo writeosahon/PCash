@@ -57,13 +57,16 @@ $(document).on("hide", "#create-account-page", utopiasoftware.saveup.controller.
 // listen for the destroy event of the Create Account page
 $(document).on("destroy", "#create-account-page", utopiasoftware.saveup.controller.createAccountPageViewModel.pageDestroy);
 
-// listen for the initialisation of the Onboarding page
-$(document).on("init", "#onboarding-page", utopiasoftware.saveup.controller.onboardingPageViewModel.pageInit);
-
 // listen for the initialisation of the Main-Menu page
 $(document).on("init", "#main-menu-page", utopiasoftware.saveup.controller.mainMenuPageViewModel.pageInit);
 
 // listen for the initialisation of the Verify Account page
 $(document).on("init", "#verify-account-page", utopiasoftware.saveup.controller.verifyAccountPageViewModel.pageInit);
+
+// listen for the hide event of the Verify Account page
+$(document).on("hide", "#verify-account-page", utopiasoftware.saveup.controller.verifyAccountPageViewModel.pageHide);
+
+// listen for the destroy event of the Verify Account page
+$(document).on("destroy", "#verify-account-page", utopiasoftware.saveup.controller.verifyAccountPageViewModel.pageDestroy);
 
 //# sourceMappingURL=model-compiled.js.map

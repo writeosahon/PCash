@@ -7,6 +7,9 @@
 [data-hint]:after {
     font-size: 0.8em !important;
 }
+label[data-hint]:after {
+    font-size: 1em !important;
+}
 
 
 /** MODAL LOADER STYLE BEGINS **/
@@ -102,3 +105,46 @@
     background-color: #EDE7F6;
 }
 /** STYLE FOR MAIN MENU PAGE ENDS **/
+
+
+/** STYLE FOR BANK SELECT ELEMENT IN VERIFY ACCOUNT PAGE BEGINS **/
+#verify-account-page .page--material__content .dropdown-content{
+    max-height: 200px !important;
+    overflow-y: scroll;
+    background-color: rgb(237,231,246);
+}
+#verify-account-page .page--material__content .dropdown-content li:hover,
+#verify-account-page .page--material__content .dropdown-content li.active,
+#verify-account-page .page--material__content .dropdown-content li.selected {
+    background-color: #b388ff;
+}
+#verify-account-page .page--material__content .dropdown-content li.active.selected {
+    background-color: #b388ff;
+}
+#verify-account-page .page--material__content .dropdown-content li:hover > span,
+#verify-account-page .page--material__content .dropdown-content li.active > span,
+#verify-account-page .page--material__content .dropdown-content li.selected > span,
+#verify-account-page .page--material__content .dropdown-content li:hover > a,
+#verify-account-page .page--material__content .dropdown-content li.active > a,
+#verify-account-page .page--material__content .dropdown-content li.selected > a {
+    color: #ffffff;
+}
+#verify-account-page .page--material__content .dropdown-content li.active.selected > span,
+#verify-account-page .page--material__content .dropdown-content li.active.selected > a {
+    color: #ffffff;
+}
+#verify-account-page .page--material__content ons-list{
+    min-height: 16em !important;
+}
+/** STYLE FOR BANK SELECT ELEMENT IN VERIFY ACCOUNT PAGE ENDS **/
+
+
+#verify-account-bottom-sheet.modal.bottom-sheet {
+    max-height: 60%;
+}
+#verify-account-bottom-sheet.modal.bottom-sheet ons-list {
+    background-color: inherit;
+}
+#verify-account-bottom-sheet.modal .modal-content {
+    padding: 0;
+}

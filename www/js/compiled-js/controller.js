@@ -462,7 +462,7 @@ utopiasoftware.saveup.controller = {
                 };
 
                 return utopiasoftware.saveup.model.appUserDetails;
-            }).// DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
+            }).// TODO DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
             then(function(newUser){
                 // create a cypher data of the user details
                 return Promise.resolve(intel.security.secureData.
@@ -873,10 +873,10 @@ utopiasoftware.saveup.controller = {
                 // initialise the form validation
                 utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator = $('#verify-account-form').parsley();
 
-                // attach listener for the create account button on the create account page
+                // attach listener for the verify account button
                 $('#verify-account-button').get(0).onclick = function(){
                     // run the validation method for the create account form
-                    utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.whenValidate();
+                    utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.whenValidate();
                 };
 
                 // listen for log in form field validation failure event
@@ -919,8 +919,10 @@ utopiasoftware.saveup.controller = {
                     $('#verify-account-choose-bank', $thisPage).material_select();
                     // initialise the character counter plugin
                     $('#verify-account-number', $thisPage).characterCounter();
-                    // hide the progress indeterminate loader
-                    $('.progress', $thisPage).css("display", "none");
+                    // initialise bottom sheet plugin
+                    $('#verify-account-bottom-sheet').modal();
+                    // remove the progress indeterminate loader
+                    $('.progress', $thisPage).remove();
                     // make the verify account form visible
                     $('#verify-account-form', $thisPage).css("display", "block");
                     // enable the 'Verify Account' button
@@ -960,6 +962,10 @@ utopiasoftware.saveup.controller = {
                 $('#verify-account-page [data-hint]').removeAttr("data-hint");
                 // destroy the form validator objects on the page
                 utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.destroy();
+                // destroy the form inputs which need to be destroyed
+                $('#verify-account-choose-bank').material_select('destroy');
+                $('#verify-account-number').off();
+                $('#verify-account-number').removeData();
             }
             catch(err){}
         },
@@ -969,6 +975,115 @@ utopiasoftware.saveup.controller = {
          */
         verifyAccountFormValidated: function(){
 
+            // check if Internet Connection is available before proceeding
+            if(navigator.connection.type === Connection.NONE){ // no Internet Connection
+                // inform the user that they cannot proceed without Internet
+                window.plugins.toast.showWithOptions({
+                    message: "You cannot verify accounts without an Internet Connection",
+                    duration: 4000,
+                    position: "top",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#ff0000', //red
+                        textColor: '#FFFFFF',
+                        textSize: 14
+                    }
+                }, function(toastEvent){
+                    if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
+                        window.plugins.toast.hide();
+                    }
+                });
+
+                return; // exit method immediately
+            }
+
+            // display the loader message to indicate that account is being verified;
+            $('#loader-modal-message').html("Verifying Bank Account...");
+            $('#loader-modal').get(0).show(); // show loader
+
+            // request for gateway authorization token
+            utopiasoftware.saveup.moneyWaveObject.useToken.
+            then(function(tokenData){
+                // verify the bank account
+                return new Promise(function(resolve, reject){
+                    var verifyAccountRequest = $.ajax(
+                        {
+                            url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/resolve/account",
+                            type: "post",
+                            contentType: "application/json",
+                            beforeSend: function(jqxhr) {
+                                jqxhr.setRequestHeader("Authorization", tokenData);
+                            },
+                            dataType: "json",
+                            timeout: 240000, // wait for 4 minutes before timeout of request
+                            processData: false,
+                            data: JSON.stringify({
+                                account_number: $('#verify-account-form #verify-account-number').val(),
+                                bank_code: $('#verify-account-form #verify-account-choose-bank').val()
+                            })
+                        }
+                    );
+
+                    // server responded to account verification request
+                    verifyAccountRequest.done(function(responseData){
+                        if(responseData.status === "success"){ // the server responded with a successful account verification
+                            // set the name of the account which has been verified
+                            $('#verify-account-form #verify-account-name').val(responseData.data.account_name);
+                            resolve(); // resolve the account verification promise
+                        }
+                        else { // the server responded unsuccessfully
+                            reject(); // reject the account verification promise
+                        }
+                    });
+
+                    // server responded with a failure to the verification request
+                    verifyAccountRequest.fail(function(){
+                        reject(); // reject the account verification promise
+                    });
+                });
+            }).
+            then(function(){
+                // hide the loader modal
+                return $('#loader-modal').get(0).hide(); // hide loader
+            }).
+            then(function(){
+                // show a toast welcoming user
+                Materialize.toast('Bank account verified <ons-button modifier="quiet" style="color: #82b1ff" onclick="utopiasoftware.saveup.controller.verifyAccountPageViewModel.moreActions();">More</ons-button>', 4000);
+                // show the result of the verification to the user
+                $('#verify-account-form .verify-account-success').css("display", "block");
+                $('#verify-account-form .verify-account-success').addClass("scale-in");
+            }).
+            catch(function(){ // inform the user that this is an invalid account number
+                // hide the loader modal
+                $('#loader-modal').get(0).hide(); // hide loader
+                // show the FAILED result of the verification to the user
+                $('#verify-account-form .verify-account-failed').css("display", "block");
+                $('#verify-account-form .verify-account-failed').addClass("scale-in");
+            });
+        },
+
+
+        /**
+         * method is used to specifically reset the verified account display used
+         * when an account has been previously verified
+         *
+         */
+        resetVerifiedAcctDisplay: function(){
+            // hide all account verification information
+            $('#verify-account-form .verify-account-success').css("display", "none");
+            $('#verify-account-form .verify-account-success').removeClass("scale-in");
+            $('#verify-account-form .verify-account-failed').css("display", "none");
+            $('#verify-account-form .verify-account-failed').removeClass("scale-in");
+        },
+
+
+        /**
+         * method is used to display the means for performing more actions upon/after
+         * bank account verification
+         */
+        moreActions: function(){
+            // display the bottom sheets
+            $('#verify-account-bottom-sheet').modal('open');
         }
 
     }
