@@ -285,6 +285,7 @@ utopiasoftware.saveup.controller = {
          * method is triggered when sign-in form is successfully validated
          */
         signinFormValidated: function signinFormValidated() {
+
             // display the loader message to indicate is being signed in;
             $('#loader-modal-message').html("Signing In...");
             $('#loader-modal').get(0).show(); // show loader
