@@ -37,6 +37,18 @@ utopiasoftware.saveup.controller = {
             //set the first page to be displayed to be the login page
             $('ons-splitter').get(0).content.load("login-template");
 
+            // initialise verify-account bottom sheet plugin
+            $('#verify-account-bottom-sheet').modal({
+                ready: function(){ // callback for when bottom sheet is opened
+                    // flag a state that indicates the bottom sheet is currently open
+                    $('#verify-account-bottom-sheet').data("saveupSheetState", "open");
+                },
+                complete: function(){ // callback for when bottom sheet is closed
+                    // flag a state that indicates the bottom sheet is currently closed
+                    $('#verify-account-bottom-sheet').data("saveupSheetState", "closed");
+                }
+            });
+
         });
 
         // add listener for when the Internet network connection is offline
@@ -866,7 +878,14 @@ utopiasoftware.saveup.controller = {
 
                 // listen for the back button event
                 $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
-                    $('#app-main-navigator').get(0).popPage({refresh: false});
+                    // check if the verify-account bottom sheet is open
+                    if($('#verify-account-bottom-sheet').data("saveupSheetState") === "open"){ // bottom sheet is open
+                        $('#verify-account-bottom-sheet').modal("close"); // close the bottom sheet
+
+                        return;
+                    }
+
+                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
                 };
 
 
@@ -919,8 +938,6 @@ utopiasoftware.saveup.controller = {
                     $('#verify-account-choose-bank', $thisPage).material_select();
                     // initialise the character counter plugin
                     $('#verify-account-number', $thisPage).characterCounter();
-                    // initialise bottom sheet plugin
-                    $('#verify-account-bottom-sheet').modal();
                     // remove the progress indeterminate loader
                     $('.progress', $thisPage).remove();
                     // make the verify account form visible
@@ -1084,7 +1101,14 @@ utopiasoftware.saveup.controller = {
         moreActions: function(){
             // display the bottom sheets
             $('#verify-account-bottom-sheet').modal('open');
-        }
+        },
+
+
+        /**
+         * method is used to listen for clicks on the bottom sheet of the verify account page
+         * @param label
+         */
+        verifyAcctBottomSheetListItemClicked: function(label){}
 
     }
 };
