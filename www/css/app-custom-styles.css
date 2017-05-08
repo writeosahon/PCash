@@ -139,6 +139,7 @@ label[data-hint]:after {
 /** STYLE FOR BANK SELECT ELEMENT IN VERIFY ACCOUNT PAGE ENDS **/
 
 
+/** STYLE FOR VERIFY ACCOUNT BOTTOM SHEET IN VERIFY ACCOUNT PAGE BEGINS **/
 #verify-account-bottom-sheet.modal.bottom-sheet {
     max-height: 60%;
 }
@@ -148,3 +149,11 @@ label[data-hint]:after {
 #verify-account-bottom-sheet.modal .modal-content {
     padding: 0;
 }
+/** STYLE FOR VERIFY ACCOUNT BOTTOM SHEET IN VERIFY ACCOUNT PAGE ENDS **/
+
+
+/** STYLE FOR SIDE MENU PAGE BEGINS **/
+#side-menu-page .page--material__background {
+    background-color: #EDE7F6;
+}
+/** STYLE FOR SIDE MENU PAGE ENDS **/

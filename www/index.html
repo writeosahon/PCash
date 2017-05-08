@@ -65,43 +65,147 @@
     <ons-splitter-side id="side-menu" side="left" collapse>
         <ons-page id="side-menu-page">
             <ons-toolbar>
-                <div id="side-menu-username" class="center" style="font-size: 0.7em; text-transform: capitalize"></div>
+                <div class="center">
+                    <ons-icon icon="md-saveup-icon-saveup-badge"></ons-icon>
+                    <span id="side-menu-username" style="font-size: 0.8em; text-transform: capitalize"></span>
+                </div>
             </ons-toolbar>
-            <ons-list id="side-menu-list">
-                <ons-list-item data-laundrymart-listitem="referral id">
-                    <span style="color: #54c143;">My Referral ID: &nbsp;</span> <span id="side-menu-referral" style="color: #54c143;"></span>
-                </ons-list-item>
-                <ons-list-item data-laundrymart-listitem="home" tappable
-                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
-                    Home
-                </ons-list-item>
-                <ons-list-item data-laundrymart-listitem="settings" tappable
-                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
-                    Settings
-                </ons-list-item>
-                <ons-list-item data-laundrymart-listitem="laundry basket" tappable
-                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
-                    Laundry Basket
-                </ons-list-item>
-                <ons-list-item data-laundrymart-listitem="about" tappable
-                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
-                    About
-                </ons-list-item>
-                <ons-list-item data-laundrymart-listitem="contact us" tappable
-                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
-                    Contact Us
-                </ons-list-item>
-                <ons-list-item style="visibility: hidden" data-laundrymart-listitem="merchant inbox" tappable
-                               onclick="utopiasoftware.laundrymart.controller.sideMenuViewModel.sideMenuListClicked(this)">
-                    <div class="center">
-                        Merchant Inbox
+            <div class="row">
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('transfer cash')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center; padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="22px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Transfer Cash</div>
+                        </div>
                     </div>
-                    <div class="right">
-                        <ons-icon icon="ion-email-unread" style="color: red; visibility: hidden;"
-                                  class="list__item__icon laundrymart-merchant-message-notification"></ons-icon>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('verify account')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center; padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-verify-account2" size="22px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Verify Account</div>
+                        </div>
                     </div>
-                </ons-list-item>
-            </ons-list>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('join savings group')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-my-accounts" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                My Accounts</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('join savings group')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-my-cards" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                My Cards</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('join savings group')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center; padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-recipients" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Saved Recipients</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('join savings group')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-transaction-history" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Transactions History</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-settings-square" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Settings
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('intro')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-tv-list" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Intro
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('intro')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-saveup-icon-saveup-contactus" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                Contact Us
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="card" style="background-color: #d1c4e9;"
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('intro')">
+                        <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
+                        <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
+                            <ons-icon icon="md-info" size="20px"></ons-icon>
+                        </div>
+                        <div class="card-action" style="color: #311b92; text-align: center">
+                            <div style="font-weight: bold; font-size: 0.7em; min-height: 1.3em; max-height: 1.3em;">
+                                App Info
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </ons-page>
     </ons-splitter-side>
     <ons-splitter-content id="splitter-content"></ons-splitter-content>

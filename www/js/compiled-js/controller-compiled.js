@@ -164,6 +164,54 @@ utopiasoftware.saveup.controller = {
     appSecondaryMenuListClicked: function appSecondaryMenuListClicked(label) {},
 
     /**
+     * object is the view-model for the app side menu
+     */
+    sideMenuViewModel: {
+
+        /**
+         * method is used to listen for when the list
+         * items in the side menu is clicked
+         *
+         * @param label {String} label represents clicked list item in the side-menu
+         */
+        sideMenuListClicked: function sideMenuListClicked(label) {
+
+            if (label == "transfer cash") {
+                // 'transfer cash' button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().then(function () {
+                    $('#app-main-navigator').get(0).bringPageTop("transfer-cash-page.html", {}); // navigate to the transfer cash page
+                }).catch(function () {});
+
+                return;
+            }
+
+            if (label == "verify account") {
+                // 'verify account' button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().then(function () {
+                    $('#app-main-navigator').get(0).bringPageTop("verify-account-page.html", {}); // navigate to the verify account page
+                }).catch(function () {});
+
+                return;
+            }
+
+            if (label == "intro") {
+                // intro button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().then(function () {
+                    $('ons-splitter').get(0).content.load("onboarding-template"); // navigate to the onboarding presentation
+                }).catch(function () {});
+
+                return;
+            }
+        }
+    },
+
+    /**
      * object is view-model for sign-in page
      */
     signInPageViewModel: {
@@ -843,6 +891,14 @@ utopiasoftware.saveup.controller = {
 
                 // listen for the back button event
                 $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function () {
+
+                    // check if the side menu is open
+                    if ($('ons-splitter').get(0).left.isOpen) {
+                        // side menu open, so close it
+                        $('ons-splitter').get(0).left.close();
+                        return; // exit the method
+                    }
+
                     // check if the verify-account bottom sheet is open
                     if ($('#verify-account-bottom-sheet').data("saveupSheetState") === "open") {
                         // bottom sheet is open
