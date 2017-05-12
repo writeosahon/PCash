@@ -6189,7 +6189,7 @@ input[type=date] + label:after,
 input[type=datetime] + label:after,
 input[type=datetime-local] + label:after,
 input[type=tel]:not(.utopiasoftware-no-style) + label:after,
-input[type=number] + label:after,
+input[type=number]:not(.utopiasoftware-no-style) + label:after,
 input[type=search] + label:after,
 textarea.materialize-textarea + label:after {
   display: block;

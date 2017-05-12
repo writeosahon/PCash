@@ -39,6 +39,9 @@ utopiasoftware.saveup.model = {
 // register the event listener for when all Hybrid plugins and document DOM are ready
 document.addEventListener("app.Ready", utopiasoftware.saveup.controller.appReady, false);
 
+// register listener for when the Pin-Security-Check Prompt dialog is just about to be shown
+$(document).on("preshow", "#pin-security-check", utopiasoftware.saveup.controller.pinSecurityCheckPreShow);
+
 // listen for the initialisation of the Sign-In page
 $(document).on("init", "#sign-in-page", utopiasoftware.saveup.controller.signInPageViewModel.pageInit);
 
@@ -68,5 +71,8 @@ $(document).on("hide", "#verify-account-page", utopiasoftware.saveup.controller.
 
 // listen for the destroy event of the Verify Account page
 $(document).on("destroy", "#verify-account-page", utopiasoftware.saveup.controller.verifyAccountPageViewModel.pageDestroy);
+
+// listen for the initialisation of the My Cards page
+$(document).on("init", "#my-cards-page", utopiasoftware.saveup.controller.myCardsPageViewModel.pageInit);
 
 //# sourceMappingURL=model-compiled.js.map

@@ -119,7 +119,6 @@ utopiasoftware.saveup.controller = {
             navigator.splashscreen.hide();
         }).
         catch(function(){
-            console.log("GOT HERE 2");
             // provide an empty device uuid
             utopiasoftware.saveup.model.deviceUUID = "";
             // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
@@ -157,6 +156,15 @@ utopiasoftware.saveup.controller = {
 
         // show the specified popover element
         $(popOverQuerySelector).get(0).show(targetElem);
+    },
+
+
+    /**
+     * method is triggered just before pin-security-check prompt dialog is shown
+     */
+    pinSecurityCheckPreShow: function(){
+        // find all input elements and ensure they are not mistakingly styled by materialize.css
+        $('#pin-security-check').find('input').addClass("utopiasoftware-no-style");
     },
 
     /**
@@ -484,7 +492,7 @@ utopiasoftware.saveup.controller = {
         },
 
         /**
-         * method is triggered when sign-in form is successfully validated
+         * method is triggered when sign-up form is successfully validated
          */
         createAccountFormValidated: function(){
 
@@ -717,6 +725,33 @@ utopiasoftware.saveup.controller = {
             if(label == "verify account"){ // 'verify account' button was clicked
 
                 $('#app-main-navigator').get(0).pushPage("verify-account-page.html", {}); // navigate to the verify account page
+
+                return;
+            }
+
+            if(label == "my cards"){ // 'my cards' button was clicked
+
+                // ask user for secure PIN before proceeding. secure pin MUST match
+                ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                    messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                    'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                    'Please enter your PostCash Secure PIN to proceed</span></div>',
+                    cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                    submitOnEnter: true
+                }).
+                then(function(userInput){ // user has provided a secured PIN , now authenticate it
+                    if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                        $('#app-main-navigator').get(0).pushPage("my-cards-page.html", {}); // navigate to the my cards pages
+                    }
+                    else{ // inform user that security check failed/user authentication failed
+                        ons.notification.alert({title: "Security Check",
+                            messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                            'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
+                            cancelable: true
+                        });
+                    }
+                }).
+                catch(function(){});
 
                 return;
             }
@@ -1166,6 +1201,221 @@ utopiasoftware.saveup.controller = {
          * @param label
          */
         verifyAcctBottomSheetListItemClicked: function(label){}
+
+    },
+
+
+    /**
+     * object is view-model for my-cards-page page
+     */
+    myCardsPageViewModel: {
+
+
+        /**
+         * event is triggered when page is initialised
+         */
+        pageInit: function(event){
+
+            var $thisPage = $(event.target); // get the current page shown
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
+
+            // call the function used to initialise the app page if the app is fully loaded
+            loadPageOnAppReady();
+
+            //function is used to initialise the page if the app is fully ready for execution
+            function loadPageOnAppReady(){
+                // check to see if onsen is ready and if all app loading has been completed
+                if(!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false){
+                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
+                    return;
+                }
+
+                // listen for the back button event
+                $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
+
+                    // check if the side menu is open
+                    if($('ons-splitter').get(0).left.isOpen){ // side menu open, so close it
+                        $('ons-splitter').get(0).left.close();
+                        return; // exit the method
+                    }
+
+                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                };
+
+                // register listener for the pull-to-refresh widget
+                $('#my-cards-pull-hook', $thisPage).on("changestate", function(event){
+
+                    // check the state of the pull-to-refresh widget
+                    switch (event.originalEvent.state){
+                        case 'initial':
+                            // update the displayed icon
+                            $('#my-cards-pull-hook-fab', event.originalEvent.pullHook).
+                            html('<ons-icon icon="fa-long-arrow-down" size="24px"></ons-icon>');
+                            break;
+
+                        case 'preaction':
+
+                            $('#my-cards-pull-hook-fab', event.originalEvent.pullHook).
+                            html('<ons-icon icon="fa-long-arrow-up" size="24px"></ons-icon>');
+                            break;
+
+                        case 'action':
+                            $('#my-cards-pull-hook-fab', event.originalEvent.pullHook).
+                            html('<ons-icon icon="fa-repeat" size="24px" spin></ons-icon>');
+                            break;
+                    }
+                });
+
+                // add method to handle the loading action of the pull-to-refresh widget
+                $('#my-cards-pull-hook', $thisPage).get(0).onAction = function(loadingDone){
+                    // disable pull-to-refresh widget till loading is done
+                    $('#my-cards-pull-hook', $thisPage).attr("disabled", true);
+
+                    // load the card data from the device secure store
+                    utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
+                    then(function(cardsArray){ // the cards array collection has been returned
+                        if(cardsArray.length == 0){ // there are no card data available
+                            // remove the page preloader progress bar
+                            $('.progress', $thisPage).remove();
+                            // display the help button
+                            $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                            // enable the pull-to-refresh widget for the page
+                            $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                            // display a message to inform user that there are no cards available
+                            $('#my-cards-page-message', $thisPage).css("display", "block");
+                            // hide the error message from displaying
+                            $('#my-cards-page-error', $thisPage).css("display", "none");
+                            // hide the my-cards-list from display
+                            $('#my-cards-list', $thisPage).css("display", "none");
+                            // enable the 'Add Card' button
+                            $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
+                            // flag that loading is done
+                            loadingDone();
+                        }
+                        else{ // there are card data available
+                            // remove the page preloader progress bar
+                            $('.progress', $thisPage).remove();
+                            // display the help button
+                            $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                            // enable the pull-to-refresh widget for the page
+                            $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                            // hide message to inform user that there are no cards available
+                            $('#my-cards-page-message', $thisPage).css("display", "none");
+                            // hide the error message from displaying
+                            $('#my-cards-page-error', $thisPage).css("display", "none");
+                            // display the my-cards-list
+                            $('#my-cards-list', $thisPage).css("display", "block");
+                            // enable the 'Add Card' button
+                            $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
+                            // flag that loading is done
+                            loadingDone();
+                        }
+                    }).
+                    catch(function(){ // an error occurred, so display the error message to the user
+                        // remove the page preloader progress bar
+                        $('.progress', $thisPage).remove();
+                        // display the help button
+                        $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                        // enable the pull-to-refresh widget for the page
+                        $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                        // hide a message to inform user that there are no cards available
+                        $('#my-cards-page-message', $thisPage).css("display", "none");
+                        // display the error message to user
+                        $('#my-cards-page-error', $thisPage).css("display", "block");
+                        // hide the my-cards-list from display
+                        $('#my-cards-list', $thisPage).css("display", "none");
+                        // disable the 'Add Card' button
+                        $('#my-cards-add-card-button', $thisPage).attr("disabled", true);
+                        // flag that loading is done
+                        loadingDone();
+                    });
+                };
+
+                // load the card data from the device secure store
+                utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
+                then(function(cardsArray){ // the cards array collection has been returned
+                    if(cardsArray.length == 0){ // there are no card data available
+                        // remove the page preloader progress bar
+                        $('.progress', $thisPage).remove();
+                        // display the help button
+                        $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                        // enable the pull-to-refresh widget for the page
+                        $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                        // display a message to inform user that there are no cards available
+                        $('#my-cards-page-message', $thisPage).css("display", "block");
+                        // hide the error message from displaying
+                        $('#my-cards-page-error', $thisPage).css("display", "none");
+                        // hide the my-cards-list from display
+                        $('#my-cards-list', $thisPage).css("display", "none");
+                        // enable the 'Add Card' button
+                        $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
+                    }
+                    else{ // there are card data available
+                        // remove the page preloader progress bar
+                        $('.progress', $thisPage).remove();
+                        // display the help button
+                        $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                        // enable the pull-to-refresh widget for the page
+                        $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                        // hide message to inform user that there are no cards available
+                        $('#my-cards-page-message', $thisPage).css("display", "none");
+                        // hide the error message from displaying
+                        $('#my-cards-page-error', $thisPage).css("display", "none");
+                        // display the my-cards-list
+                        $('#my-cards-list', $thisPage).css("display", "block");
+                        // enable the 'Add Card' button
+                        $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
+                    }
+                }).
+                catch(function(){ // an error occurred, so display the error message to the user
+                    // remove the page preloader progress bar
+                    $('.progress', $thisPage).remove();
+                    // display the help button
+                    $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                    // enable the pull-to-refresh widget for the page
+                    $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                    // hide a message to inform user that there are no cards available
+                    $('#my-cards-page-message', $thisPage).css("display", "none");
+                    // display the error message to user
+                    $('#my-cards-page-error', $thisPage).css("display", "block");
+                    // hide the my-cards-list from display
+                    $('#my-cards-list', $thisPage).css("display", "none");
+                    // disable the 'Add Card' button
+                    $('#my-cards-add-card-button', $thisPage).attr("disabled", true);
+                });
+
+                // hide the loader
+                $('#loader-modal').get(0).hide();
+
+            }
+
+        },
+
+
+        /**
+         * method is used to load the user's financial cards ("My Cards") data from
+         * the device secure storage
+         * @return {Promise} method returns a Promise object that resolves with
+         * the retrieved cards as an array OR rejects when the cards cannot be retrieved.
+         *
+         * NOTE: the Promise object resolve with an empty array when no cards are available
+         */
+        loadCardData: function(){
+
+            return new Promise(function(resolve, reject){
+                // dummy result
+                setTimeout(function(){
+                    resolve([{}]);
+                }, 3000);
+            });
+        },
+
+
+        /**
+         * method is triggered when the 'Add Card' button is clicked
+         */
+        addCardButtonClicked: function(){}
 
     }
 };

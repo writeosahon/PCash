@@ -157,3 +157,35 @@ label[data-hint]:after {
     background-color: #EDE7F6;
 }
 /** STYLE FOR SIDE MENU PAGE ENDS **/
+
+
+/** STYLE FOR PIN SECURITY CHECK PROMPT DIALOG BEGINS **/
+#pin-security-check input{
+     -webkit-text-security: disc;
+     text-align: center;
+     color: #311b92;
+ }
+/** STYLE FOR PIN SECURITY CHECK PROMPT DIALOG ENDS **/
+
+
+/** STYLE FOR MY CARDS PAGE BEGINS **/
+#my-cards-help-1 {
+    background-color: #82b1ff;
+}
+#my-cards-page-help-popover,
+#my-cards-page-help-popover .popover__content {
+    background-color: #82b1ff;
+}
+#my-cards-page-help-popover .popover__arrow,
+#my-cards-page-help-popover .popover--right__arrow {
+    background-image: linear-gradient(45deg, #82b1ff, #82b1ff 50%, #82b1ff 50%);
+}
+#my-cards-add-card-button {
+    background-color: rgb(179, 136, 255);
+}
+#my-cards-pull-hook-fab ons-icon[spin] {
+    -webkit-animation: ons-icon-spin 0.8s infinite linear;
+    -moz-animation: ons-icon-spin 0.8s infinite linear;
+    animation: ons-icon-spin 0.8s infinite linear;
+}
+/** STYLE FOR MY CARDS PAGE ENDS **/
