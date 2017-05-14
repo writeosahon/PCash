@@ -133,10 +133,14 @@ label[data-hint]:after {
 #verify-account-page .page--material__content .dropdown-content li.active.selected > a {
     color: #ffffff;
 }
+/** STYLE FOR BANK SELECT ELEMENT IN VERIFY ACCOUNT PAGE ENDS **/
+
+
+/** STYLE FOR ONS-LIST ELEMENT IN VERIFY ACCOUNT PAGE BEGINS **/
 #verify-account-page .page--material__content ons-list{
     min-height: 16em !important;
 }
-/** STYLE FOR BANK SELECT ELEMENT IN VERIFY ACCOUNT PAGE ENDS **/
+/** STYLE FOR ONS-LIST ELEMENT IN VERIFY ACCOUNT PAGE ENDS **/
 
 
 /** STYLE FOR VERIFY ACCOUNT BOTTOM SHEET IN VERIFY ACCOUNT PAGE BEGINS **/
@@ -189,3 +193,40 @@ label[data-hint]:after {
     animation: ons-icon-spin 0.8s infinite linear;
 }
 /** STYLE FOR MY CARDS PAGE ENDS **/
+
+
+/** STYLE FOR ADD CARD PAGE BEGINS **/
+#add-card-page .page--material__content {
+    position: absolute;
+    top: 0;
+}
+/** STYLE FOR ADD CARD PAGE ENDS **/
+
+
+/** STYLE FOR SELECT ELEMENTS IN ADD CARD PAGE BEGINS **/
+#add-card-page .page--material__content .dropdown-content{
+    max-height: 200px !important;
+    overflow-y: scroll;
+    background-color: rgb(237,231,246);
+}
+#add-card-page .page--material__content .dropdown-content li:hover,
+#add-card-page .page--material__content .dropdown-content li.active,
+#add-card-page .page--material__content .dropdown-content li.selected {
+    background-color: #b388ff;
+}
+#add-card-page .page--material__content .dropdown-content li.active.selected {
+    background-color: #b388ff;
+}
+#add-card-page .page--material__content .dropdown-content li:hover > span,
+#add-card-page .page--material__content .dropdown-content li.active > span,
+#add-card-page .page--material__content .dropdown-content li.selected > span,
+#add-card-page .page--material__content .dropdown-content li:hover > a,
+#add-card-page .page--material__content .dropdown-content li.active > a,
+#add-card-page .page--material__content .dropdown-content li.selected > a {
+    color: #ffffff;
+}
+#add-card-page .page--material__content .dropdown-content li.active.selected > span,
+#add-card-page .page--material__content .dropdown-content li.active.selected > a {
+    color: #ffffff;
+}
+/** STYLE FOR SELECT ELEMENTS IN ADD CARD PAGE ENDS **/

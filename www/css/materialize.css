@@ -5893,7 +5893,7 @@ select:focus {
 
 button:focus {
   outline: none;
-  background-color: #311b92;
+  /**background-color: #311b92;**/ /**changed by utopia software **/
 }
 
 label {

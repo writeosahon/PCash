@@ -211,6 +211,37 @@ utopiasoftware.saveup.controller = {
                 return;
             }
 
+            if(label == "my cards"){ // 'my cards' button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().
+                then(function(){
+                    // ask user for secure PIN before proceeding. secure pin MUST match
+                    return ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                        messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                        'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                        'Please enter your PostCash Secure PIN to proceed</span></div>',
+                        cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                        submitOnEnter: true
+                    });
+                }).
+                then(function(userInput){ // user has provided a secured PIN , now authenticate it
+                    if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                        $('#app-main-navigator').get(0).bringPageTop("my-cards-page.html", {}); // navigate to the specified page
+                    }
+                    else{ // inform user that security check failed/user authentication failed
+                        ons.notification.alert({title: "Security Check",
+                            messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                            'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
+                            cancelable: true
+                        });
+                    }
+                }).
+                catch(function(){});
+
+                return;
+            }
+
             if(label == "intro"){ // intro button was clicked
 
                 // close the side menu
@@ -369,6 +400,7 @@ utopiasoftware.saveup.controller = {
                     cancelable: false
                 });
             }
+
         },
 
         /**
@@ -1009,22 +1041,20 @@ utopiasoftware.saveup.controller = {
                 utopiasoftware.saveup.controller.verifyAccountPageViewModel.formValidator.on('form:success',
                     utopiasoftware.saveup.controller.verifyAccountPageViewModel.verifyAccountFormValidated);
 
-                // retrieve the list of banks
-                Promise.resolve($.ajax(
-                    {
-                        url: "banks.json",
-                        type: "get",
-                        dataType: "json",
-                        timeout: 240000 // wait for 4 minutes before timeout of request
+                // retrieve the sorted array of banks
+                Promise.resolve(utopiasoftware.saveup.sortBanksData()).
+                then(function(bankArrayData){
+                    var optionTags = ""; // string to hold all created option tags
 
+                    // get each object in bank array and use it to create the select element
+                    for(var index = 0; index < bankArrayData.length; index++){
+                        var bankObject = bankArrayData[index]; // get the bank object
+                        // update the banks select element option tags
+                        for(var prop in bankObject){
+                            optionTags += '<option value="' + prop + '">' + bankObject[prop] + '</option>';
+                        }
                     }
-                )).
-                then(function(bankData){
-                    var optionTags = "";
-                    // update the banks select element
-                    for(var prop in bankData){
-                        optionTags += '<option value="' + prop + '">' + bankData[prop] + '</option>';
-                    }
+
                     $('#verify-account-choose-bank', $thisPage).append(optionTags); // append all the created option tags
                     // initilise the select element
                     $('#verify-account-choose-bank', $thisPage).material_select();
@@ -1415,7 +1445,252 @@ utopiasoftware.saveup.controller = {
         /**
          * method is triggered when the 'Add Card' button is clicked
          */
-        addCardButtonClicked: function(){}
+        addCardButtonClicked: function(){
+            $('#app-main-navigator').get(0).pushPage("add-card-page.html", {
+                animation: "lift-md"
+            });
+        }
+
+    },
+
+    /**
+     * object is view-model for add-card page
+     */
+    addCardPageViewModel: {
+
+        /**
+         * used to hold the parsley form validation object for the page
+         */
+        formValidator: null,
+
+        /**
+         * property used to keep track of the immediate last scroll position of the
+         * page content
+         */
+        previousScrollPosition: 0,
+
+        /**
+         * property used to keep track of the current scroll position of the
+         * page content
+         */
+        currentScrollPosition: 0,
+
+        /**
+         * event is triggered when page is initialised
+         */
+        pageInit: function(event){
+
+            var $thisPage = $(event.target); // get the current page shown
+            // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+            $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
+            // disable the swipeable feature for the app splitter
+            $('ons-splitter-side').removeAttr("swipeable", true);
+
+            // reset the previous & current scroll positions of the page contents
+            utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition = 0;
+            utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition = 0;
+
+            // call the function used to initialise the app page if the app is fully loaded
+            loadPageOnAppReady();
+
+            //function is used to initialise the page if the app is fully ready for execution
+            function loadPageOnAppReady(){
+                // check to see if onsen is ready and if all app loading has been completed
+                if(!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false){
+                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
+                    return;
+                }
+
+
+                // listen for the back button event
+                $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
+
+                    // check if the side menu is open
+                    if($('ons-splitter').get(0).left.isOpen){ // side menu open, so close it
+                        $('ons-splitter').get(0).left.close();
+                        return; // exit the method
+                    }
+
+                    $('#app-main-navigator').get(0).popPage();
+                };
+
+                // listen for the scroll event of the page content
+                $('#add-card-page .page__content').on("scroll", utopiasoftware.saveup.controller.addCardPageViewModel.pageContentScrolled);
+
+                // initialise the form validation
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator = $('#add-card-form').parsley();
+
+                // attach listener for the 'save' button click
+                $('#add-card-save-button').get(0).onclick = function(){
+                    // run the validation method for the create account form
+                    utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.whenValidate();
+                };
+
+                // listen for log in form field validation failure event
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('field:error', function(fieldInstance) {
+                    // get the element that triggered the field validation error and use it to display tooltip
+                    // display tooltip
+                    $(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                    $(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint", fieldInstance.getErrorsMessages()[0]);
+                });
+
+                // listen for form field validation success event
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('field:success', function(fieldInstance) {
+                    // remove tooltip from element
+                    $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                    $(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");
+                });
+
+                // listen for form validation success
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('form:success',
+                    utopiasoftware.saveup.controller.addCardPageViewModel.addCardFormValidated);
+
+                /** dynamically create the contents of the various select elements **/
+                var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
+                var yearOption = (new Date()).getFullYear(); // get the current year
+                // add current year to the options tag
+                optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
+
+                // add 3 more years to the option tags for the Card Expiry Year
+                for(var index = 0; index < 3; index++){
+                    // increase the yearOption by 1
+                    yearOption += 1;
+                    // add current year to the options tag
+                    optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
+                }
+
+                $('#add-card-expiry-year', $thisPage).append(optionTags); // append all the created option tags
+
+                // initialise all the select element
+                $('select', $thisPage).material_select();
+                // initialise the character counter plugin
+                $('#add-card-card-number', $thisPage).characterCounter();
+                // remove the progress indeterminate loader
+                $('.progress', $thisPage).remove();
+                // make the add card form visible
+                $('#add-card-form', $thisPage).css("display", "block");
+                // enable the 'Cancel' & 'Save' buttons
+                $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
+                // hide the loader
+                $('#loader-modal').get(0).hide();
+
+            }
+
+        },
+
+        /**
+         * method is triggered when the create-account page is hidden
+         * @param event
+         */
+        pageHide: (event) => {
+            try {
+                // remove any tooltip being displayed on all forms on the page
+                $('#add-card-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#add-card-page [data-hint]').removeAttr("data-hint");
+                // reset the form validator object on the page
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
+            }
+            catch(err){}
+        },
+
+        /**
+         * method is triggered when the sign-in page is destroyed
+         * @param event
+         */
+        pageDestroy: (event) => {
+            try{
+                // remove any tooltip being displayed on all forms on the page
+                $('#add-card-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#add-card-page [data-hint]').removeAttr("data-hint");
+                // destroy the form validator objects on the page
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.destroy();
+                // destroy the form inputs which need to be destroyed
+                $('#add-card-page select').material_select('destroy');
+                $('#add-card-page #add-card-card-number').off();
+                $('#add-card-page #add-card-card-number').removeData();
+            }
+            catch(err){}
+        },
+
+        /**
+         * method is triggered when add card form is successfully validated
+         */
+        addCardFormValidated: function(){
+
+            // display the loader message to indicate that account is being verified;
+            $('#loader-modal-message').html("Saving New Card...");
+            $('#loader-modal').get(0).show(); // show loader
+        },
+
+
+        /**
+         * method is used to specifically reset the verified account display used
+         * when an account has been previously verified
+         *
+         */
+        resetVerifiedAcctDisplay: function(){
+            // hide all account verification information
+            $('#verify-account-form .verify-account-success').css("display", "none");
+            $('#verify-account-form .verify-account-success').removeClass("scale-in");
+            $('#verify-account-form .verify-account-failed').css("display", "none");
+            $('#verify-account-form .verify-account-failed').removeClass("scale-in");
+        },
+
+        /**
+         * method is used to listen for scroll event of the page content
+         *
+         * @param event
+         */
+        pageContentScrolled: function(event){
+
+            // set the current scrolltop position
+            utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition = $(this).scrollTop();
+
+            if(utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition >
+                utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition){ // user scrolled up
+                // set the current position as previous position
+                utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition =
+                    utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition;
+
+                // check if the header image left after scrolling is <= height of page toolbar
+                if((140 - utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition) <= 56){
+                    // the header image left after scrolling is <= height of page toolbar
+                    // check if the toolbar for the page has already been made opaque
+                    if(this.isToolBarOpaque != true){ // toolbar has not been made opaque
+
+                        $('#add-card-page ons-toolbar').removeClass("toolbar--transparent"); // make the toolbar opaque
+                        // also pin the help header on the page just below the toolbar
+                        $('#add-card-page ons-list-header').css(
+                            {"position": "fixed", "top": "56px", "width": "100%"});
+                        this.isToolBarOpaque = true; // flag that toolbar has been made opaque
+                    }
+                }
+
+                return;
+            }
+
+            if(utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition <
+                utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition){ // user scrolled down
+                // set the current position as previous position
+                utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition =
+                    utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition;
+
+                // check if the header image left after scrolling is > height of page toolbar
+                if((140 - utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition) > 56){
+                    // the header image left after scrolling is > height of page toolbar
+                    // check if the toolbar for the page has already been made transparent
+                    if(this.isToolBarOpaque == true){ // toolbar has NOT been made transparent
+
+                        $('#add-card-page ons-toolbar').addClass("toolbar--transparent"); // make the toolbar transparent
+                        // also unpin the help header on the page from just below the toolbar
+                        $('#add-card-page ons-list-header').css({"position": "static", "top": "56px"});
+                        this.isToolBarOpaque = false; // flag that toolbar has been made transparent
+                    }
+                }
+
+                return;
+            }
+        }
 
     }
 };
