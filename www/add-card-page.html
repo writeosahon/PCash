@@ -71,14 +71,17 @@
                 </div>
                 <div class="col s8 input-field">
                     <input id="add-card-card-number" type="number" required
-                           data-length="16"
+                           data-length="20"
                            data-parsley-type="digits"
                            data-parsley-minlength="16"
-                           data-parsley-maxlength="16"
+                           data-parsley-maxlength="20"
+                           data-parsley-remote data-parsley-remote-validator='financialcardcheck'
+                           data-parsley-remote-options='{ "type": "GET", "dataType": "text", "timeout": 240000}'
                            data-parsley-required-message="Card Number is required"
                            data-parsley-digits-message="Card Number must contain only numbers"
-                           data-parsley-minlength-message="Card Number must be 16 digits"
-                           data-parsley-maxlength-message="Card Number must be 16 digits">
+                           data-parsley-minlength-message="Card Number must be at least 16 digits"
+                           data-parsley-maxlength-message="Card Number cannot be more than 20 digits"
+                           data-parsley-financialcardcheck-message="Card unknown or invalid">
                     <label for="add-card-card-number" class="hint--top">Card Number</label>
                 </div>
             </div>

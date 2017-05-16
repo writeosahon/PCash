@@ -53,6 +53,11 @@ utopiasoftware.saveup.controller = {
             });
         });
 
+        /** ADD CUSTOM VALIDATORS FOR PARSLEY HERE **/
+        Parsley.addAsyncValidator("financialcardcheck", utopiasoftware.saveup.controller.addCardPageViewModel.financialCardValidator, utopiasoftware.saveup.paystackObject.gateway + 'decision/bin/{value}');
+
+        /** CUSTOM VALIDATORS FOR PARSLEY ENDS **/
+
         // add listener for when the Internet network connection is offline
         document.addEventListener("offline", function () {
 
@@ -1415,6 +1420,19 @@ utopiasoftware.saveup.controller = {
         currentScrollPosition: 0,
 
         /**
+         * property stores the brand of the new financial card being added.
+         * currently, Possible values are- Mastercard, Visa or Verve.
+         * Default value is an empty string
+         */
+        newCardBrand: "",
+
+        /**
+         * property holds the 'general' locale of the new financial card being added.
+         * currently, possible values are - local or international
+         */
+        newCardLocale: "",
+
+        /**
          * event is triggered when page is initialised
          */
         pageInit: function pageInit(event) {
@@ -1428,6 +1446,10 @@ utopiasoftware.saveup.controller = {
             // reset the previous & current scroll positions of the page contents
             utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition = 0;
             utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition = 0;
+
+            // reset the new card brand and card general locale
+            utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "";
+            utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "";
 
             // call the function used to initialise the app page if the app is fully loaded
             loadPageOnAppReady();
@@ -1465,7 +1487,13 @@ utopiasoftware.saveup.controller = {
                     utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.whenValidate();
                 };
 
-                // listen for log in form field validation failure event
+                // listen for form field validation failure event
+                utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('field:ajaxoptions', function (fieldInstance, ajaxOptions) {
+                    // edit the ajax options object to include the necessary authorization header
+                    ajaxOptions.headers = { "Authorization": utopiasoftware.saveup.paystackObject.key.secret };
+                });
+
+                // listen for form field validation failure event
                 utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('field:error', function (fieldInstance) {
                     // get the element that triggered the field validation error and use it to display tooltip
                     // display tooltip
@@ -1622,6 +1650,65 @@ utopiasoftware.saveup.controller = {
 
                 return;
             }
+        },
+
+        /**
+         * custom parsley validator for financial cards (including visa, master, verve)
+         *
+         * @param jqxhr {jqueryXhr}
+         */
+        financialCardValidator: function financialCardValidator(jqxhr) {
+            var serverResponse = ""; // holds the server response
+
+            // check the validator response
+            if (jqxhr.status != 200) {
+                // request was NOT success
+                return false;
+            }
+
+            // convert the server response to json
+            serverResponse = JSON.parse(jqxhr.responseText.trim());
+
+            if (serverResponse.status != true) {
+                // the server api response was NOT successful
+                return false;
+            }
+
+            if (serverResponse.data.brand == "" || serverResponse.data.brand == "Unknown") {
+                // card could not be identified
+                return false;
+            }
+
+            // get the brand of the new card
+            if (serverResponse.data.brand.indexOf("Master") >= 0) {
+                // brand is a Mastercard
+                // set new card brand as mastercard
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Mastercard";
+            }
+            if (serverResponse.data.brand.indexOf("Visa") >= 0) {
+                // brand is a Visa
+                // set new card brand as visa
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Visa";
+            }
+            if (serverResponse.data.brand.indexOf("Verve") >= 0) {
+                // brand is a Verve
+                // set new card brand as visa
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Verve";
+            }
+
+            // get the general locale of the new card
+            if (serverResponse.data.country_name.indexOf("Nigeria") >= 0) {
+                // card is local
+                // set the new card locale
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "local";
+            }
+            if (serverResponse.data.country_name.indexOf("Nigeria") < 0) {
+                // card is international
+                // set the new card locale
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "international";
+            }
+
+            return true; // validation successful
         }
 
     }
