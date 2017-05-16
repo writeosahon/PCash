@@ -1554,7 +1554,7 @@ utopiasoftware.saveup.controller = {
                 utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('field:ajaxoptions',
                     function(fieldInstance, ajaxOptions){
                         // edit the ajax options object to include the necessary authorization header
-                        ajaxOptions.headers = {"Authorization": utopiasoftware.saveup.paystackObject.key.secret};
+                        ajaxOptions.headers = {"Authorization":"Bearer " + utopiasoftware.saveup.paystackObject.key.secret};
                     });
 
                 // listen for form field validation failure event
