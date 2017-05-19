@@ -265,10 +265,10 @@ label[data-hint]:after {
     }
 }
 .rotating-infinite {
-    -webkit-animation: rotating 2s ease infinite;
-    -moz-animation: rotating 2s ease infinite;
-    -ms-animation: rotating 2s ease infinite;
-    -o-animation: rotating 2s ease infinite;
-    animation: rotating 2s ease infinite;
+    -webkit-animation: rotating 1.5s ease infinite;
+    -moz-animation: rotating 1.5s ease infinite;
+    -ms-animation: rotating 1.5s ease infinite;
+    -o-animation: rotating 1.5s ease infinite;
+    animation: rotating 1.5s ease infinite;
 }
 /** STYLE FOR ROTATING ANIMATION FOR ELEMENTS ENDS **/
