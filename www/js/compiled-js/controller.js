@@ -1730,9 +1730,9 @@ utopiasoftware.saveup.controller = {
          */
         addCardFormValidated: function(){
 
-            // display the loader message to indicate that account is being verified;
-            $('#loader-modal-message').html("Saving New Card...");
-            $('#loader-modal').get(0).show(); // show loader
+            // display the secure storage modal to indicate that card is being securely stored
+            $('#secure-storage-modal .modal-message').html("Storing Card on Device...");
+            $('#secure-storage-modal').get(0).show(); // show loader
         },
 
 
