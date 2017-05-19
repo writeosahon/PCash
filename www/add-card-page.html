@@ -60,7 +60,9 @@
                 </div>
                 <div class="col s10 input-field">
                     <input id="add-card-alias" type="text" placeholder="Nickname for card" required
-                           data-parsley-required-message="a card alias is required">
+                           data-parsley-required-message="a card alias is required"
+                           onfocus="$('#add-card-page ons-list-header').css({'display': 'none'});"
+                           onblur="$('#add-card-page ons-list-header').css({'display': 'block'});">
                     <label for="add-card-alias" class="active hint--top">Card Alias</label>
                 </div>
             </div>
@@ -75,15 +77,32 @@
                            data-parsley-type="digits"
                            data-parsley-minlength="16"
                            data-parsley-maxlength="20"
-                           data-parsley-remote data-parsley-remote-validator='financialcardcheck'
+                           data-parsley-remote
                            data-parsley-remote-options='{ "type": "GET", "dataType": "text", "timeout": 240000}'
                            data-parsley-required-message="Card Number is required"
                            data-parsley-digits-message="Card Number must contain only numbers"
                            data-parsley-minlength-message="Card Number must be at least 16 digits"
                            data-parsley-maxlength-message="Card Number cannot be more than 20 digits"
-                           data-parsley-financialcardcheck-message="Card unknown or invalid">
+                           data-parsley-remote-message="Card Number unknown or invalid"
+                    onfocus="$('#add-card-page ons-list-header').css({'display': 'none'});"
+                           onblur="$('#add-card-page ons-list-header').css({'display': 'block'});">
                     <label for="add-card-card-number" class="hint--top">Card Number</label>
                 </div>
+                <div id="add-card-number-validation-loading" class="col s12" style="text-align: center; display: none">
+                    <ons-icon icon="ion-load-d" size="32px" style="color: #311b92;" spin></ons-icon>
+                </div>
+                <div class="col s12" style="text-align: center; padding-top: 1em;">
+                    <input id="add-card-verify-card" type="checkbox" value="verified"
+                           onclick="utopiasoftware.saveup.controller.addCardPageViewModel.isCardNumberValidated(this);">
+                    <label for="add-card-verify-card">Verify Card Number</label>
+                </div>
+            </div>
+
+            <div id="add-card-image-container" class="row" style="display: none">
+                <div class="col s4">
+                    <img id="add-card-image" src="css/app-images/blank.png" style="width: 100%; height: auto; vertical-align: bottom">
+                </div>
+                <div id="add-card-image-type" class="col s8">Visa (International)</div>
             </div>
 
             <div class="row">
@@ -98,7 +117,9 @@
                            data-parsley-required-message="CVV is required"
                            data-parsley-digits-message="CVV must contain only numbers"
                            data-parsley-minlength-message="CVV must be 3 digits"
-                           data-parsley-maxlength-message="CVV must be 3 digits">
+                           data-parsley-maxlength-message="CVV must be 3 digits"
+                           onfocus="$('#add-card-page ons-list-header').css({'display': 'none'});"
+                           onblur="$('#add-card-page ons-list-header').css({'display': 'block'});">
                     <label for="add-card-cvv" class="hint--top">CVV</label>
                 </div>
             </div>
@@ -150,7 +171,7 @@
             </div>
 
             <div class="row"><!-- this row is just meant to provide the extra height needed to display the various select options -->
-                <div class="col s12" style="height: 210px;"></div>
+                <div class="col s12" style="height: 100px;"></div>
             </div>
         </ons-list>
     </form>

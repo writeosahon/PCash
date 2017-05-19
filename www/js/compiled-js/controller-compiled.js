@@ -1424,13 +1424,15 @@ utopiasoftware.saveup.controller = {
          * currently, Possible values are- Mastercard, Visa or Verve.
          * Default value is an empty string
          */
-        newCardBrand: "",
+        newCardBrand: "Unknown",
 
         /**
          * property holds the 'general' locale of the new financial card being added.
          * currently, possible values are - local or international
          */
-        newCardLocale: "",
+        newCardLocale: "Unknown",
+
+        cardImageRandomNum: null,
 
         /**
          * event is triggered when page is initialised
@@ -1448,8 +1450,13 @@ utopiasoftware.saveup.controller = {
             utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition = 0;
 
             // reset the new card brand and card general locale
-            utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "";
-            utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "";
+            utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+            utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+
+            // generate the random number used to display the financial card image
+            var randomGen = new Random(Random.engines.nativeMath); // random number generator
+            // generate the random number
+            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum = randomGen.integer(1, 3);
 
             // call the function used to initialise the app page if the app is fully loaded
             loadPageOnAppReady();
@@ -1491,6 +1498,8 @@ utopiasoftware.saveup.controller = {
                 utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('field:ajaxoptions', function (fieldInstance, ajaxOptions) {
                     // edit the ajax options object to include the necessary authorization header
                     ajaxOptions.headers = { "Authorization": "Bearer " + utopiasoftware.saveup.paystackObject.key.secret };
+                    // display the loading icon for card number validation
+                    $('#add-card-number-validation-loading', $thisPage).css("display", "block");
                 });
 
                 // listen for form field validation failure event
@@ -1499,6 +1508,14 @@ utopiasoftware.saveup.controller = {
                     // display tooltip
                     $(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
                     $(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint", fieldInstance.getErrorsMessages()[0]);
+                    // check if the element that triggered that validation error was the card number input
+                    if ($(fieldInstance.$element).is('#add-card-card-number')) {
+                        // it is the card number input
+                        // hide the loading icon
+                        $('#add-card-number-validation-loading', $thisPage).css("display", "none");
+                        // hide the card image row
+                        $('#add-card-image-container', $thisPage).css("display", "none");
+                    }
                 });
 
                 // listen for form field validation success event
@@ -1506,6 +1523,62 @@ utopiasoftware.saveup.controller = {
                     // remove tooltip from element
                     $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
                     $(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");
+                    // check if the element that triggered that validation success was the card number input
+                    if ($(fieldInstance.$element).is('#add-card-card-number')) {
+                        // it is the card number input
+                        // hide the loading icon
+                        $('#add-card-number-validation-loading', $thisPage).css("display", "none");
+                        // check if the user request for remote card number validation
+                        if ($('#add-card-verify-card').is(":checked")) {
+                            //user asked for remote validation
+                            // display an image to indicate the card type which the card number verified based on card brand
+                            switch (utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand) {
+                                case "Mastercard":
+                                    if (utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale == "local") {
+                                        // this is a local mastercard
+                                        $('#add-card-image').attr("src", "css/app-images/mastercard-local-" + utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png");
+                                        // update the card type display name
+                                        $('#add-card-image-type').html("Mastercard");
+                                    } else {
+                                        // this is a international mastercard
+                                        $('#add-card-image').attr("src", "css/app-images/mastercard-international-" + utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png");
+                                        // update the card type display name
+                                        $('#add-card-image-type').html("Mastercard (International)");
+                                    }
+                                    break;
+
+                                case "Visa":
+                                    if (utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale == "local") {
+                                        // this is a local visa
+                                        $('#add-card-image').attr("src", "css/app-images/visacard-local-" + utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png");
+                                        // update the card type display name
+                                        $('#add-card-image-type').html("Visa");
+                                    } else {
+                                        // this is a international Visa card
+                                        $('#add-card-image').attr("src", "css/app-images/visacard-international-" + utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png");
+                                        // update the card type display name
+                                        $('#add-card-image-type').html("Visa (International)");
+                                    }
+                                    break;
+
+                                case "Verve":
+                                    if (utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale == "local") {
+                                        // this is a local verve
+                                        $('#add-card-image').attr("src", "css/app-images/verve-local-" + utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png");
+                                        // update the card type display name
+                                        $('#add-card-image-type').html("Verve");
+                                    }
+                                    break;
+                            }
+
+                            // display the card image row
+                            $('#add-card-image-container', $thisPage).css("display", "block");
+                        } else {
+                            // user did not ask for remote card validation
+                            // hide the card image row
+                            $('#add-card-image-container', $thisPage).css("display", "none");
+                        }
+                    }
                 });
 
                 // listen for form validation success
@@ -1585,16 +1658,21 @@ utopiasoftware.saveup.controller = {
         },
 
         /**
-         * method is used to specifically reset the verified account display used
-         * when an account has been previously verified
-         *
+         * method is used to check if user has asked for card number to be validated.
+         * It sets or remove the appropriate attributes need to activate or deactivate
+         * remote card validation
          */
-        resetVerifiedAcctDisplay: function resetVerifiedAcctDisplay() {
-            // hide all account verification information
-            $('#verify-account-form .verify-account-success').css("display", "none");
-            $('#verify-account-form .verify-account-success').removeClass("scale-in");
-            $('#verify-account-form .verify-account-failed').css("display", "none");
-            $('#verify-account-form .verify-account-failed').removeClass("scale-in");
+        isCardNumberValidated: function isCardNumberValidated(checkElem) {
+            // check if user wants card number validated or not
+            if ($(checkElem).is(":checked")) {
+                // user wants the card number remotely validated
+                // add the necessary attributes to the card number input in order to enable remote card number validation
+                $('#add-card-card-number').attr("data-parsley-remote-validator", "financialcardcheck");
+            } else {
+                // user does not want card number remotely validated
+                // remove attributes to prevent remote card number validation
+                $('#add-card-card-number').removeAttr("data-parsley-remote-validator");
+            }
         },
 
         /**
@@ -1621,7 +1699,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#add-card-page ons-toolbar').removeClass("toolbar--transparent"); // make the toolbar opaque
                         // also pin the help header on the page just below the toolbar
-                        $('#add-card-page ons-list-header').css({ "position": "fixed", "top": "56px", "width": "100%" });
+                        $('#add-card-page ons-list-header').css({ "display": "block", "position": "fixed", "top": "56px", "width": "100%" });
                         this.isToolBarOpaque = true; // flag that toolbar has been made opaque
                     }
                 }
@@ -1643,7 +1721,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#add-card-page ons-toolbar').addClass("toolbar--transparent"); // make the toolbar transparent
                         // also unpin the help header on the page from just below the toolbar
-                        $('#add-card-page ons-list-header').css({ "position": "static", "top": "56px" });
+                        $('#add-card-page ons-list-header').css({ "display": "block", "position": "static", "top": "56px" });
                         this.isToolBarOpaque = false; // flag that toolbar has been made transparent
                     }
                 }
@@ -1663,6 +1741,10 @@ utopiasoftware.saveup.controller = {
             // check the validator response
             if (jqxhr.status != 200) {
                 // request was NOT success
+                // set new card brand as unknown
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                // set the new card locale as unknown
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
                 return false;
             }
 
@@ -1671,28 +1753,36 @@ utopiasoftware.saveup.controller = {
 
             if (serverResponse.status != true) {
                 // the server api response was NOT successful
+                // set new card brand as unknown
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                // set the new card locale as unknown
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
                 return false;
             }
 
             if (serverResponse.data.brand == "" || serverResponse.data.brand == "Unknown") {
                 // card could not be identified
+                // set new card brand as unknown
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                // set the new card locale as unknown
+                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
                 return false;
             }
 
             // get the brand of the new card
-            if (serverResponse.data.brand.indexOf("Master") >= 0) {
+            if (serverResponse.data.brand.toLocaleUpperCase().indexOf("MASTER") >= 0) {
                 // brand is a Mastercard
                 // set new card brand as mastercard
                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Mastercard";
             }
-            if (serverResponse.data.brand.indexOf("Visa") >= 0) {
+            if (serverResponse.data.brand.toLocaleUpperCase().indexOf("VISA") >= 0) {
                 // brand is a Visa
                 // set new card brand as visa
                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Visa";
             }
-            if (serverResponse.data.brand.indexOf("Verve") >= 0) {
+            if (serverResponse.data.brand.toLocaleUpperCase().indexOf("VERVE") >= 0) {
                 // brand is a Verve
-                // set new card brand as visa
+                // set new card brand as verve
                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Verve";
             }
 
