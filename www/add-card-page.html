@@ -9,7 +9,7 @@
 <ons-page id="add-card-page">
     <ons-toolbar class="toolbar--transparent">
         <div class="left">
-            <ons-toolbar-button onclick="$('#app-main-navigator').get(0).popPage();">
+            <ons-toolbar-button onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">
                 <ons-icon icon="md-long-arrow-left" size="20px"></ons-icon>
             </ons-toolbar-button>
         </div>
@@ -180,7 +180,7 @@
         <ons-row>
             <ons-col width="100%" style="text-align: center;">
                 <ons-button id="add-card-cancel-button" modifier="quiet" disabled style="color: red;"
-                            onclick="$('#app-main-navigator').get(0).popPage();">Cancel</ons-button>
+                            onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">Cancel</ons-button>
                 <ons-button id="add-card-save-button" modifier="quiet" disabled>Save</ons-button>
             </ons-col>
         </ons-row>

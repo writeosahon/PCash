@@ -75,6 +75,9 @@ $(document).on("destroy", "#verify-account-page", utopiasoftware.saveup.controll
 // listen for the initialisation of the My Cards page
 $(document).on("init", "#my-cards-page", utopiasoftware.saveup.controller.myCardsPageViewModel.pageInit);
 
+// listen for when the My Cards page is shown
+$(document).on("show", "#my-cards-page", utopiasoftware.saveup.controller.myCardsPageViewModel.pageShow);
+
 // listen for the initialisation of the Add Card page
 $(document).on("init", "#add-card-page", utopiasoftware.saveup.controller.addCardPageViewModel.pageInit);
 

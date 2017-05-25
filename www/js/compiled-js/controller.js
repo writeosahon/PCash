@@ -1331,6 +1331,46 @@ utopiasoftware.saveup.controller = {
                             loadingDone();
                         }
                         else{ // there are card data available
+                            // empty the contents of the my cards list
+                            $('#my-cards-list', $thisPage).html("");
+
+                            for(let index = 0; index < cardsArray.length; index++){ // append the stored cards to the "My Cards" list
+                                // create the card content
+                                let cardContent = `<div class="row"><div class="col s1"></div><div class="col s10">
+                                <div class="card small">
+                                <div class="card-image" style="padding-top: 3%; padding-left: 3%; padding-right: 3%;
+                                background-image: url('${cardsArray[index].cardImage}'); background-position: center; background-size: contain; background-origin: content-box; background-repeat: no-repeat;">
+                                <img src="css/app-images/blank.png">
+                                </div>
+                                <div class="card-content" style="padding-bottom: 5px;">
+                                <div style="font-weight: bold; font-style: italic; color: #464646">${cardsArray[index].cardNickName}</div>
+                                <div style="font-weight: bold; font-size: 0.8em; color: #464646">${cardsArray[index].cardBrand}
+                                ${cardsArray[index].cardLocale == "international" ? "(International)" : ""}</div>
+                                </div>
+                                <div class="card-action" style="padding: 0;">
+                                <ons-button modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                                </ons-icon>
+                                </ons-button>
+                                <ons-button modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-icon icon="md-edit" size="25px">
+                                </ons-icon>
+                                </ons-button>
+                                <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-icon icon="md-delete" size="25px">
+                                </ons-icon>
+                                </ons-button>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col s1"></div>
+                                </div>` ;
+                                // append the card content to the "My Card" list
+                                $('#my-cards-list', $thisPage).append(cardContent);
+                            }
                             // remove the page preloader progress bar
                             $('.progress', $thisPage).remove();
                             // display the help button
@@ -1389,6 +1429,46 @@ utopiasoftware.saveup.controller = {
                         $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
                     }
                     else{ // there are card data available
+                        // empty the contents of the my cards list
+                        $('#my-cards-list', $thisPage).html("");
+
+                        for(let index = 0; index < cardsArray.length; index++){ // append the stored cards to the "My Cards" list
+                            // create the card content
+                            let cardContent = `<div class="row"><div class="col s1"></div><div class="col s10">
+                            <div class="card small">
+                            <div class="card-image" style="padding-top: 3%; padding-left: 3%; padding-right: 3%;
+                            background-image: url('${cardsArray[index].cardImage}'); background-position: center; background-size: contain; background-origin: content-box; background-repeat: no-repeat;">
+                            <img src="css/app-images/blank.png">
+                            </div>
+                            <div class="card-content" style="padding-bottom: 5px;">
+                            <div style="font-weight: bold; font-style: italic; color: #464646">${cardsArray[index].cardNickName}</div>
+                            <div style="font-weight: bold; font-size: 0.8em; color: #464646">${cardsArray[index].cardBrand}
+                            ${cardsArray[index].cardLocale == "international" ? "(International)" : ""}</div>
+                            </div>
+                            <div class="card-action" style="padding: 0;">
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                            <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                            </ons-icon>
+                            </ons-button>
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                            <ons-icon icon="md-edit" size="25px">
+                            </ons-icon>
+                            </ons-button>
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                            <ons-icon icon="md-delete" size="25px">
+                            </ons-icon>
+                            </ons-button>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="col s1"></div>
+                            </div>` ;
+                            // append the card content to the "My Card" list
+                            $('#my-cards-list', $thisPage).append(cardContent);
+                        }
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
@@ -1431,6 +1511,117 @@ utopiasoftware.saveup.controller = {
 
 
         /**
+         * method is triggered when page is shown
+         *
+         * @param event
+         */
+        pageShow: function(event){
+            var $thisPage = $(event.target); // get the current page shown
+
+            // check if the data on the page should be refreshed
+            if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.refresh
+            && $('#app-main-navigator').get(0).topPage.data.refresh === true){ // user wants this page refreshed
+                // add & display the preloader for the page
+                $('#my-cards-pull-hook', $thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');
+
+                // load the card data from the device secure store
+                utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
+                then(function(cardsArray){ // the cards array collection has been returned
+                    if(cardsArray.length == 0){ // there are no card data available
+                        // remove the page preloader progress bar
+                        $('.progress', $thisPage).remove();
+                        // display the help button
+                        $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                        // enable the pull-to-refresh widget for the page
+                        $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                        // display a message to inform user that there are no cards available
+                        $('#my-cards-page-message', $thisPage).css("display", "block");
+                        // hide the error message from displaying
+                        $('#my-cards-page-error', $thisPage).css("display", "none");
+                        // hide the my-cards-list from display
+                        $('#my-cards-list', $thisPage).css("display", "none");
+                        // enable the 'Add Card' button
+                        $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
+                    }
+                    else{ // there are card data available
+                        // empty the contents of the my cards list
+                        $('#my-cards-list', $thisPage).html("");
+
+                        for(let index = 0; index < cardsArray.length; index++){ // append the stored cards to the "My Cards" list
+                            // create the card content
+                            let cardContent = `<div class="row"><div class="col s1"></div><div class="col s10">
+                            <div class="card small">
+                            <div class="card-image" style="padding-top: 3%; padding-left: 3%; padding-right: 3%;
+                            background-image: url('${cardsArray[index].cardImage}'); background-position: center; background-size: contain; background-origin: content-box; background-repeat: no-repeat;">
+                            <img src="css/app-images/blank.png">
+                            </div>
+                            <div class="card-content" style="padding-bottom: 5px;">
+                            <div style="font-weight: bold; font-style: italic; color: #464646">${cardsArray[index].cardNickName}</div>
+                            <div style="font-weight: bold; font-size: 0.8em; color: #464646">${cardsArray[index].cardBrand}
+                            ${cardsArray[index].cardLocale == "international" ? "(International)" : ""}</div>
+                            </div>
+                            <div class="card-action" style="padding: 0;">
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                            <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                            </ons-icon>
+                            </ons-button>
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                            <ons-icon icon="md-edit" size="25px">
+                            </ons-icon>
+                            </ons-button>
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                            <ons-icon icon="md-delete" size="25px">
+                            </ons-icon>
+                            </ons-button>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="col s1"></div>
+                            </div>` ;
+                            // append the card content to the "My Card" list
+                            $('#my-cards-list', $thisPage).append(cardContent);
+                        }
+                        // remove the page preloader progress bar
+                        $('.progress', $thisPage).remove();
+                        // display the help button
+                        $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                        // enable the pull-to-refresh widget for the page
+                        $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                        // hide message to inform user that there are no cards available
+                        $('#my-cards-page-message', $thisPage).css("display", "none");
+                        // hide the error message from displaying
+                        $('#my-cards-page-error', $thisPage).css("display", "none");
+                        // display the my-cards-list
+                        $('#my-cards-list', $thisPage).css("display", "block");
+                        // enable the 'Add Card' button
+                        $('#my-cards-add-card-button', $thisPage).removeAttr("disabled");
+                    }
+                }).
+                catch(function(){ // an error occurred, so display the error message to the user
+                    // remove the page preloader progress bar
+                    $('.progress', $thisPage).remove();
+                    // display the help button
+                    $('#my-cards-help-1', $thisPage).css("display", "inline-block");
+                    // enable the pull-to-refresh widget for the page
+                    $('#my-cards-pull-hook', $thisPage).removeAttr("disabled");
+                    // hide a message to inform user that there are no cards available
+                    $('#my-cards-page-message', $thisPage).css("display", "none");
+                    // display the error message to user
+                    $('#my-cards-page-error', $thisPage).css("display", "block");
+                    // hide the my-cards-list from display
+                    $('#my-cards-list', $thisPage).css("display", "none");
+                    // disable the 'Add Card' button
+                    $('#my-cards-add-card-button', $thisPage).attr("disabled", true);
+                });
+            }
+
+        },
+
+
+        /**
          * method is used to load the user's financial cards ("My Cards") data from
          * the device secure storage
          * @return {Promise} method returns a Promise object that resolves with
@@ -1439,12 +1630,29 @@ utopiasoftware.saveup.controller = {
          * NOTE: the Promise object resolve with an empty array when no cards are available
          */
         loadCardData: function(){
-
+            // return the Promise object
             return new Promise(function(resolve, reject){
-                // dummy result
-                setTimeout(function(){
-                    resolve([{}]);
-                }, 3000);
+                // read the user's cards data from secure storage
+                Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                then(function(instanceId){
+                    // read the content of the securely stored cards data
+                    return Promise.resolve(intel.security.secureData.getData(instanceId));
+                }, function(errObject){
+                    if(errObject.code == 1){ // the secure card storage has not been created before
+                        resolve([]); // return an empty cards data array
+                    }
+                    else{ // another error occurred (which is considered severe)
+                        throw errObject;
+                    }
+                }).
+                then(function(secureCardDataArray){
+                    secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
+                    resolve(secureCardDataArray);
+                }).
+                catch(function(err){
+                    // reject the Promise
+                    reject(err);
+                });
             });
         },
 
@@ -1495,6 +1703,11 @@ utopiasoftware.saveup.controller = {
          */
         newCardLocale: "Unknown",
 
+        /**
+         * poperty holds the image to be used for the new card
+         */
+        newCardImage: "",
+
         cardImageRandomNum: null,
 
         /**
@@ -1512,9 +1725,10 @@ utopiasoftware.saveup.controller = {
             utopiasoftware.saveup.controller.addCardPageViewModel.previousScrollPosition = 0;
             utopiasoftware.saveup.controller.addCardPageViewModel.currentScrollPosition = 0;
 
-            // reset the new card brand and card general locale
+            // reset the new card brand, card general locale & card image
             utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
             utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+            utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
 
             // generate the random number used to display the financial card image
             var randomGen = new Random(Random.engines.nativeMath); // random number generator
@@ -1597,6 +1811,10 @@ utopiasoftware.saveup.controller = {
                                 case "Mastercard":
                                     if(utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale == "local"){
                                         // this is a local mastercard
+                                        // set the image for the card
+                                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                                            newCardImage = "css/app-images/mastercard-local-" +
+                                            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png";
                                         $('#add-card-image').attr("src", "css/app-images/mastercard-local-" +
                                             utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png"
                                         );
@@ -1605,6 +1823,10 @@ utopiasoftware.saveup.controller = {
                                     }
                                     else{
                                         // this is a international mastercard
+                                        // set the image for the card
+                                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                                            newCardImage = "css/app-images/mastercard-international-" +
+                                            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png";
                                         $('#add-card-image').attr("src", "css/app-images/mastercard-international-" +
                                             utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png"
                                         );
@@ -1616,6 +1838,10 @@ utopiasoftware.saveup.controller = {
                                 case "Visa":
                                     if(utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale == "local"){
                                         // this is a local visa
+                                        // set the image for the card
+                                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                                            newCardImage = "css/app-images/visacard-local-" +
+                                            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png";
                                         $('#add-card-image').attr("src", "css/app-images/visacard-local-" +
                                             utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png"
                                         );
@@ -1624,6 +1850,10 @@ utopiasoftware.saveup.controller = {
                                     }
                                     else{
                                         // this is a international Visa card
+                                        // set the image for the card
+                                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                                            newCardImage = "css/app-images/visacard-international-" +
+                                            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png";
                                         $('#add-card-image').attr("src", "css/app-images/visacard-international-" +
                                             utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png"
                                         );
@@ -1635,6 +1865,10 @@ utopiasoftware.saveup.controller = {
                                 case "Verve":
                                     if(utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale == "local"){
                                         // this is a local verve
+                                        // set the image for the card
+                                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                                            newCardImage = "css/app-images/verve-local-" +
+                                            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png";
                                         $('#add-card-image').attr("src", "css/app-images/verve-local-" +
                                             utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png"
                                         );
@@ -1648,6 +1882,14 @@ utopiasoftware.saveup.controller = {
                             $('#add-card-image-container', $thisPage).css("display", "block");
                         }
                         else{ // user did not ask for remote card validation
+                            // set the image for the card
+                            utopiasoftware.saveup.controller.addCardPageViewModel.
+                                newCardImage = "css/app-images/unknown-local-" +
+                                utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum + ".png";
+                            // set new card brand as unknown
+                            utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                            // set the new card locale as unknown
+                            utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
                             // hide the card image row
                             $('#add-card-image-container', $thisPage).css("display", "none");
                         }
@@ -1733,6 +1975,71 @@ utopiasoftware.saveup.controller = {
             // display the secure storage modal to indicate that card is being securely stored
             $('#secure-storage-modal .modal-message').html("Storing Card on Device...");
             $('#secure-storage-modal').get(0).show(); // show loader
+
+            var newCardData = {
+                cardUniqueId: "" + utopiasoftware.saveup.model.deviceUUID + Date.now(),
+                cardHolderName: $('#add-card-form #add-card-card-holder').val(),
+                cardNickName: $('#add-card-form #add-card-alias').val(),
+                cardNumber: $('#add-card-form #add-card-card-number').val(),
+                cvv: $('#add-card-form #add-card-cvv').val(),
+                cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
+                cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
+                cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
+                cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
+                cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
+            };
+
+            // get the previous stored cards on the user's device
+            Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+            then(function(instanceId){
+                return Promise.resolve(intel.security.secureData.getData(instanceId));
+            }, function(errObject){
+                if(errObject.code == 1){ // the secure card storage has not been created before
+                    return '[]'; // return an empty card data array
+                }
+                else{ // another error occurred (which is considered severe)
+                    throw errObject;
+                }
+            }).
+            then(function(secureCardDataArray){
+                secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
+                secureCardDataArray.unshift(newCardData); // add the card to the beginning of the array collection
+                // store the updated card collection securely on user's device
+                return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
+            }).
+            then(function(instanceId){
+                return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
+            }).
+            then(function(){
+                // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+                window.setTimeout(function(){
+                    // reset the form validator object on the page
+                    utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
+                    // reset the form object
+                    $('#add-card-page #add-card-form').get(0).reset();
+                    // reset the new card brand, card general locale & card image
+                    utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                    utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+                    utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
+                    // hide the card image row
+                    $('#add-card-page #add-card-image-container').css("display", "none");
+                    // reset the page scroll position to the top
+                    $('#add-card-page .page__content').scrollTop(0);
+
+                    $('#secure-storage-modal').get(0).hide(); // hide loader
+                    // inform user that add has been successfully added to secure storage
+                    Materialize.toast('New card added successfully', 4000);
+                }, 4000)
+            }).
+            catch(function(err){
+
+                ons.notification.alert({title: "Save Error",
+                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                    'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be added. ' +
+                    '<br>You can try again' + '</span>',
+                    cancelable: true
+                });
+            });
         },
 
 
