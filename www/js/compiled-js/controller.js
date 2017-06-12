@@ -1408,7 +1408,7 @@ utopiasoftware.saveup.controller = {
                         loadingDone();
                     });
                 };
-
+//todo
                 // load the card data from the device secure store
                 utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
                 then(function(cardsArray){ // the cards array collection has been returned

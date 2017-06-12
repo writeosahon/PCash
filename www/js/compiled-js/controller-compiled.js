@@ -464,7 +464,8 @@ $('#my-cards-page-message',$thisPage).css("display","none");// display the error
 $('#my-cards-page-error',$thisPage).css("display","block");// hide the my-cards-list from display
 $('#my-cards-list',$thisPage).css("display","none");// disable the 'Add Card' button
 $('#my-cards-add-card-button',$thisPage).attr("disabled",true);// flag that loading is done
-loadingDone();});};// load the card data from the device secure store
+loadingDone();});};//todo
+// load the card data from the device secure store
 utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().then(function(cardsArray){// the cards array collection has been returned
 if(cardsArray.length==0){// there are no card data available
 // remove the page preloader progress bar

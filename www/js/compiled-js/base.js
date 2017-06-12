@@ -160,6 +160,7 @@ var utopiasoftware = {
             });
         },
 
+
         /**
          * this object encapsulates the payment gateway credentials
          */
@@ -248,6 +249,16 @@ var utopiasoftware = {
              * public object holds the keys for the gateway
              */
             key: {"secret": "sk_test_91815f725eeca4db7d43a08e46bd682d4d669a72"},
+        },
+
+        /**
+         * object encapsulates some operations/manipulations that can be performed on
+         * stored financial cards
+         */
+        financialCardOperations: {
+            getCard: function(){
+
+            }
         }
     }
 };
