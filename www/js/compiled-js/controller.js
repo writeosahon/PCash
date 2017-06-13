@@ -2157,8 +2157,8 @@ utopiasoftware.saveup.controller = {
                         cancelable: true
                     });
                 });
-            }
 
+            }
 
         },
 
