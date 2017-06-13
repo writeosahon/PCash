@@ -2085,7 +2085,7 @@ utopiasoftware.saveup.controller = {
                 catch(function(){
                     ons.notification.alert({title: "Save Error",
                         messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be edited. ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be updated. ' +
                         '<br>You can try again' + '</span>',
                         cancelable: true
                     });
