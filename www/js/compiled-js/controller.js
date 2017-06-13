@@ -1310,7 +1310,7 @@ utopiasoftware.saveup.controller = {
                     $('#my-cards-pull-hook', $thisPage).attr("disabled", true);
 
                     // load the card data from the device secure store
-                    utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
+                    utopiasoftware.saveup.financialCardOperations.loadCardData().
                     then(function(cardsArray){ // the cards array collection has been returned
                         if(cardsArray.length == 0){ // there are no card data available
                             // remove the page preloader progress bar
@@ -1353,16 +1353,18 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
-                                <ons-icon icon="md-edit" size="25px">
-                                </ons-icon>
-                                </ons-button>
                                 <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
-                                <ons-icon icon="md-delete" size="25px">
-                                </ons-icon>
-                                </ons-button>
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                    onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.editCardButtonClicked(this)">
+                            <ons-icon icon="md-edit" size="25px">
+                            </ons-icon>
+                            </ons-button>
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                    onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.deleteCardButtonClicked(this)">
+                            <ons-icon icon="md-delete" size="25px">
+                            </ons-icon>
+                            </ons-button>
                                 </div>
                                 </div>
                                 </div>
@@ -1408,9 +1410,9 @@ utopiasoftware.saveup.controller = {
                         loadingDone();
                     });
                 };
-//todo
+
                 // load the card data from the device secure store
-                utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
+                utopiasoftware.saveup.financialCardOperations.loadCardData().
                 then(function(cardsArray){ // the cards array collection has been returned
                     if(cardsArray.length == 0){ // there are no card data available
                         // remove the page preloader progress bar
@@ -1451,13 +1453,15 @@ utopiasoftware.saveup.controller = {
                             <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                             </ons-icon>
                             </ons-button>
-                            <ons-button modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                    onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.editCardButtonClicked(this)">
                             <ons-icon icon="md-edit" size="25px">
                             </ons-icon>
                             </ons-button>
                             <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                    onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.deleteCardButtonClicked(this)">
                             <ons-icon icon="md-delete" size="25px">
                             </ons-icon>
                             </ons-button>
@@ -1525,7 +1529,7 @@ utopiasoftware.saveup.controller = {
                 $('#my-cards-pull-hook', $thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');
 
                 // load the card data from the device secure store
-                utopiasoftware.saveup.controller.myCardsPageViewModel.loadCardData().
+                utopiasoftware.saveup.financialCardOperations.loadCardData().
                 then(function(cardsArray){ // the cards array collection has been returned
                     if(cardsArray.length == 0){ // there are no card data available
                         // remove the page preloader progress bar
@@ -1566,13 +1570,15 @@ utopiasoftware.saveup.controller = {
                             <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                             </ons-icon>
                             </ons-button>
-                            <ons-button modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                    onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.editCardButtonClicked(this)">
                             <ons-icon icon="md-edit" size="25px">
                             </ons-icon>
                             </ons-button>
                             <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                    onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.deleteCardButtonClicked(this)">
                             <ons-icon icon="md-delete" size="25px">
                             </ons-icon>
                             </ons-button>
@@ -1622,47 +1628,57 @@ utopiasoftware.saveup.controller = {
 
 
         /**
-         * method is used to load the user's financial cards ("My Cards") data from
-         * the device secure storage
-         * @return {Promise} method returns a Promise object that resolves with
-         * the retrieved cards as an array OR rejects when the cards cannot be retrieved.
-         *
-         * NOTE: the Promise object resolve with an empty array when no cards are available
+         * method is triggered when the 'Add Card' button is clicked
          */
-        loadCardData: function(){
-            // return the Promise object
-            return new Promise(function(resolve, reject){
-                // read the user's cards data from secure storage
-                Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
-                then(function(instanceId){
-                    // read the content of the securely stored cards data
-                    return Promise.resolve(intel.security.secureData.getData(instanceId));
-                }, function(errObject){
-                    if(errObject.code == 1){ // the secure card storage has not been created before
-                        resolve([]); // return an empty cards data array
+        addCardButtonClicked: function(){
+            $('#app-main-navigator').get(0).pushPage("add-card-page.html", {
+                animation: "lift-md"
+            });
+        },
+
+
+        /**
+         * method is used to trigger the delete operation of a financial card
+         * and updating the user-interface (UI)
+         *
+         * @param buttonElem
+         */
+        deleteCardButtonClicked: function(buttonElem){
+            // card the utility method used to delete a specified card
+            utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).
+            then(function(){
+                $(buttonElem).closest('.row').remove();
+            }).
+            catch(function(){
+                // inform the user that the specified financial card could not be deleted
+                window.plugins.toast.showWithOptions({
+                    message: "Sorry, the bank card could not be deleted.\n Try again",
+                    duration: 4000,
+                    position: "top",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#ff0000', //red
+                        textColor: '#FFFFFF',
+                        textSize: 14
                     }
-                    else{ // another error occurred (which is considered severe)
-                        throw errObject;
+                }, function(toastEvent){
+                    if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
+                        window.plugins.toast.hide();
                     }
-                }).
-                then(function(secureCardDataArray){
-                    secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
-                    resolve(secureCardDataArray);
-                }).
-                catch(function(err){
-                    // reject the Promise
-                    reject(err);
                 });
             });
         },
 
 
         /**
-         * method is triggered when the 'Add Card' button is clicked
+         * method is used to trigger the edit operation of a financial card
+         * and updating/changing the user-interface (UI)
+         *
+         * @param buttonElem
          */
-        addCardButtonClicked: function(){
+        editCardButtonClicked: function(buttonElem){
             $('#app-main-navigator').get(0).pushPage("add-card-page.html", {
-                animation: "lift-md"
+                animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
             });
         }
 
@@ -1920,14 +1936,59 @@ utopiasoftware.saveup.controller = {
                 $('select', $thisPage).material_select();
                 // initialise the character counter plugin
                 $('#add-card-card-number', $thisPage).characterCounter();
-                // remove the progress indeterminate loader
-                $('.progress', $thisPage).remove();
-                // make the add card form visible
-                $('#add-card-form', $thisPage).css("display", "block");
-                // enable the 'Cancel' & 'Save' buttons
-                $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
-                // hide the loader
-                $('#loader-modal').get(0).hide();
+
+
+
+                // check if the page was sent a financial card id.
+                // if so preload the financial card data into the form
+                if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){
+                    // get the details of the card to be edited
+                    utopiasoftware.saveup.financialCardOperations.
+                    getCard($('#app-main-navigator').get(0).topPage.data.edit).then(function(card){
+                        $('#add-card-page #add-card-unique-id').val(card.cardUniqueId);
+                        $('#add-card-page #add-card-card-holder').val(card.cardHolderName);
+                        $('#add-card-page #add-card-alias').val(card.cardNickName);
+                        $('#add-card-page #add-card-card-number').val(card.cardNumber);
+                        $('#add-card-page #add-card-cvv').val(card.cvv);
+                        $('#add-card-page #add-card-expiry-month').val(card.cardExpiryMonth);
+                        $('#add-card-page #hidden-card-expiry-month-input').val(card.cardExpiryMonth);
+                        $('#add-card-page #add-card-expiry-year').val(card.cardExpiryYear);
+                        $('#add-card-page #hidden-card-expiry-year-input').val(card.cardExpiryYear);
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = card.cardBrand;
+                        $('#add-card-page #add-card-verify-card').prop("checked", card.cardBrand !== "Unknown");
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = card.cardLocale;
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = card.cardImage;
+
+                        // update the card image file
+                        $('#add-card-page #add-card-image').attr("src", utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage);
+                        // display the card image row
+                        $('#add-card-image-container', $thisPage).css("display", "block");
+
+                        // re-update the form input fields
+                        Materialize.updateTextFields();
+                        //re-initialise the form select elements
+                        $('select', $thisPage).material_select();
+
+                        // remove the progress indeterminate loader
+                        $('.progress', $thisPage).remove();
+                        // make the add card form visible
+                        $('#add-card-form', $thisPage).css("display", "block");
+                        // enable the 'Cancel' & 'Save' buttons
+                        $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
+                        // hide the loader
+                        $('#loader-modal').get(0).hide();
+                    });
+                }
+                else {
+                    // remove the progress indeterminate loader
+                    $('.progress', $thisPage).remove();
+                    // make the add card form visible
+                    $('#add-card-form', $thisPage).css("display", "block");
+                    // enable the 'Cancel' & 'Save' buttons
+                    $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
+                    // hide the loader
+                    $('#loader-modal').get(0).hide();
+                }
 
             }
 
@@ -1976,70 +2037,129 @@ utopiasoftware.saveup.controller = {
             $('#secure-storage-modal .modal-message').html("Storing Card on Device...");
             $('#secure-storage-modal').get(0).show(); // show loader
 
-            var newCardData = {
-                cardUniqueId: "" + utopiasoftware.saveup.model.deviceUUID + Date.now(),
-                cardHolderName: $('#add-card-form #add-card-card-holder').val(),
-                cardNickName: $('#add-card-form #add-card-alias').val(),
-                cardNumber: $('#add-card-form #add-card-card-number').val(),
-                cvv: $('#add-card-form #add-card-cvv').val(),
-                cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
-                cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
-                cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
-                cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
-                cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
-            };
+            // check if this is an EDIT or CREATE operation
+            if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){ //this is an EDIT operation
+                // card the utility method used to delete a specified card
+                utopiasoftware.saveup.financialCardOperations.
+                deleteCard($('#app-main-navigator').get(0).topPage.data.edit).
+                then(function(){
+                    // create an edited card data
+                    var editedCardData = {
+                        cardUniqueId: $('#app-main-navigator').get(0).topPage.data.edit,
+                        cardHolderName: $('#add-card-form #add-card-card-holder').val(),
+                        cardNickName: $('#add-card-form #add-card-alias').val(),
+                        cardNumber: $('#add-card-form #add-card-card-number').val(),
+                        cvv: $('#add-card-form #add-card-cvv').val(),
+                        cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
+                        cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
+                        cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
+                        cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
+                        cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
+                    };
 
-            // get the previous stored cards on the user's device
-            Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
-            then(function(instanceId){
-                return Promise.resolve(intel.security.secureData.getData(instanceId));
-            }, function(errObject){
-                if(errObject.code == 1){ // the secure card storage has not been created before
-                    return '[]'; // return an empty card data array
-                }
-                else{ // another error occurred (which is considered severe)
-                    throw errObject;
-                }
-            }).
-            then(function(secureCardDataArray){
-                secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
-                secureCardDataArray.unshift(newCardData); // add the card to the beginning of the array collection
-                // store the updated card collection securely on user's device
-                return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
-            }).
-            then(function(instanceId){
-                return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
-            }).
-            then(function(){
-                // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
-                window.setTimeout(function(){
-                    // reset the form validator object on the page
-                    utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
-                    // reset the form object
-                    $('#add-card-page #add-card-form').get(0).reset();
-                    // reset the new card brand, card general locale & card image
-                    utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-                    utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-                    utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
-                    // hide the card image row
-                    $('#add-card-page #add-card-image-container').css("display", "none");
-                    // reset the page scroll position to the top
-                    $('#add-card-page .page__content').scrollTop(0);
+                    // card the utility method used to add a specified card to the card collection
+                    return utopiasoftware.saveup.financialCardOperations.
+                    addCard(editedCardData);
+                }).
+                then(function(){
+                    // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+                    window.setTimeout(function(){
+                        // reset the form validator object on the page
+                        utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
+                        // reset the form object
+                        $('#add-card-page #add-card-form').get(0).reset();
+                        // reset the new card brand, card general locale & card image
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
+                        // hide the card image row
+                        $('#add-card-page #add-card-image-container').css("display", "none");
+                        // reset the page scroll position to the top
+                        $('#add-card-page .page__content').scrollTop(0);
 
-                    $('#secure-storage-modal').get(0).hide(); // hide loader
-                    // inform user that add has been successfully added to secure storage
-                    Materialize.toast('New card added successfully', 4000);
-                }, 4000)
-            }).
-            catch(function(err){
-
-                ons.notification.alert({title: "Save Error",
-                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                    'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be added. ' +
-                    '<br>You can try again' + '</span>',
-                    cancelable: true
+                        $('#secure-storage-modal').get(0).hide(); // hide loader
+                        // inform user that add has been successfully added to secure storage
+                        Materialize.toast('New card added successfully', 4000);
+                    }, 4000);
+                }).
+                catch(function(){
+                    ons.notification.alert({title: "Save Error",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be edited. ' +
+                        '<br>You can try again' + '</span>',
+                        cancelable: true
+                    });
                 });
-            });
+            }
+            else { // this is a CREATE/ADD OPERATION
+
+                var newCardData = {
+                    cardUniqueId: "" + utopiasoftware.saveup.model.deviceUUID + Date.now(),
+                    cardHolderName: $('#add-card-form #add-card-card-holder').val(),
+                    cardNickName: $('#add-card-form #add-card-alias').val(),
+                    cardNumber: $('#add-card-form #add-card-card-number').val(),
+                    cvv: $('#add-card-form #add-card-cvv').val(),
+                    cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
+                    cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
+                    cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
+                    cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
+                    cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
+                };
+
+                // get the previous stored cards on the user's device
+                Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                then(function(instanceId){
+                    return Promise.resolve(intel.security.secureData.getData(instanceId));
+                }, function(errObject){
+                    if(errObject.code == 1){ // the secure card storage has not been created before
+                        return '[]'; // return an empty card data array
+                    }
+                    else{ // another error occurred (which is considered severe)
+                        throw errObject;
+                    }
+                }).
+                then(function(secureCardDataArray){
+                    secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
+                    secureCardDataArray.unshift(newCardData); // add the card to the beginning of the array collection
+                    // store the updated card collection securely on user's device
+                    return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
+                }).
+                then(function(instanceId){
+                    return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
+                }).
+                then(function(){
+                    // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+                    window.setTimeout(function(){
+                        // reset the form validator object on the page
+                        utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
+                        // reset the form object
+                        $('#add-card-page #add-card-form').get(0).reset();
+                        // reset the new card brand, card general locale & card image
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
+                        // hide the card image row
+                        $('#add-card-page #add-card-image-container').css("display", "none");
+                        // reset the page scroll position to the top
+                        $('#add-card-page .page__content').scrollTop(0);
+
+                        $('#secure-storage-modal').get(0).hide(); // hide loader
+                        // inform user that add has been successfully added to secure storage
+                        Materialize.toast('New card added successfully', 4000);
+                    }, 4000);
+                }).
+                catch(function(err){
+
+                    ons.notification.alert({title: "Save Error",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be added. ' +
+                        '<br>You can try again' + '</span>',
+                        cancelable: true
+                    });
+                });
+            }
+
+
         },
 
 

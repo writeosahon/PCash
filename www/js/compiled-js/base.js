@@ -256,9 +256,171 @@ var utopiasoftware = {
          * stored financial cards
          */
         financialCardOperations: {
-            getCard: function(){
 
+            /**
+             * method is used to load the collection of user's financial cards ("My Cards") data from
+             * the device secure storage
+             * @return {Promise} method returns a Promise object that resolves with
+             * the retrieved cards as an array OR rejects when the cards cannot be retrieved.
+             *
+             * NOTE: the Promise object resolve with an empty array when no cards are available
+             */
+            loadCardData: function(){
+                // return the Promise object
+                return new Promise(function(resolve, reject){
+                    // read the user's cards data from secure storage
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                    then(function(instanceId){
+                        // read the content of the securely stored cards data
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function(errObject){
+                        if(errObject.code == 1){ // the secure card storage has not been created before
+                            resolve([]); // return an empty cards data array
+                        }
+                        else{ // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).
+                    then(function(secureCardDataArray){
+                        secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
+                        resolve(secureCardDataArray);
+                    }).
+                    catch(function(err){
+                        // reject the Promise
+                        reject(err);
+                    });
+                });
+            },
+
+            /**
+             * method is used to retrieve data details of a financial card
+             * @param cardId {String} the unique of the financial card to be retrieved
+
+             * @returns {Promise} returns a promise that resolves to the
+             * data details of the financial card or rejects with an error
+             */
+            getCard: function(cardId){
+
+                // return a Promise object for the method
+                return new Promise(function(resolve, reject){
+                    // get all the stored cards on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                    then(function(instanceId){
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).
+                    then(function(secureCardDataArray){
+                        secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an array object
+                        return secureCardDataArray.find(function(arrayElem){ // find the right financial card based on the card id
+                            if(arrayElem.cardUniqueId === cardId){ // this is the financial card that is required
+                                return true
+                            }
+                        });
+                    }).
+                    then(function(cardObject){ // get the financial card object
+                        if(!cardObject){ // no financial card was discovered
+                            throw "error"; // throw an error
+                        }
+                        else { // a financial card was found
+                            resolve(cardObject); // resolve the promise with the card object
+                        }
+                    }).catch(function(err){ // an error occurred OR no card was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+
+            /**
+             * method is used to delete data details of a financial card
+             * @param cardId {String} the unique of the financial card to be deleted
+
+             * @returns {Promise} returns a promise that resolves when the financial card deleted or rejects with an error
+             */
+            deleteCard: function(cardId){
+
+                // return a Promise object for the method
+                return new Promise(function(resolve, reject){
+                    // get all the stored cards on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                    then(function(instanceId){
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).
+                    then(function(secureCardDataArray){
+                        secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an array object
+                        var cardObjIndex = secureCardDataArray.findIndex(function(arrayElem){ // find the right financial card index based on the card id
+                            if(arrayElem.cardUniqueId === cardId){ // this is the financial card that is required
+                                return true
+                            }
+                        });
+
+                        if(cardObjIndex < 0){ // no financial card with the provided id was discovered
+                            throw "error"; // throw an error
+                        }
+                        else{ // a financial card was found with the specified id
+                            secureCardDataArray.splice(cardObjIndex, 1); // delete the item
+                            // write the updated financial cards collection array back into secure storage
+                            return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
+                        }
+                    }).
+                    then(function(instanceId){
+                        return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
+                    }).
+                    then(function(){ // financial cards array collection has been updated, so resolve the promise to delete the card data
+
+                        resolve(); // resolve the Promise to delete the card data
+                    }).
+                    catch(function(err){ // an error occurred OR no card was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+
+            /**
+             * method is used to add financial card data details to the collection of financial cards
+             *
+             * @param cardObject {Object} the financial card object to be added to the
+             * collection of financial cards
+
+             * @returns {Promise} returns a promise that resolves when the financial card has
+             * been added/created or rejects with an error
+             */
+            addCard: function(cardObject){
+
+                // return a Promise which resolves when financial card has been added successfully or rejects otherwise
+                return new Promise(function(resolve, reject){
+                    // get the previous stored cards on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                    then(function(instanceId){
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function(errObject){
+                        if(errObject.code == 1){ // the secure card storage has not been created before
+                            return '[]'; // return an empty card data array
+                        }
+                        else{ // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).
+                    then(function(secureCardDataArray){
+                        secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
+                        secureCardDataArray.unshift(cardObject); // add the card to the beginning of the array collection
+                        // store the updated card collection securely on user's device
+                        return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
+                    }).
+                    then(function(instanceId){
+                        return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
+                    }).
+                    then(function(){ // card has been added
+                        // resolve promise
+                        resolve();
+                    }).
+                    catch(function(err){ // there was an error and card could NOT be added
+                        reject(err); // reject promise
+                    });
+                });
             }
+
         }
+
     }
 };
