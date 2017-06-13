@@ -263,6 +263,12 @@ ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"u
 if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
 $('#app-main-navigator').get(0).pushPage("my-cards-page.html",{});// navigate to the my cards pages
 }else{// inform user that security check failed/user authentication failed
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="my accounts"){// 'my accounts' button was clicked
+// ask user for secure PIN before proceeding. secure pin MUST match
+ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+$('#app-main-navigator').get(0).pushPage("my-accounts-page.html",{});// navigate to the my accounts pages
+}else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="intro"){// intro button was clicked
 $('ons-splitter').get(0).content.load("onboarding-template");// navigate to the onboarding presentation
 return;}}},/**
@@ -682,7 +688,7 @@ utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand="Unknown";uto
 $('#add-card-page #add-card-image-container').css("display","none");// reset the page scroll position to the top
 $('#add-card-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that add has been successfully added to secure storage
-Materialize.toast('New card added successfully',4000);},4000);}).catch(function(){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
+Materialize.toast('Card updated successfully',4000);},4000);}).catch(function(){ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
 var newCardData={cardUniqueId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),cardHolderName:$('#add-card-form #add-card-card-holder').val(),cardNickName:$('#add-card-form #add-card-alias').val(),cardNumber:$('#add-card-form #add-card-card-number').val(),cvv:$('#add-card-form #add-card-cvv').val(),cardExpiryMonth:$('#add-card-form #add-card-expiry-month').val(),cardExpiryYear:$('#add-card-form #add-card-expiry-year').val(),cardBrand:utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,cardLocale:utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,cardImage:utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage};// get the previous stored cards on the user's device
 Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).then(function(instanceId){return Promise.resolve(intel.security.secureData.getData(instanceId));},function(errObject){if(errObject.code==1){// the secure card storage has not been created before
 return'[]';// return an empty card data array
