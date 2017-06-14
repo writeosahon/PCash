@@ -1702,29 +1702,39 @@ utopiasoftware.saveup.controller = {
          * @param buttonElem
          */
         deleteCardButtonClicked: function(buttonElem){
-            // card the utility method used to delete a specified card
-            utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).
-            then(function(){
-                $(buttonElem).closest('.row').remove();
-            }).
-            catch(function(){
-                // inform the user that the specified financial card could not be deleted
-                window.plugins.toast.showWithOptions({
-                    message: "Sorry, the bank card could not be deleted.\n Try again",
-                    duration: 4000,
-                    position: "top",
-                    styling: {
-                        opacity: 1,
-                        backgroundColor: '#ff0000', //red
-                        textColor: '#FFFFFF',
-                        textSize: 14
-                    }
-                }, function(toastEvent){
-                    if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
-                        window.plugins.toast.hide();
+
+            // confirm that user wants to delete the card before proceeding
+            ons.notification.confirm('Do you want to delete this card?', {title: 'Confirm Delete',
+                    buttonLabels: ['No', 'Yes']}) // Ask for confirmation
+                .then(function(index) {
+                    if (index === 1) { // YES button clicked
+                        // call the utility method used to delete a specified card
+                        utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).
+                        then(function(){ // card has been deleted
+                            $(buttonElem).closest('.row').remove(); // remove the card from display
+                            // inform the user that card was deleted
+                            Materialize.toast('Card deleted', 3000);
+                        }).
+                        catch(function(){
+                            // inform the user that the specified financial card could not be deleted
+                            window.plugins.toast.showWithOptions({
+                                message: "Sorry, the bank card could not be deleted.\n Try again",
+                                duration: 4000,
+                                position: "top",
+                                styling: {
+                                    opacity: 1,
+                                    backgroundColor: '#ff0000', //red
+                                    textColor: '#FFFFFF',
+                                    textSize: 14
+                                }
+                            }, function(toastEvent){
+                                if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
+                                    window.plugins.toast.hide();
+                                }
+                            });
+                        });
                     }
                 });
-            });
         },
 
 

@@ -553,11 +553,17 @@ $('#my-cards-add-card-button',$thisPage).attr("disabled",true);});}},/**
          * and updating the user-interface (UI)
          *
          * @param buttonElem
-         */deleteCardButtonClicked:function deleteCardButtonClicked(buttonElem){// card the utility method used to delete a specified card
-utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).then(function(){$(buttonElem).closest('.row').remove();}).catch(function(){// inform the user that the specified financial card could not be deleted
+         */deleteCardButtonClicked:function deleteCardButtonClicked(buttonElem){// confirm that user wants to delete the card before proceeding
+ons.notification.confirm('Do you want to delete this card?',{title:'Confirm Delete',buttonLabels:['No','Yes']})// Ask for confirmation
+.then(function(index){if(index===1){// YES button clicked
+// call the utility method used to delete a specified card
+utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).then(function(){// card has been deleted
+$(buttonElem).closest('.row').remove();// remove the card from display
+// inform the user that card was deleted
+Materialize.toast('Card deleted',3000);}).catch(function(){// inform the user that the specified financial card could not be deleted
 window.plugins.toast.showWithOptions({message:"Sorry, the bank card could not be deleted.\n Try again",duration:4000,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
 textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
-window.plugins.toast.hide();}});});},/**
+window.plugins.toast.hide();}});});}});},/**
          * method is used to trigger the edit operation of a financial card
          * and updating/changing the user-interface (UI)
          *
