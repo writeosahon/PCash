@@ -272,3 +272,10 @@ label[data-hint]:after {
     animation: rotating 3s ease-in infinite;
 }
 /** STYLE FOR ROTATING ANIMATION FOR ELEMENTS ENDS **/
+
+
+/** STYLE FOR MY ACCOUNTS PAGE BEGINS **/
+#my-accounts-page .card.horizontal .card-image { /** control the size of the profile/avatar photos used in the cards **/
+    max-width: 40%;
+}
+/** STYLE FOR MY ACCOUNTS PAGE ENDS **/
