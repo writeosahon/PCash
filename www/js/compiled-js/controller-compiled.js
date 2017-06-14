@@ -78,6 +78,13 @@ return ons.notification.prompt({title:"Security Check",id:"pin-security-check",c
 if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
 $('#app-main-navigator').get(0).bringPageTop("my-cards-page.html",{});// navigate to the specified page
 }else{// inform user that security check failed/user authentication failed
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="my accounts"){// 'my accounts' button was clicked
+// close the side menu
+$('ons-splitter').get(0).left.close().then(function(){// ask user for secure PIN before proceeding. secure pin MUST match
+return ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true});}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+$('#app-main-navigator').get(0).bringPageTop("my-accounts-page.html",{});// navigate to the specified page
+}else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="intro"){// intro button was clicked
 // close the side menu
 $('ons-splitter').get(0).left.close().then(function(){$('ons-splitter').get(0).content.load("onboarding-template");// navigate to the onboarding presentation
