@@ -298,3 +298,39 @@ label[data-hint]:after {
     animation: ons-icon-spin 0.8s infinite linear;
 }
 /** STYLE FOR MY ACCOUNTS PAGE ENDS **/
+
+
+/** STYLE FOR BANK SELECT ELEMENT IN ADD ACCOUNT PAGE BEGINS **/
+#add-account-page .page--material__content .dropdown-content{
+    max-height: 200px !important;
+    overflow-y: scroll;
+    background-color: rgb(237,231,246);
+}
+#add-account-page .page--material__content .dropdown-content li:hover,
+#add-account-page .page--material__content .dropdown-content li.active,
+#add-account-page .page--material__content .dropdown-content li.selected {
+    background-color: #b388ff;
+}
+#add-account-page .page--material__content .dropdown-content li.active.selected {
+    background-color: #b388ff;
+}
+#add-account-page .page--material__content .dropdown-content li:hover > span,
+#add-account-page .page--material__content .dropdown-content li.active > span,
+#add-account-page .page--material__content .dropdown-content li.selected > span,
+#add-account-page .page--material__content .dropdown-content li:hover > a,
+#verify-account-page .page--material__content .dropdown-content li.active > a,
+#add-account-page .page--material__content .dropdown-content li.selected > a {
+    color: #ffffff;
+}
+#add-account-page .page--material__content .dropdown-content li.active.selected > span,
+#add-account-page .page--material__content .dropdown-content li.active.selected > a {
+    color: #ffffff;
+}
+/** STYLE FOR BANK SELECT ELEMENT IN ADD ACCOUNT PAGE ENDS **/
+
+
+/** STYLE FOR ONS-LIST ELEMENT IN ADD ACCOUNT PAGE BEGINS **/
+#add-account-page .page--material__content ons-list{
+    min-height: 16em !important;
+}
+/** STYLE FOR ONS-LIST ELEMENT IN ADD ACCOUNT PAGE ENDS **/
