@@ -99,7 +99,7 @@
                 </div>
                 <div class="col s6">
                     <div class="card" style="background-color: #d1c4e9;"
-                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('join savings group')">
+                         onclick="utopiasoftware.saveup.controller.sideMenuViewModel.sideMenuListClicked('my accounts')">
                         <ons-ripple color="rgba(0,0,0,0.1)" background="rgba(0,0,0,0.2)"></ons-ripple>
                         <div class="card-content" style="color: #311b92; text-align: center;  padding-bottom: 0;">
                             <ons-icon icon="md-saveup-icon-saveup-my-accounts" size="20px"></ons-icon>
@@ -284,7 +284,7 @@
     </ons-list>
 </ons-popover>
 
-<!-- popver for forgot-pin message -->
+<!-- popver for My Cards Page Help message -->
 <ons-popover direction="left" id="my-cards-page-help-popover" modifier="flat" cancelable disable-auto-styling>
     <div style="padding: 10px;">
         <h5 style="font-size: 0.95em; font-weight: bold; text-align: center; color: #ffffff">
@@ -294,6 +294,32 @@
             Securely store your bank cards on your device.
             Stored cards can be safely viewed and used for cash transfers to any bank account.<br>
             It's easy and secure
+        </p>
+    </div>
+</ons-popover>
+
+<!-- popver for My Accounts Page Help message -->
+<ons-popover direction="left" id="my-accounts-page-help-popover" modifier="flat" cancelable disable-auto-styling>
+    <div style="padding: 10px;">
+        <h5 style="font-size: 0.95em; font-weight: bold; text-align: center; color: #ffffff">
+            Your Bank Accounts
+        </h5>
+        <p style="text-align: left; font-size: 0.95em; color: #ffffff">
+            Securely store your bank accounts on your device.
+            Stored bank accounts can be safely viewed and used for cash transfers to
+            recipients in other banks* .<br>
+            It's easy and secure
+        </p>
+        <p style="text-align: left; font-size: 0.95em; color: #ffffff">
+            *currently, we support cash transfers from the following banks to any other bank in Nigeria
+            <ul class="browser-default" style="font-size: 0.95em; color: #ffffff;">
+                <li>ACCESS BANK NIGERIA</li>
+                <li>GTBANK PLC</li>
+                <li>ZENITH BANK PLC</li>
+                <li>FIRST BANK PLC</li>
+                <li>UNITED BANK FOR AFRICA PLC</li>
+                <li>DIAMOND BANK PLC</li>
+            </ul>
         </p>
     </div>
 </ons-popover>

@@ -420,6 +420,50 @@ var utopiasoftware = {
                 });
             }
 
+        },
+
+
+        /**
+         * object encapsulates some operations/manipulations  that can be performed on
+         * stored bank accounts
+         */
+        bankAccountOperations: {
+
+            /**
+             * method is used to load the collection of user's stored bank accounts ("My accounts") data from
+             * the device secure storage
+             *
+             * @return {Promise} method returns a Promise object that resolves with
+             * the retrieved bank accounts as an array OR rejects when the bank accounts cannot be retrieved.
+             *
+             * NOTE: the Promise object resolve with an empty array when no accounts are available
+             */
+            loadMyAccountsData: function(){
+                // return the Promise object
+                return new Promise(function(resolve, reject){
+                    // read the user's bank accounts ("My Accounts") data from secure storage
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-bank-accounts'})).
+                    then(function(instanceId){
+                        // read the content of the securely stored bank accounts data
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function(errObject){
+                        if(errObject.code == 1){ // the secure bank accounts storage has not been created before
+                            resolve([]); // return an empty my accounts data array
+                        }
+                        else{ // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).
+                    then(function(secureBankAcctDataArray){
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an object
+                        resolve(secureBankAcctDataArray);
+                    }).
+                    catch(function(err){
+                        // reject the Promise
+                        reject(err);
+                    });
+                });
+            }
         }
 
     }

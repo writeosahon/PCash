@@ -84,3 +84,9 @@ $(document).on("hide", "#add-card-page", utopiasoftware.saveup.controller.addCar
 
 // listen for the destroy event of the Add Card page
 $(document).on("destroy", "#add-card-page", utopiasoftware.saveup.controller.addCardPageViewModel.pageDestroy);
+
+// listen for the initialisation of the My Accounts page
+$(document).on("init", "#my-accounts-page", utopiasoftware.saveup.controller.myAccountsPageViewModel.pageInit);
+
+// listen for when the My Accounts page is shown
+$(document).on("show", "#my-accounts-page", utopiasoftware.saveup.controller.myAccountsPageViewModel.pageShow);

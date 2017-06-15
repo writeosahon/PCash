@@ -778,6 +778,149 @@ if(serverResponse.data.country_name.indexOf("Nigeria")>=0){// card is local
 utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale="local";}if(serverResponse.data.country_name.indexOf("Nigeria")<0){// card is international
 // set the new card locale
 utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale="international";}return true;// validation successful
-}}};
+}},/**
+     * object is view-model for my-accounts-page page
+     */myAccountsPageViewModel:{/**
+         * event is triggered when page is initialised
+         */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
+// enable the swipeable feature for the app splitter
+$('ons-splitter-side').attr("swipeable",true);// call the function used to initialise the app page if the app is fully loaded
+loadPageOnAppReady();//function is used to initialise the page if the app is fully ready for execution
+function loadPageOnAppReady(){// check to see if onsen is ready and if all app loading has been completed
+if(!ons.isReady()||utopiasoftware.saveup.model.isAppReady===false){setTimeout(loadPageOnAppReady,500);// call this function again after half a second
+return;}// listen for the back button event
+$('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check if the side menu is open
+if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
+$('ons-splitter').get(0).left.close();return;// exit the method
+}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// register listener for the pull-to-refresh widget
+$('#my-accounts-pull-hook',$thisPage).on("changestate",function(event){// check the state of the pull-to-refresh widget
+switch(event.originalEvent.state){case'initial':// update the displayed icon
+$('#my-accounts-pull-hook-fab',event.originalEvent.pullHook).html('<ons-icon icon="fa-long-arrow-down" size="24px"></ons-icon>');break;case'preaction':$('#my-accounts-pull-hook-fab',event.originalEvent.pullHook).html('<ons-icon icon="fa-long-arrow-up" size="24px"></ons-icon>');break;case'action':$('#my-accounts-pull-hook-fab',event.originalEvent.pullHook).html('<ons-icon icon="fa-repeat" size="24px" spin></ons-icon>');break;}});// add method to handle the loading action of the pull-to-refresh widget
+$('#my-accounts-pull-hook',$thisPage).get(0).onAction=function(loadingDone){// disable pull-to-refresh widget till loading is done
+$('#my-accounts-pull-hook',$thisPage).attr("disabled",true);// load the user's bank account data from the device secure store
+utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().then(function(banksAcctsArray){// the user's bank acct array collection has been returned
+if(banksAcctsArray.length==0){// there are no bank account data available
+// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// display a message to inform user that there are no cards available
+$('#my-accounts-page-message',$thisPage).css("display","block");// hide the error message from displaying
+$('#my-accounts-page-error',$thisPage).css("display","none");// hide the my-accounts-list from display
+$('#my-accounts-list',$thisPage).css("display","none");// enable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).removeAttr("disabled");// flag that loading is done
+loadingDone();}else{// there are card data available
+// empty the contents of the my accounts list
+$('#my-accounts-list',$thisPage).html("");for(var index=0;index<banksAcctsArray.length;index++){// append the stored bank accounts to the "My Accounts" list
+// create the bank account content
+var bankAcctContent="<div class=\"row\"><div class=\"col s12\"><div class=\"card horizontal\">\n                                <div class=\"card-image\" style=\"padding: 3%;\">\n                                <img src=\""+banksAcctsArray[index].bankAccountAvatar+"\">\n                                </div>\n                                <div class=\"card-stacked\">\n                                <div class=\"card-content\" style=\"padding-bottom: 0;\">\n                                <div style=\"font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;\n                                padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankAccountName+"</div>\n                                </div><div class=\"card-action\" style=\"font-weight: bold; font-size: 0.75em;\n                                color: #464646; padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankAccountNumber+"</div>\n                                <div  class=\"card-action\" style=\"font-weight: bold; font-size: 0.75em;\n                                color: #464646; padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankName+"</div>\n                                <div class=\"card-action\" style=\"padding: 0;\">\n                                <div style=\"display: inline-block; margin-left: auto; margin-right: auto\">\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;\">\n                                <ons-icon icon=\"md-saveup-icon-saveup-transfer-cash\" size=\"29px\">\n                                </ons-icon>\n                                </ons-button>\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;\">\n                                   <ons-icon icon=\"md-edit\" size=\"25px\">\n                                </ons-icon>\n                                </ons-button>\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;\">\n                                <ons-icon icon=\"md-delete\" size=\"25px\"></ons-icon>\n                                </ons-button>\n                                </div></div></div></div></div></div>";// append the bank account content to the "My Accounts" list
+$('#my-accounts-list',$thisPage).append(bankAcctContent);}// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// hide message to inform user that there are no accounts available
+$('#my-accounts-page-message',$thisPage).css("display","none");// hide the error message from displaying
+$('#my-accounts-page-error',$thisPage).css("display","none");// display the my-accounts-list
+$('#my-accounts-list',$thisPage).css("display","block");// enable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).removeAttr("disabled");// flag that loading is done
+loadingDone();}}).catch(function(){// an error occurred, so display the error message to the user
+// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// hide a message to inform user that there are no accounts available
+$('#my-accounts-page-message',$thisPage).css("display","none");// display the error message to user
+$('#my-accounts-page-error',$thisPage).css("display","block");// hide the my-accounts-list from display
+$('#my-accounts-list',$thisPage).css("display","none");// disable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).attr("disabled",true);// flag that loading is done
+loadingDone();});};// load the user's bank account data from the device secure store
+utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().then(function(banksAcctsArray){// the user's bank acct array collection has been returned
+if(banksAcctsArray.length==0){// there are no bank account data available
+// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// display a message to inform user that there are no cards available
+$('#my-accounts-page-message',$thisPage).css("display","block");// hide the error message from displaying
+$('#my-accounts-page-error',$thisPage).css("display","none");// hide the my-accounts-list from display
+$('#my-accounts-list',$thisPage).css("display","none");// enable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).removeAttr("disabled");}else{// there are card data available
+// empty the contents of the my accounts list
+$('#my-accounts-list',$thisPage).html("");for(var index=0;index<banksAcctsArray.length;index++){// append the stored bank accounts to the "My Accounts" list
+// create the bank account content
+var bankAcctContent="<div class=\"row\"><div class=\"col s12\"><div class=\"card horizontal\">\n                                <div class=\"card-image\" style=\"padding: 3%;\">\n                                <img src=\""+banksAcctsArray[index].bankAccountAvatar+"\">\n                                </div>\n                                <div class=\"card-stacked\">\n                                <div class=\"card-content\" style=\"padding-bottom: 0;\">\n                                <div style=\"font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;\n                                padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankAccountName+"</div>\n                                </div><div class=\"card-action\" style=\"font-weight: bold; font-size: 0.75em;\n                                color: #464646; padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankAccountNumber+"</div>\n                                <div  class=\"card-action\" style=\"font-weight: bold; font-size: 0.75em;\n                                color: #464646; padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankName+"</div>\n                                <div class=\"card-action\" style=\"padding: 0;\">\n                                <div style=\"display: inline-block; margin-left: auto; margin-right: auto\">\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;\">\n                                <ons-icon icon=\"md-saveup-icon-saveup-transfer-cash\" size=\"29px\">\n                                </ons-icon>\n                                </ons-button>\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;\">\n                                   <ons-icon icon=\"md-edit\" size=\"25px\">\n                                </ons-icon>\n                                </ons-button>\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;\">\n                                <ons-icon icon=\"md-delete\" size=\"25px\"></ons-icon>\n                                </ons-button>\n                                </div></div></div></div></div></div>";// append the bank account content to the "My Accounts" list
+$('#my-accounts-list',$thisPage).append(bankAcctContent);}// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// hide message to inform user that there are no accounts available
+$('#my-accounts-page-message',$thisPage).css("display","none");// hide the error message from displaying
+$('#my-accounts-page-error',$thisPage).css("display","none");// display the my-accounts-list
+$('#my-accounts-list',$thisPage).css("display","block");// enable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).removeAttr("disabled");}}).catch(function(){// an error occurred, so display the error message to the user
+// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// hide a message to inform user that there are no accounts available
+$('#my-accounts-page-message',$thisPage).css("display","none");// display the error message to user
+$('#my-accounts-page-error',$thisPage).css("display","block");// hide the my-accounts-list from display
+$('#my-accounts-list',$thisPage).css("display","none");// disable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).attr("disabled",true);});// hide the loader
+$('#loader-modal').get(0).hide();}},/**
+         * method is triggered when page is shown
+         *
+         * @param event
+         */pageShow:function pageShow(event){var $thisPage=$(event.target);// get the current page shown
+// check if the data on the page should be refreshed
+if($('#app-main-navigator').get(0).topPage.data&&$('#app-main-navigator').get(0).topPage.data.refresh&&$('#app-main-navigator').get(0).topPage.data.refresh===true){// user wants this page refreshed
+// add & display the preloader for the page
+$('#my-accounts-pull-hook',$thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');// load the user's bank account data from the device secure store
+utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().then(function(banksAcctsArray){// the user's bank acct array collection has been returned
+if(banksAcctsArray.length==0){// there are no bank account data available
+// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// display a message to inform user that there are no cards available
+$('#my-accounts-page-message',$thisPage).css("display","block");// hide the error message from displaying
+$('#my-accounts-page-error',$thisPage).css("display","none");// hide the my-accounts-list from display
+$('#my-accounts-list',$thisPage).css("display","none");// enable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).removeAttr("disabled");}else{// there are card data available
+// empty the contents of the my accounts list
+$('#my-accounts-list',$thisPage).html("");for(var index=0;index<banksAcctsArray.length;index++){// append the stored bank accounts to the "My Accounts" list
+// create the bank account content
+var bankAcctContent="<div class=\"row\"><div class=\"col s12\"><div class=\"card horizontal\">\n                                <div class=\"card-image\" style=\"padding: 3%;\">\n                                <img src=\""+banksAcctsArray[index].bankAccountAvatar+"\">\n                                </div>\n                                <div class=\"card-stacked\">\n                                <div class=\"card-content\" style=\"padding-bottom: 0;\">\n                                <div style=\"font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;\n                                padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankAccountName+"</div>\n                                </div><div class=\"card-action\" style=\"font-weight: bold; font-size: 0.75em;\n                                color: #464646; padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankAccountNumber+"</div>\n                                <div  class=\"card-action\" style=\"font-weight: bold; font-size: 0.75em;\n                                color: #464646; padding-bottom: 0.5em;\">"+banksAcctsArray[index].bankName+"</div>\n                                <div class=\"card-action\" style=\"padding: 0;\">\n                                <div style=\"display: inline-block; margin-left: auto; margin-right: auto\">\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;\">\n                                <ons-icon icon=\"md-saveup-icon-saveup-transfer-cash\" size=\"29px\">\n                                </ons-icon>\n                                </ons-button>\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;\">\n                                   <ons-icon icon=\"md-edit\" size=\"25px\">\n                                </ons-icon>\n                                </ons-button>\n                                <ons-button modifier=\"quiet\" disable-auto-styling class=\"right\"\n                                        style=\"color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;\">\n                                <ons-icon icon=\"md-delete\" size=\"25px\"></ons-icon>\n                                </ons-button>\n                                </div></div></div></div></div></div>";// append the bank account content to the "My Accounts" list
+$('#my-accounts-list',$thisPage).append(bankAcctContent);}// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// hide message to inform user that there are no accounts available
+$('#my-accounts-page-message',$thisPage).css("display","none");// hide the error message from displaying
+$('#my-accounts-page-error',$thisPage).css("display","none");// display the my-accounts-list
+$('#my-accounts-list',$thisPage).css("display","block");// enable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).removeAttr("disabled");}}).catch(function(){// an error occurred, so display the error message to the user
+// remove the page preloader progress bar
+$('.progress',$thisPage).remove();// display the help button
+$('#my-accounts-help-1',$thisPage).css("display","inline-block");// enable the pull-to-refresh widget for the page
+$('#my-accounts-pull-hook',$thisPage).removeAttr("disabled");// hide a message to inform user that there are no accounts available
+$('#my-accounts-page-message',$thisPage).css("display","none");// display the error message to user
+$('#my-accounts-page-error',$thisPage).css("display","block");// hide the my-accounts-list from display
+$('#my-accounts-list',$thisPage).css("display","none");// disable the 'Add Account' button
+$('#my-accounts-add-account-button',$thisPage).attr("disabled",true);});}},/**
+         * method is triggered when the 'Add Card' button is clicked
+         */addCardButtonClicked:function addCardButtonClicked(){$('#app-main-navigator').get(0).pushPage("add-card-page.html",{animation:"lift-md"});},/**
+         * method is used to trigger the delete operation of a financial card
+         * and updating the user-interface (UI)
+         *
+         * @param buttonElem
+         */deleteCardButtonClicked:function deleteCardButtonClicked(buttonElem){// confirm that user wants to delete the card before proceeding
+ons.notification.confirm('Do you want to delete this card?',{title:'Confirm Delete',buttonLabels:['No','Yes']})// Ask for confirmation
+.then(function(index){if(index===1){// YES button clicked
+// call the utility method used to delete a specified card
+utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).then(function(){// card has been deleted
+$(buttonElem).closest('.row').remove();// remove the card from display
+// inform the user that card was deleted
+Materialize.toast('Card deleted',3000);}).catch(function(){// inform the user that the specified financial card could not be deleted
+window.plugins.toast.showWithOptions({message:"Sorry, the bank card could not be deleted.\n Try again",duration:4000,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
+textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
+window.plugins.toast.hide();}});});}});},/**
+         * method is used to trigger the edit operation of a financial card
+         * and updating/changing the user-interface (UI)
+         *
+         * @param buttonElem
+         */editCardButtonClicked:function editCardButtonClicked(buttonElem){$('#app-main-navigator').get(0).pushPage("add-card-page.html",{animation:"lift-md",data:{edit:$(buttonElem).attr("data-id")}});}}};
 
 //# sourceMappingURL=controller-compiled.js.map
