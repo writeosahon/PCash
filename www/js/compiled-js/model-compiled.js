@@ -93,4 +93,13 @@ $(document).on("init", "#my-accounts-page", utopiasoftware.saveup.controller.myA
 // listen for when the My Accounts page is shown
 $(document).on("show", "#my-accounts-page", utopiasoftware.saveup.controller.myAccountsPageViewModel.pageShow);
 
+// listen for the initialisation of the Add Account page
+$(document).on("init", "#add-account-page", utopiasoftware.saveup.controller.addAccountPageViewModel.pageInit);
+
+// listen for the hide event of the Add Account page
+$(document).on("hide", "#add-account-page", utopiasoftware.saveup.controller.addAccountPageViewModel.pageHide);
+
+// listen for the destroy event of the Add Account page
+$(document).on("destroy", "#add-account-page", utopiasoftware.saveup.controller.addAccountPageViewModel.pageDestroy);
+
 //# sourceMappingURL=model-compiled.js.map

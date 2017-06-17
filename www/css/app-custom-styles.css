@@ -231,6 +231,7 @@ label[data-hint]:after {
 }
 /** STYLE FOR SELECT ELEMENTS IN ADD CARD PAGE ENDS **/
 
+
 /** STYLE FOR ROTATING ANIMATION FOR ELEMENTS BEGINS **/
 @-webkit-keyframes rotating /* Safari and Chrome */ {
     from {
@@ -299,6 +300,12 @@ label[data-hint]:after {
 }
 /** STYLE FOR MY ACCOUNTS PAGE ENDS **/
 
+/** STYLE FOR ADD ACCOUNT PAGE BEGINS **/
+#add-account-page .page--material__content {
+    position: absolute;
+    top: 0;
+}
+/** STYLE FOR ADD ACCOUNT PAGE ENDS **/
 
 /** STYLE FOR BANK SELECT ELEMENT IN ADD ACCOUNT PAGE BEGINS **/
 #add-account-page .page--material__content .dropdown-content{

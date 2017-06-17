@@ -96,6 +96,10 @@
                            onclick="utopiasoftware.saveup.controller.addCardPageViewModel.isCardNumberValidated(this);">
                     <label for="add-card-verify-card">Verify Card Number</label>
                 </div>
+                <div id="add-card-verify-card-notice" class="col s12" style="text-align: center;
+                font-size: 0.75em; color: gray; display: none;">
+                    NOTE: active Internet connection is required to verify card number
+                </div>
             </div>
 
             <div id="add-card-image-container" class="row" style="display: none">
@@ -172,7 +176,7 @@
 
             <div class="row"><!-- this row is just meant to provide the extra height needed to display the various select options -->
                 <div class="col s12" style="height: 100px;">
-                    <input id="add-card-unique-id" type="hidden">
+                    <input id="add-card-unique-id" type="hidden"><!-- used to hold the unique id for the account during update/edit -->
                 </div>
             </div>
         </ons-list>
