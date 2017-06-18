@@ -15,7 +15,7 @@
             </ons-toolbar-button>
         </div>
         <div class="center" style="text-align: center;">
-            My Accounts
+            Saved Recipients
         </div>
         <div class="right">
             <ons-toolbar-button class="page-options-button"
@@ -23,8 +23,8 @@
         </div>
     </ons-toolbar>
 
-    <ons-pull-hook id="my-accounts-pull-hook" fixed-content disabled style="text-align: center">
-        <ons-fab id="my-accounts-pull-hook-fab" style="background-color: #b388ff" class="fab--mini">
+    <ons-pull-hook id="saved-recipients-pull-hook" fixed-content disabled style="text-align: center">
+        <ons-fab id="saved-recipients-pull-hook-fab" style="background-color: #b388ff" class="fab--mini">
             <ons-icon icon="fa-long-arrow-down" size="24px"></ons-icon>
         </ons-fab>
     </ons-pull-hook>
@@ -33,7 +33,7 @@
         <div class="indeterminate"></div>
     </div>
 
-    <ons-fab id="my-accounts-help-1" position="top right" class="fab--mini"
+    <ons-fab id="saved-recipients-help-1" position="top right" class="fab--mini"
              style=" display: none; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 75%;
              border-bottom-right-radius: 0; margin-right: -20px; margin-top: 36px;"
     onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#my-accounts-page-help-popover', this)">
@@ -41,19 +41,19 @@
     </ons-fab>
 
 
-    <p id="my-accounts-page-message" style="margin-top: 3em; margin-left: 1em; margin-right:1em; text-align: center; min-height: 4em; display: none">
-        <ons-icon icon="md-saveup-icon-saveup-my-accounts" size="55px" style="color: gray"></ons-icon><br>
-        <span style="text-align: center; font-size: 1.1em; color: gray">No Accounts In Here.
-            <br>to begin, tap the 'ADD ACCOUNT' button below</span>
+    <p id="saved-recipients-page-message" style="margin-top: 3em; margin-left: 1em; margin-right:1em; text-align: center; min-height: 4em; display: none">
+        <ons-icon icon="md-saveup-icon-saveup-recipients" size="55px" style="color: gray"></ons-icon><br>
+        <span style="text-align: center; font-size: 1.1em; color: gray">No Saved Recipients In Here.
+            <br>to begin, tap the 'ADD RECIPIENT' button below</span>
     </p>
 
-    <p id="my-accounts-page-error" style="margin-top: 3em; margin-left: 1em; margin-right:1em; text-align: center; min-height: 4em; display: none">
+    <p id="saved-recipients-page-error" style="margin-top: 3em; margin-left: 1em; margin-right:1em; text-align: center; min-height: 4em; display: none">
         <ons-icon icon="md-close-circle-o" size="55px" style="color: gray"></ons-icon><br>
         <span style="text-align: center; font-size: 1.1em; color: gray">Sorry we could not load the requested data.
             <br>Please 'Pull Down' to refresh</span>
     </p>
 
-    <ons-list id="my-accounts-list" style="display: none;">
+    <ons-list id="saved-recipients-list" style="display: none;">
 
         <div class="row">
             <div class="col s12">
@@ -99,9 +99,9 @@
     <ons-bottom-toolbar style="height: 50px; background: rgba(255, 255, 255, 0.85)">
         <ons-row>
             <ons-col width="100%" style="text-align: center; padding-top: 0.5em">
-                <ons-button id="my-accounts-add-account-button" disabled onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.addAccountButtonClicked();">
+                <ons-button id="saved-recipients-add-account-button" disabled onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.addAccountButtonClicked();">
                     <ons-icon icon="md-plus-circle">
-                    </ons-icon> Add Account
+                    </ons-icon> Add Recipient
                 </ons-button>
             </ons-col>
         </ons-row>

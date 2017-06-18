@@ -367,3 +367,36 @@ label[data-hint]:after {
     min-height: 16em !important;
 }
 /** STYLE FOR ONS-LIST ELEMENT IN ADD ACCOUNT PAGE ENDS **/
+
+
+
+/** STYLE FOR SAVED RECIPIENTS PAGE BEGINS **/
+#saved-recipients-page .page--material__background {
+    background-image: linear-gradient(0deg, rgba(255, 255, 255,0.7) 0%, rgba(255, 255, 255,0.7) 100%),
+    url('app-images/recipients-background.jpg');
+    background-repeat: no-repeat;
+    background-size: contain, cover;
+}
+#saved-recipients-page ons-list, #saved-recipients-page ons-list-item {
+    background-color: transparent;
+}
+#saved-recipients-help-1 {
+    background-color: #82b1ff;
+}
+#saved-recipients-page-help-popover,
+#saved-recipients-page-help-popover .popover__content {
+    background-color: #82b1ff;
+}
+#saved-recipients-page-help-popover .popover__arrow,
+#saved-recipients-page-help-popover .popover--right__arrow {
+    background-image: linear-gradient(45deg, #82b1ff, #82b1ff 50%, #82b1ff 50%);
+}
+#saved-recipients-add-card-button {
+    background-color: rgb(179, 136, 255);
+}
+#saved-recipients-pull-hook-fab ons-icon[spin] {
+    -webkit-animation: ons-icon-spin 0.8s infinite linear;
+    -moz-animation: ons-icon-spin 0.8s infinite linear;
+    animation: ons-icon-spin 0.8s infinite linear;
+}
+/** STYLE FOR SAVED RECIPIENTS PAGE ENDS **/
