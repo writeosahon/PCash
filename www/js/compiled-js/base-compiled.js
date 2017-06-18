@@ -575,6 +575,171 @@ var utopiasoftware = {
                     });
                 });
             }
+        },
+
+        /**
+         * object encapsulates some operations/manipulations  that can be performed on
+         * stored saved recipients bank accounts
+         */
+        savedRecipientsBankAccountOperations: {
+
+            /**
+             * method is used to load the collection of saved recipients stored bank accounts ("Stored Recipients") data from
+             * the device secure storage
+             *
+             * @return {Promise} method returns a Promise object that resolves with
+             * the retrieved saved recipients bank accounts as an array OR
+             * rejects when the saved recipients bank accounts cannot be retrieved.
+             *
+             * NOTE: the Promise object resolve with an empty array when no accounts are available
+             */
+            loadSavedRecipientsAccountsData: function loadSavedRecipientsAccountsData() {
+                // return the Promise object
+                return new Promise(function (resolve, reject) {
+                    // read the saved recipients bank accounts ("Saved Recipients") data from secure storage
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-saved-recipients-bank-accounts' })).then(function (instanceId) {
+                        // read the content of the securely stored bank accounts data
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function (errObject) {
+                        if (errObject.code == 1) {
+                            // the secure bank accounts storage has not been created before
+                            resolve([]); // return an empty my accounts data array
+                        } else {
+                            // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).then(function (secureBankAcctDataArray) {
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an object
+                        resolve(secureBankAcctDataArray);
+                    }).catch(function (err) {
+                        // reject the Promise
+                        reject(err);
+                    });
+                });
+            },
+
+            /**
+             * method is used to retrieve data details of a specific user's bank account
+             * @param bankAcctId {String} the unique id of the specific bank account to be retrieved
+               * @returns {Promise} returns a promise that resolves to the
+             * data details of the specific user bank account or rejects with an error
+             */
+            getMyAccount: function getMyAccount(bankAcctId) {
+
+                // return a Promise object for the method
+                return new Promise(function (resolve, reject) {
+                    // get all the stored cards on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-user-bank-accounts' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).then(function (secureBankAcctDataArray) {
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an array object
+                        return secureBankAcctDataArray.find(function (arrayElem) {
+                            // find the right bank acct based on the acct id
+                            if (arrayElem.uniqueAccountId === bankAcctId) {
+                                // this is the bank acct that is required
+                                return true;
+                            }
+                        });
+                    }).then(function (bankAcctObject) {
+                        // get the bank account object
+                        if (!bankAcctObject) {
+                            // no bank account was discovered
+                            throw "error"; // throw an error
+                        } else {
+                            // a bank account was found
+                            resolve(bankAcctObject); // resolve the promise with the account object
+                        }
+                    }).catch(function (err) {
+                        // an error occurred OR no account was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+            /**
+             * method is used to delete data details of a user's bank account
+             * @param bankAcctId {String} the unique id of the specific bank account to be deleted
+               * @returns {Promise} returns a promise that resolves when the bank account is deleted or rejects with an error
+             */
+            deleteMyAccount: function deleteMyAccount(bankAcctId) {
+
+                // return a Promise object for the method
+                return new Promise(function (resolve, reject) {
+                    // get all the stored accounts on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-user-bank-accounts' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).then(function (secureBankAcctDataArray) {
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an array object
+                        var acctObjIndex = secureBankAcctDataArray.findIndex(function (arrayElem) {
+                            // find the right bank acct index based on the acct id
+                            if (arrayElem.uniqueAccountId === bankAcctId) {
+                                // this is the bank account that is required
+                                return true;
+                            }
+                        });
+
+                        if (acctObjIndex < 0) {
+                            // no bank acct with the provided id was discovered
+                            throw "error"; // throw an error
+                        } else {
+                            // a bank account was found with the specified id
+                            secureBankAcctDataArray.splice(acctObjIndex, 1); // delete the item
+                            // write the updated bank accounts collection array back into secure storage
+                            return intel.security.secureData.createFromData({ 'data': JSON.stringify(secureBankAcctDataArray) });
+                        }
+                    }).then(function (instanceId) {
+                        return intel.security.secureStorage.write({ 'id': 'postcash-user-bank-accounts', 'instanceID': instanceId });
+                    }).then(function () {
+                        // bank accounts array collection has been updated, so resolve the promise to delete the acct data
+
+                        resolve(); // resolve the Promise to delete the bank account data
+                    }).catch(function (err) {
+                        // an error occurred OR no bank account was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+            /**
+             * method is used to add bank account data details to the collection of user's bank account
+             *
+             * @param bankAcctObject {Object} the bank account object to be added to the
+             * collection of user's bank accounts
+               * @returns {Promise} returns a promise that resolves when the bank account has
+             * been added/created or rejects with an error
+             */
+            addMyAccount: function addMyAccount(bankAcctObject) {
+
+                // return a Promise which resolves when bank account has been added successfully or rejects otherwise
+                return new Promise(function (resolve, reject) {
+                    // get the previous bank accounts on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-user-bank-accounts' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function (errObject) {
+                        if (errObject.code == 1) {
+                            // the secure storage has not been created before
+                            return '[]'; // return an empty data array
+                        } else {
+                            // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).then(function (secureBankAcctDataArray) {
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an object
+                        secureBankAcctDataArray.unshift(bankAcctObject); // add the bank acct to the beginning of the array collection
+                        // store the updated account collection securely on user's device
+                        return intel.security.secureData.createFromData({ 'data': JSON.stringify(secureBankAcctDataArray) });
+                    }).then(function (instanceId) {
+                        return intel.security.secureStorage.write({ 'id': 'postcash-user-bank-accounts', 'instanceID': instanceId });
+                    }).then(function () {
+                        // account has been added
+                        // resolve promise
+                        resolve();
+                    }).catch(function (err) {
+                        // there was an error and account could NOT be added
+                        reject(err); // reject promise
+                    });
+                });
+            }
         }
 
     }
