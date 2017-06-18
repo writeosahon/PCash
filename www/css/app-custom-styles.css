@@ -53,6 +53,13 @@ label[data-hint]:after {
     text-align: center;
     color: #311b92;
 }
+#user-phone .text-input--material__label{
+    color: #311b92;
+}
+#secure-pin .text-input--material__label{
+    color: #311b92;
+}
+
 /** STYLE FOR THE USER SIGIN-IN PAGE INPUT FIELD ENDS **/
 
 

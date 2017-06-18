@@ -5,7 +5,10 @@
 <body>
 <!-- sign-in-page -->
 <ons-page id="sign-in-page">
-    <form id="login-form" class="valign-wrapper" style="background-color: rgb(237, 231, 246) !important; width: 100%; overflow-x: hidden !important; min-height: 100%" autocomplete="off" data-parsley-inputs="ons-input,textarea,select"
+    <form id="login-form" class="valign-wrapper" style=" width: 100%;
+    background-image: linear-gradient(0deg, rgba(237, 231, 246,0.5) 0%, rgba(237, 231, 246,0.5) 100%),
+    url('css/app-images/phone-dial-background.jpg');
+    background-repeat: no-repeat; background-size: contain, cover; overflow-x: hidden !important; min-height: 100%" autocomplete="off" data-parsley-inputs="ons-input,textarea,select"
           data-parsley-excluded="ons-input[type=button], ons-input[type=submit],
                               ons-input[type=reset], ons-input[type=hidden], [disabled], :hidden">
         <div style="width: 100%;">
@@ -18,7 +21,7 @@
             </ons-row>
         <ons-row class="hide-on-med-and-up">
             <ons-col style="text-align: center;">
-                <h5 style="color: #b388ff">SIGN IN</h5>
+                <h5 style="color: #8a2be2">SIGN IN</h5>
             </ons-col>
         </ons-row> <!-- end of mobile layout -->
 
@@ -30,13 +33,13 @@
             </ons-row>
             <ons-row class="hide-on-small-only">
                 <ons-col style="text-align: center;">
-                    <h4 style="color: #b388ff">SIGN IN</h4>
+                    <h4 style="color: #8a2be2">SIGN IN</h4>
                 </ons-col>
             </ons-row> <!-- end of tablet layout -->
 
         <ons-row vertical-align="top" style="margin-bottom: 1em; text-align: center;">
             <ons-col>
-                <ons-icon icon="md-saveup-icon-saveup-phone" size="28px" class="first" style="color: #b388ff; margin-right: 0.2em;"></ons-icon>
+                <ons-icon icon="md-saveup-icon-saveup-phone" size="28px" class="first" style="color: #8a2be2; margin-right: 0.2em;"></ons-icon>
                 <ons-input id="user-phone" type="tel" required modifier="underbar" placeholder="Phone Number" float
                            pattern="(0[1-9]{1}[0-9]{9}|\+234[1-9]{1}[0-9]{9})" required float
                            data-parsley-required-message="your phone number is required"
@@ -47,7 +50,7 @@
         </ons-row>
         <ons-row style="margin-bottom: 2em; text-align: center;">
             <ons-col>
-                <ons-icon icon="md-lock" size="28px" class="second" style="color: #b388ff; margin-right: 0.2em;"></ons-icon>
+                <ons-icon icon="md-lock" size="28px" class="second" style="color: #8a2be2; margin-right: 0.2em;"></ons-icon>
                 <ons-input id="secure-pin" type="number" required data-parsley-type="digits"
                            data-parsley-minlength="4"
                            data-parsley-maxlength="8"

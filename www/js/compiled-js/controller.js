@@ -2028,7 +2028,9 @@ utopiasoftware.saveup.controller = {
                         $('#add-card-page #hidden-card-expiry-year-input').val(card.cardExpiryYear);
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = card.cardBrand;
                         $('#add-card-page #add-card-verify-card').prop("checked", card.cardBrand !== "Unknown");
-                        $('#add-card-verify-card-notice').css("display", card.cardBrand !== "Unknown" ? "block" : "none");
+                        // reset the card number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = card.cardLocale;
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = card.cardImage;
 
@@ -2141,8 +2143,9 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-card-page #add-card-form').get(0).reset();
-                        // hide the notice that an internet connection is required for verification
-                        $('#add-card-verify-card-notice').css("display", "none");
+                        // reset the card number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
                         // reset the new card brand, card general locale & card image
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
@@ -2209,8 +2212,9 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-card-page #add-card-form').get(0).reset();
-                        // hide the notice that an internet connection is required for verification
-                        $('#add-card-verify-card-notice').css("display", "none");
+                        // reset the card number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
                         // reset the new card brand, card general locale & card image
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
                         utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
@@ -2497,8 +2501,10 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
+                                disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
@@ -2592,8 +2598,10 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
+                                disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
@@ -2704,8 +2712,10 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
+                                disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
@@ -2777,17 +2787,17 @@ utopiasoftware.saveup.controller = {
                     buttonLabels: ['No', 'Yes']}) // Ask for confirmation
                 .then(function(index) {
                     if (index === 1) { // YES button clicked
-                        // call the utility method used to delete a specified card
-                        utopiasoftware.saveup.financialCardOperations.deleteCard($(buttonElem).attr("data-id")).
-                        then(function(){ // card has been deleted
-                            $(buttonElem).closest('.row').remove(); // remove the card from display
+                        // call the utility method used to delete a specified bank account
+                        utopiasoftware.saveup.bankAccountOperations.deleteMyAccount($(buttonElem).attr("data-id")).
+                        then(function(){ // account has been deleted
+                            $(buttonElem).closest('.row').remove(); // remove the account from display
                             // inform the user that card was deleted
-                            Materialize.toast('Card deleted', 3000);
+                            Materialize.toast('Bank Account deleted', 3000);
                         }).
                         catch(function(){
-                            // inform the user that the specified financial card could not be deleted
+                            // inform the user that the specified bank account could not be deleted
                             window.plugins.toast.showWithOptions({
-                                message: "Sorry, the bank card could not be deleted.\n Try again",
+                                message: "Sorry, the bank account could not be deleted.\n Try again",
                                 duration: 4000,
                                 position: "top",
                                 styling: {
@@ -2808,13 +2818,13 @@ utopiasoftware.saveup.controller = {
 
 
         /**
-         * method is used to trigger the edit operation of a financial card
+         * method is used to trigger the edit operation of a user's bank account
          * and updating/changing the user-interface (UI)
          *
          * @param buttonElem
          */
-        editCardButtonClicked: function(buttonElem){
-            $('#app-main-navigator').get(0).pushPage("add-card-page.html", {
+        editAccountButtonClicked: function(buttonElem){
+            $('#app-main-navigator').get(0).pushPage("add-account-page.html", {
                 animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
             });
         }
@@ -2872,7 +2882,6 @@ utopiasoftware.saveup.controller = {
          */
         pageInit: function(event){
 
-            console.log("ACCOUNT PAGE INITIALISED");
             var $thisPage = $(event.target); // get the current page shown
             // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
             $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
@@ -2927,17 +2936,24 @@ utopiasoftware.saveup.controller = {
                 $('#add-account-save-button').get(0).onclick = function(){
                     // check if the user requested for remote account number validation
                     if($('#add-account-verify-account').is(":checked")){ //user asked for remote validation
+                        // display loader message to the user
+                        $('#loader-modal #loader-modal-message').html("Preparing Device Storage...");
+                        $('#loader-modal').get(0).show();
                         // request for gateway authorization token used in account number validation
                         utopiasoftware.saveup.moneyWaveObject.useToken.
                         then(function(tokenData){
                             // set the token data used for verifying the bank account number
                             utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData = tokenData;
+                            // hide loader message
+                            $('#loader-modal').get(0).hide();
                             // run the validation method for the create account form
                             utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.whenValidate();
                         }).
                         catch(function(){
                             // clear the token data used for verifying the bank account number
                             utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData = "";
+                            // hide loader message
+                            $('#loader-modal').get(0).hide();
                             // run the validation method for the create account form
                             utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.whenValidate();
                         });
@@ -3153,10 +3169,9 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-account-page #add-account-form').get(0).reset();
-                        // also make the account name input enabled
-                        $('#add-account-account-name').removeAttr("disabled");
-                        // hide the notice that an internet connection is required for verification
-                        $('#add-account-verify-account-notice').css("display", "none");
+                        // reset the account number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addAccountPageViewModel.
+                        isbankAccountNumberValidated($('#add-account-page #add-account-verify-account'));
                         // reset the bank account properties
                         utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName = "";
                         utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData = "";
@@ -3198,10 +3213,9 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-account-page #add-account-form').get(0).reset();
-                        // also make the account name input enabled
-                        $('#add-account-account-name').removeAttr("disabled");
-                        // hide the notice that an internet connection is required for verification
-                        $('#add-account-verify-account-notice').css("display", "none");
+                        // reset the account number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addAccountPageViewModel.
+                        isbankAccountNumberValidated($('#add-account-page #add-account-verify-account'));
                         // reset the bank account properties
                         utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName = "";
                         utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData = "";
