@@ -180,6 +180,15 @@ label[data-hint]:after {
 
 
 /** STYLE FOR MY CARDS PAGE BEGINS **/
+#my-cards-page .page--material__background {
+    background-image: linear-gradient(0deg, rgba(255, 255, 255,0.6) 0%, rgba(255, 255, 255,0.6) 100%),
+    url('app-images/cards-background.png');
+    background-repeat: no-repeat;
+    background-size: contain, cover;
+}
+#my-cards-page ons-list, #my-cards-page ons-list-item {
+    background-color: transparent;
+}
 #my-cards-help-1 {
     background-color: #82b1ff;
 }
@@ -283,6 +292,16 @@ label[data-hint]:after {
 
 
 /** STYLE FOR MY ACCOUNTS PAGE BEGINS **/
+#my-accounts-page .page--material__background {
+    background-image: linear-gradient(0deg, rgba(255, 255, 255,0.6) 0%, rgba(255, 255, 255,0.6) 100%),
+    url('app-images/accounts-background.jpg');
+    background-repeat: no-repeat;
+    background-size: contain, cover;
+}
+#my-accounts-page ons-list, #my-accounts-page ons-list-item {
+    background-color: transparent;
+}
+
 #my-accounts-page .card.horizontal .card-image { /** control the size of the profile/avatar photos used in the cards **/
     max-width: 40%;
 }

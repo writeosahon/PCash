@@ -2508,8 +2508,9 @@ utopiasoftware.saveup.controller = {
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
@@ -2605,8 +2606,9 @@ utopiasoftware.saveup.controller = {
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
@@ -2719,8 +2721,9 @@ utopiasoftware.saveup.controller = {
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
