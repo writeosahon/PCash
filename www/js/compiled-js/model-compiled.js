@@ -102,4 +102,10 @@ $(document).on("hide", "#add-account-page", utopiasoftware.saveup.controller.add
 // listen for the destroy event of the Add Account page
 $(document).on("destroy", "#add-account-page", utopiasoftware.saveup.controller.addAccountPageViewModel.pageDestroy);
 
+// listen for the initialisation of the Saved Recipients page
+$(document).on("init", "#saved-recipients-page", utopiasoftware.saveup.controller.savedRecipientsPageViewModel.pageInit);
+
+// listen for when the Saved Recipients page is shown
+$(document).on("show", "#saved-recipients-page", utopiasoftware.saveup.controller.savedRecipientsPageViewModel.pageShow);
+
 //# sourceMappingURL=model-compiled.js.map

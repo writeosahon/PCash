@@ -3518,13 +3518,13 @@ utopiasoftware.saveup.controller = {
                             // enable the 'Add Recipient' button
                             $('#saved-recipients-add-recipients-button', $thisPage).removeAttr("disabled");
                             // flag that loading is done
-                            loadingDone(); // todo
+                            loadingDone();
                         }
                         else{ // there are card data available
-                            // empty the contents of the my accounts list
-                            $('#my-accounts-list', $thisPage).html("");
+                            // empty the contents of the saved recipients list
+                            $('#saved-recipients-list', $thisPage).html("");
 
-                            for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "My Accounts" list
+                            for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "Saved Recipients" list
                                 // create the bank account content
                                 let bankAcctContent = `<div class="row"><div class="col s12"><div class="card horizontal">
                                 <div class="card-image" style="padding: 3%;">
@@ -3558,23 +3558,23 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
-                                // append the bank account content to the "My Accounts" list
-                                $('#my-accounts-list', $thisPage).append(bankAcctContent);
+                                // append the bank account content to the "saved recipients" list
+                                $('#saved-recipients-list', $thisPage).append(bankAcctContent);
                             }
                             // remove the page preloader progress bar
                             $('.progress', $thisPage).remove();
                             // display the help button
-                            $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                            $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                             // enable the pull-to-refresh widget for the page
-                            $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
+                            $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
                             // hide message to inform user that there are no accounts available
-                            $('#my-accounts-page-message', $thisPage).css("display", "none");
+                            $('#saved-recipients-page-message', $thisPage).css("display", "none");
                             // hide the error message from displaying
-                            $('#my-accounts-page-error', $thisPage).css("display", "none");
-                            // display the my-accounts-list
-                            $('#my-accounts-list', $thisPage).css("display", "block");
-                            // enable the 'Add Account' button
-                            $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                            $('#saved-recipients-page-error', $thisPage).css("display", "none");
+                            // display the saved-recipients-list
+                            $('#saved-recipients-list', $thisPage).css("display", "block");
+                            // enable the 'Add Recipient' button
+                            $('#saved-recipients-add-recipient-button', $thisPage).removeAttr("disabled");
                             // flag that loading is done
                             loadingDone();
                         }
@@ -3583,46 +3583,46 @@ utopiasoftware.saveup.controller = {
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
                         // hide a message to inform user that there are no accounts available
-                        $('#my-accounts-page-message', $thisPage).css("display", "none");
+                        $('#saved-recipients-page-message', $thisPage).css("display", "none");
                         // display the error message to user
-                        $('#my-accounts-page-error', $thisPage).css("display", "block");
+                        $('#saved-recipients-page-error', $thisPage).css("display", "block");
                         // hide the my-accounts-list from display
-                        $('#my-accounts-list', $thisPage).css("display", "none");
-                        // disable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).attr("disabled", true);
+                        $('#saved-recipients-list', $thisPage).css("display", "none");
+                        // disable the 'Add Recipient' button
+                        $('#saved-recipients-add-recipient-button', $thisPage).attr("disabled", true);
                         // flag that loading is done
                         loadingDone();
                     });
                 };
 
-                // load the user's bank account data from the device secure store
-                utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().
-                then(function(banksAcctsArray){ // the user's bank acct array collection has been returned
+                // load the saved recipients account data from the device secure store
+                utopiasoftware.saveup.savedRecipientsBankAccountOperations.loadSavedRecipientsAccountsData().
+                then(function(banksAcctsArray){ // the bank acct array collection has been returned
                     if(banksAcctsArray.length == 0){ // there are no bank account data available
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // display a message to inform user that there are no cards available
-                        $('#my-accounts-page-message', $thisPage).css("display", "block");
+                        $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
+                        // display a message to inform user that there are no accounts available
+                        $('#saved-recipients-page-message', $thisPage).css("display", "block");
                         // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
+                        $('#saved-recipients-page-error', $thisPage).css("display", "none");
                         // hide the my-accounts-list from display
-                        $('#my-accounts-list', $thisPage).css("display", "none");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-list', $thisPage).css("display", "none");
+                        // enable the 'Add Recipient' button
+                        $('#saved-recipients-add-recipients-button', $thisPage).removeAttr("disabled");
                     }
                     else{ // there are card data available
-                        // empty the contents of the my accounts list
-                        $('#my-accounts-list', $thisPage).html("");
+                        // empty the contents of the saved recipients list
+                        $('#saved-recipients-list', $thisPage).html("");
 
-                        for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "My Accounts" list
+                        for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "Saved Recipients" list
                             // create the bank account content
                             let bankAcctContent = `<div class="row"><div class="col s12"><div class="card horizontal">
                                 <div class="card-image" style="padding: 3%;">
@@ -3656,40 +3656,40 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
-                            // append the bank account content to the "My Accounts" list
-                            $('#my-accounts-list', $thisPage).append(bankAcctContent);
+                            // append the bank account content to the "saved recipients" list
+                            $('#saved-recipients-list', $thisPage).append(bankAcctContent);
                         }
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
                         // hide message to inform user that there are no accounts available
-                        $('#my-accounts-page-message', $thisPage).css("display", "none");
+                        $('#saved-recipients-page-message', $thisPage).css("display", "none");
                         // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
-                        // display the my-accounts-list
-                        $('#my-accounts-list', $thisPage).css("display", "block");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-page-error', $thisPage).css("display", "none");
+                        // display the saved-recipients-list
+                        $('#saved-recipients-list', $thisPage).css("display", "block");
+                        // enable the 'Add Recipient' button
+                        $('#saved-recipients-add-recipient-button', $thisPage).removeAttr("disabled");
                     }
                 }).
                 catch(function(){ // an error occurred, so display the error message to the user
                     // remove the page preloader progress bar
                     $('.progress', $thisPage).remove();
                     // display the help button
-                    $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                    $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                     // enable the pull-to-refresh widget for the page
-                    $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
+                    $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
                     // hide a message to inform user that there are no accounts available
-                    $('#my-accounts-page-message', $thisPage).css("display", "none");
+                    $('#saved-recipients-page-message', $thisPage).css("display", "none");
                     // display the error message to user
-                    $('#my-accounts-page-error', $thisPage).css("display", "block");
+                    $('#saved-recipients-page-error', $thisPage).css("display", "block");
                     // hide the my-accounts-list from display
-                    $('#my-accounts-list', $thisPage).css("display", "none");
-                    // disable the 'Add Account' button
-                    $('#my-accounts-add-account-button', $thisPage).attr("disabled", true);
+                    $('#saved-recipients-list', $thisPage).css("display", "none");
+                    // disable the 'Add Recipient' button
+                    $('#saved-recipients-add-recipient-button', $thisPage).attr("disabled", true);
                 });
 
                 // hide the loader
@@ -3712,32 +3712,32 @@ utopiasoftware.saveup.controller = {
             if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.refresh
                 && $('#app-main-navigator').get(0).topPage.data.refresh === true){ // user wants this page refreshed
                 // add & display the preloader for the page
-                $('#my-accounts-pull-hook', $thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');
+                $('#saved-recipients-pull-hook', $thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');
 
-                // load the user's bank account data from the device secure store
-                utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().
-                then(function(banksAcctsArray){ // the user's bank acct array collection has been returned
+                // load the saved recipients account data from the device secure store
+                utopiasoftware.saveup.savedRecipientsBankAccountOperations.loadSavedRecipientsAccountsData().
+                then(function(banksAcctsArray){ // the bank acct array collection has been returned
                     if(banksAcctsArray.length == 0){ // there are no bank account data available
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // display a message to inform user that there are no cards available
-                        $('#my-accounts-page-message', $thisPage).css("display", "block");
+                        $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
+                        // display a message to inform user that there are no accounts available
+                        $('#saved-recipients-page-message', $thisPage).css("display", "block");
                         // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
+                        $('#saved-recipients-page-error', $thisPage).css("display", "none");
                         // hide the my-accounts-list from display
-                        $('#my-accounts-list', $thisPage).css("display", "none");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-list', $thisPage).css("display", "none");
+                        // enable the 'Add Recipient' button
+                        $('#saved-recipients-add-recipients-button', $thisPage).removeAttr("disabled");
                     }
                     else{ // there are card data available
-                        // empty the contents of the my accounts list
-                        $('#my-accounts-list', $thisPage).html("");
+                        // empty the contents of the saved recipients list
+                        $('#saved-recipients-list', $thisPage).html("");
 
-                        for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "My Accounts" list
+                        for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "Saved Recipients" list
                             // create the bank account content
                             let bankAcctContent = `<div class="row"><div class="col s12"><div class="card horizontal">
                                 <div class="card-image" style="padding: 3%;">
@@ -3771,40 +3771,40 @@ utopiasoftware.saveup.controller = {
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
-                            // append the bank account content to the "My Accounts" list
-                            $('#my-accounts-list', $thisPage).append(bankAcctContent);
+                            // append the bank account content to the "saved recipients" list
+                            $('#saved-recipients-list', $thisPage).append(bankAcctContent);
                         }
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
                         // hide message to inform user that there are no accounts available
-                        $('#my-accounts-page-message', $thisPage).css("display", "none");
+                        $('#saved-recipients-page-message', $thisPage).css("display", "none");
                         // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
-                        // display the my-accounts-list
-                        $('#my-accounts-list', $thisPage).css("display", "block");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-page-error', $thisPage).css("display", "none");
+                        // display the saved-recipients-list
+                        $('#saved-recipients-list', $thisPage).css("display", "block");
+                        // enable the 'Add Recipient' button
+                        $('#saved-recipients-add-recipient-button', $thisPage).removeAttr("disabled");
                     }
                 }).
                 catch(function(){ // an error occurred, so display the error message to the user
                     // remove the page preloader progress bar
                     $('.progress', $thisPage).remove();
                     // display the help button
-                    $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                    $('#saved-recipients-help-1', $thisPage).css("display", "inline-block");
                     // enable the pull-to-refresh widget for the page
-                    $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
+                    $('#saved-recipients-pull-hook', $thisPage).removeAttr("disabled");
                     // hide a message to inform user that there are no accounts available
-                    $('#my-accounts-page-message', $thisPage).css("display", "none");
+                    $('#saved-recipients-page-message', $thisPage).css("display", "none");
                     // display the error message to user
-                    $('#my-accounts-page-error', $thisPage).css("display", "block");
+                    $('#saved-recipients-page-error', $thisPage).css("display", "block");
                     // hide the my-accounts-list from display
-                    $('#my-accounts-list', $thisPage).css("display", "none");
-                    // disable the 'Add Account' button
-                    $('#my-accounts-add-account-button', $thisPage).attr("disabled", true);
+                    $('#saved-recipients-list', $thisPage).css("display", "none");
+                    // disable the 'Add Recipient' button
+                    $('#saved-recipients-add-recipient-button', $thisPage).attr("disabled", true);
                 });
             }
 
@@ -3812,10 +3812,10 @@ utopiasoftware.saveup.controller = {
 
 
         /**
-         * method is triggered when the 'Add Account' button is clicked
+         * method is triggered when the 'Add Recipient' button is clicked
          */
-        addAccountButtonClicked: function(){
-            $('#app-main-navigator').get(0).pushPage("add-account-page.html", {
+        addRecipientButtonClicked: function(){
+            $('#app-main-navigator').get(0).pushPage("add-recipient-page.html", {
                 animation: "lift-md"
             });
         },
@@ -3827,7 +3827,7 @@ utopiasoftware.saveup.controller = {
          *
          * @param buttonElem
          */
-        deleteAccountButtonClicked: function(buttonElem){
+        deleteRecipientButtonClicked: function(buttonElem){
 
             // confirm that user wants to delete the account before proceeding
             ons.notification.confirm('Do you want to delete this bank account?', {title: 'Confirm Delete',
@@ -3870,8 +3870,8 @@ utopiasoftware.saveup.controller = {
          *
          * @param buttonElem
          */
-        editAccountButtonClicked: function(buttonElem){
-            $('#app-main-navigator').get(0).pushPage("add-account-page.html", {
+        editRecipientButtonClicked: function(buttonElem){
+            $('#app-main-navigator').get(0).pushPage("add-recipient-page.html", {
                 animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
             });
         }
