@@ -5,8 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<!-- add-account page -->
-<ons-page id="add-account-page">
+<!-- add-recipient page -->
+<ons-page id="add-recipient-page">
     <ons-toolbar class="toolbar--transparent">
         <div class="left">
             <ons-toolbar-button onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">
@@ -14,7 +14,7 @@
             </ons-toolbar-button>
         </div>
         <div class="center" style="text-align: center;">
-            Add Bank Account
+            Add Recipient Account
         </div>
         <div class="right">
             <ons-toolbar-button class="page-options-button"
@@ -22,7 +22,7 @@
         </div>
     </ons-toolbar>
 
-    <div style="background-image: url('css/app-images/cash-1726618_1280.jpg'); background-position: center;
+    <div style="background-image: url('css/app-images/add-recipients-image.jpg'); background-position: center;
     background-size: 100% 100%; background-repeat: no-repeat; -webkit-filter: blur(1px); filter: blur(1px);
     width: 100%; height: 140px; position: relative"><!-- div has background image -->
         <div class="progress" style="position: absolute; top: 0;">
@@ -30,14 +30,14 @@
         </div>
     </div>
 
-    <form id="add-account-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
+    <form id="add-recipient-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
           data-parsley-excluded="input[type=button], input[type=submit],
                               input[type=reset], input[type=hidden], [disabled], :hidden, readonly" style="display: none;">
 
         <ons-list>
             <ons-list-header style="z-index: 2; font-size: 1.3em; margin:0; text-align: center; background-color: #ede7f6; color: #b388ff">
-                Add New Account <span id="add-account-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
-                                          onclick="$('.tap-target', $('#add-account-page')).tapTarget('open');">
+                Add New Recipient <span id="add-recipient-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                                          onclick="$('.tap-target', $('#add-recipient-page')).tapTarget('open');">
                     <ons-icon icon="fa-question"></ons-icon>
                 </span>
             </ons-list-header>
@@ -47,12 +47,12 @@
                     <ons-icon icon="md-saveup-icon-saveup-saving-group" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s8 input-field" style="position: relative">
-                    <select id="add-account-choose-bank"
+                    <select id="add-recipient-choose-bank"
                             onchange="$('#hidden-choose-bank-input').val($(this).val()); $('#hidden-choose-bank-input').blur();
                             utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();">
                         <option value="" disabled selected>Choose Bank</option>
                     </select>
-                    <label for="add-account-choose-bank"></label>
+                    <label for="add-recipient-choose-bank"></label>
                 </div>
                 <input id="hidden-choose-bank-input" type="text" required
                        data-parsley-trigger-after-failure="focusout"
@@ -66,8 +66,8 @@
                     <ons-icon icon="md-account" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s8 input-field">
-                    <input id="add-account-number" type="number" required placeholder="NUBAN"
-                           onkeyup="addAccountPageViewModel.resetAccountNameDisplay();"
+                    <input id="add-recipient-account-number" type="number" required placeholder="NUBAN"
+                           onkeyup="utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();"
                            onfocus="$('#add-account-page ons-list-header').css({'display': 'none'});"
                            onblur="$('#add-account-page ons-list-header').css({'display': 'block'});"
                            data-length="10"
@@ -81,18 +81,18 @@
                            data-parsley-minlength-message="account number cannot be less than 10 numbers"
                            data-parsley-maxlength-message="account number cannot be more than 10 numbers"
                            data-parsley-remote-message="account number unknown or invalid">
-                    <label for="add-account-number" class="active hint--top">Account Number</label>
+                    <label for="add-recipient-account-number" class="active hint--top">Account Number</label>
                 </div>
-                <div id="add-account-number-validation-loading" class="col s12" style="text-align: center; display: none">
+                <div id="add-recipient-account-number-validation-loading" class="col s12" style="text-align: center; display: none">
                     <ons-icon icon="ion-load-d" size="32px" style="color: #311b92;" spin></ons-icon>
                 </div>
                 <div class="col s12" style="text-align: center; padding-top: 1em;">
-                    <input id="add-account-verify-account" type="checkbox" value="verified"
+                    <input id="add-recipient-account-verify-account" type="checkbox" value="verified"
                            onclick="utopiasoftware.saveup.controller.addAccountPageViewModel.isbankAccountNumberValidated(this);">
-                    <label for="add-account-verify-account">Verify Account Number</label>
+                    <label for="add-recipient-account-verify-account">Verify Account Number</label>
                     <input id="add-account-unique-id" type="hidden"> <!-- used to hold the unique id for the account during update/edit -->
                 </div>
-                <div id="add-account-verify-account-notice" class="col s12" style="text-align: center;
+                <div id="add-recipient-account-verify-account-notice" class="col s12" style="text-align: center;
                 font-size: 0.75em; color: gray; display: none;">
                     NOTE: active Internet connection is required to verify account number
                 </div>
@@ -103,14 +103,14 @@
                     <ons-icon icon="md-account-box-o" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s9 input-field">
-                    <input id="add-account-account-name" type="text"
+                    <input id="add-recipient-account-name" type="text"
                            pattern="[a-zA-Z0-9]{1}[\w\s\-\.]*[a-zA-Z0-9]{1}" required
                            onkeyup="utopiasoftware.saveup.controller.verifyAccountPageViewModel.resetVerifiedAcctDisplay();"
                            onfocus="$('#add-account-page ons-list-header').css({'display': 'none'});"
                            onblur="$('#add-account-page ons-list-header').css({'display': 'block'});"
                            data-parsley-required-message="enter an account name"
                            data-parsley-pattern-message="incorrect name pattern. please check your spelling">
-                    <label for="add-account-account-name" class="active hint--top">Account Name</label>
+                    <label for="add-recipient-account-name" class="active hint--top">Account Name</label>
                 </div>
             </div>
 
@@ -120,19 +120,19 @@
     <ons-bottom-toolbar>
         <ons-row>
             <ons-col width="100%" style="text-align: center;">
-                <ons-button id="add-account-cancel-button" modifier="quiet" disabled style="color: red;"
+                <ons-button id="add-recipient-cancel-button" modifier="quiet" disabled style="color: red;"
                             onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">Cancel</ons-button>
-                <ons-button id="add-account-save-button" modifier="quiet" disabled>Save</ons-button>
+                <ons-button id="add-recipient-save-button" modifier="quiet" disabled>Save</ons-button>
             </ons-col>
         </ons-row>
     </ons-bottom-toolbar>
 
     <!-- tap target for feature discovery. This is not directly visible on the page -->
-    <div class="tap-target" data-activates="add-account-help-1" style="background-color: #82b1ff; color: #ffffff;">
+    <div class="tap-target" data-activates="add-recipient-help-1" style="background-color: #82b1ff; color: #ffffff;">
         <div class="tap-target-content">
-            <h5 style="padding-left: 1em;">Store Your Bank Account</h5>
+            <h5 style="padding-left: 1em;">Store Transfer Recipient</h5>
             <p style="width: 50%; margin-left: 3%;">
-                Add your bank account to your secure digital wallet</p>
+                Add recipient bank account to your secure digital wallet</p>
         </div>
     </div>
 

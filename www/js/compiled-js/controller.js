@@ -3830,7 +3830,7 @@ utopiasoftware.saveup.controller = {
         deleteRecipientButtonClicked: function(buttonElem){
 
             // confirm that user wants to delete the account before proceeding
-            ons.notification.confirm('Do you want to delete this bank account?', {title: 'Confirm Delete',
+            ons.notification.confirm('Do you want to delete this recipient bank account?', {title: 'Confirm Delete',
                     buttonLabels: ['No', 'Yes']}) // Ask for confirmation
                 .then(function(index) {
                     if (index === 1) { // YES button clicked

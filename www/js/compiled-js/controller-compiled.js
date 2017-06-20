@@ -1258,7 +1258,7 @@ $('#saved-recipients-add-recipient-button',$thisPage).attr("disabled",true);});}
          *
          * @param buttonElem
          */deleteRecipientButtonClicked:function deleteRecipientButtonClicked(buttonElem){// confirm that user wants to delete the account before proceeding
-ons.notification.confirm('Do you want to delete this bank account?',{title:'Confirm Delete',buttonLabels:['No','Yes']})// Ask for confirmation
+ons.notification.confirm('Do you want to delete this recipient bank account?',{title:'Confirm Delete',buttonLabels:['No','Yes']})// Ask for confirmation
 .then(function(index){if(index===1){// YES button clicked
 // call the utility method used to delete a specified bank account
 utopiasoftware.saveup.bankAccountOperations.deleteMyAccount($(buttonElem).attr("data-id")).then(function(){// account has been deleted

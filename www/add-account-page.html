@@ -67,7 +67,7 @@
                 </div>
                 <div class="col s8 input-field">
                     <input id="add-account-number" type="number" required placeholder="NUBAN"
-                           onkeyup="addAccountPageViewModel.resetAccountNameDisplay();"
+                           onkeyup="utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();"
                            onfocus="$('#add-account-page ons-list-header').css({'display': 'none'});"
                            onblur="$('#add-account-page ons-list-header').css({'display': 'block'});"
                            data-length="10"
@@ -105,7 +105,7 @@
                 <div class="col s9 input-field">
                     <input id="add-account-account-name" type="text"
                            pattern="[a-zA-Z0-9]{1}[\w\s\-\.]*[a-zA-Z0-9]{1}" required
-                           onkeyup="utopiasoftware.saveup.controller.verifyAccountPageViewModel.resetVerifiedAcctDisplay();"
+                           onkeyup="utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();"
                            onfocus="$('#add-account-page ons-list-header').css({'display': 'none'});"
                            onblur="$('#add-account-page ons-list-header').css({'display': 'block'});"
                            data-parsley-required-message="enter an account name"
