@@ -637,18 +637,18 @@ var utopiasoftware = {
             },
 
             /**
-             * method is used to retrieve data details of a specific user's bank account
+             * method is used to retrieve data details of a specific recipient's bank account
              * @param bankAcctId {String} the unique id of the specific bank account to be retrieved
 
              * @returns {Promise} returns a promise that resolves to the
              * data details of the specific user bank account or rejects with an error
              */
-            getMyAccount: function(bankAcctId){
+            getSavedRecipientAccount: function(bankAcctId){
 
                 // return a Promise object for the method
                 return new Promise(function(resolve, reject){
                     // get all the stored cards on the user's device
-                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-bank-accounts'})).
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-saved-recipients-bank-accounts'})).
                     then(function(instanceId){
                         return Promise.resolve(intel.security.secureData.getData(instanceId));
                     }).
@@ -674,17 +674,17 @@ var utopiasoftware = {
             },
 
             /**
-             * method is used to delete data details of a user's bank account
+             * method is used to delete data details of a recipient's bank account
              * @param bankAcctId {String} the unique id of the specific bank account to be deleted
 
              * @returns {Promise} returns a promise that resolves when the bank account is deleted or rejects with an error
              */
-            deleteMyAccount: function(bankAcctId){
+            deleteSavedRecipientAccount: function(bankAcctId){
 
                 // return a Promise object for the method
                 return new Promise(function(resolve, reject){
                     // get all the stored accounts on the user's device
-                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-bank-accounts'})).
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-saved-recipients-bank-accounts'})).
                     then(function(instanceId){
                         return Promise.resolve(intel.security.secureData.getData(instanceId));
                     }).
@@ -706,7 +706,8 @@ var utopiasoftware = {
                         }
                     }).
                     then(function(instanceId){
-                        return intel.security.secureStorage.write({'id':'postcash-user-bank-accounts', 'instanceID': instanceId });
+                        return intel.security.secureStorage.write({'id':'postcash-saved-recipients-bank-accounts',
+                            'instanceID': instanceId });
                     }).
                     then(function(){ // bank accounts array collection has been updated, so resolve the promise to delete the acct data
 
@@ -719,20 +720,20 @@ var utopiasoftware = {
             },
 
             /**
-             * method is used to add bank account data details to the collection of user's bank account
+             * method is used to add bank account data details to the collection of recipient's bank account
              *
              * @param bankAcctObject {Object} the bank account object to be added to the
-             * collection of user's bank accounts
+             * collection of saved recipients bank accounts
 
              * @returns {Promise} returns a promise that resolves when the bank account has
              * been added/created or rejects with an error
              */
-            addMyAccount: function(bankAcctObject){
+            addSavedRecipientAccount: function(bankAcctObject){
 
                 // return a Promise which resolves when bank account has been added successfully or rejects otherwise
                 return new Promise(function(resolve, reject){
-                    // get the previous bank accounts on the user's device
-                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-bank-accounts'})).
+                    // get the previous recipient's bank accounts on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-saved-recipients-bank-accounts'})).
                     then(function(instanceId){
                         return Promise.resolve(intel.security.secureData.getData(instanceId));
                     }, function(errObject){
@@ -750,7 +751,8 @@ var utopiasoftware = {
                         return intel.security.secureData.createFromData({'data': JSON.stringify(secureBankAcctDataArray)});
                     }).
                     then(function(instanceId){
-                        return intel.security.secureStorage.write({'id':'postcash-user-bank-accounts', 'instanceID': instanceId });
+                        return intel.security.secureStorage.write({'id':'postcash-saved-recipients-bank-accounts',
+                            'instanceID': instanceId });
                     }).
                     then(function(){ // account has been added
                         // resolve promise
