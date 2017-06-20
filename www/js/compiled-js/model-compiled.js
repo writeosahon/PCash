@@ -63,6 +63,9 @@ $(document).on("destroy", "#create-account-page", utopiasoftware.saveup.controll
 // listen for the initialisation of the Main-Menu page
 $(document).on("init", "#main-menu-page", utopiasoftware.saveup.controller.mainMenuPageViewModel.pageInit);
 
+// listen for when the Main-Menu page is shown
+$(document).on("show", "#main-menu-page", utopiasoftware.saveup.controller.mainMenuPageViewModel.pageShow);
+
 // listen for the initialisation of the Verify Account page
 $(document).on("init", "#verify-account-page", utopiasoftware.saveup.controller.verifyAccountPageViewModel.pageInit);
 

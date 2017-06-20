@@ -264,6 +264,9 @@ $('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){ons.notifi
 navigator.app.exitApp();// Close the app
 }});};// hide the loader
 $('#loader-modal').get(0).hide();}},/**
+         * method is triggered when page is shown
+         */pageShow:function pageShow(){// disable the swipeable feature for the app splitter
+$('ons-splitter-side').removeAttr("swipeable");},/**
          * method is used to listen for click events of the main menu items
          *
          * @param label
@@ -526,7 +529,8 @@ $('#loader-modal').get(0).hide();}},/**
          *
          * @param event
          */pageShow:function pageShow(event){var $thisPage=$(event.target);// get the current page shown
-// check if the data on the page should be refreshed
+// enable the swipeable feature for the app splitter
+$('ons-splitter-side').attr("swipeable",true);// check if the data on the page should be refreshed
 if($('#app-main-navigator').get(0).topPage.data&&$('#app-main-navigator').get(0).topPage.data.refresh&&$('#app-main-navigator').get(0).topPage.data.refresh===true){// user wants this page refreshed
 // add & display the preloader for the page
 $('#my-cards-pull-hook',$thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');// load the card data from the device secure store
@@ -884,7 +888,8 @@ $('#loader-modal').get(0).hide();}},/**
          *
          * @param event
          */pageShow:function pageShow(event){var $thisPage=$(event.target);// get the current page shown
-// check if the data on the page should be refreshed
+// enable the swipeable feature for the app splitter
+$('ons-splitter-side').attr("swipeable",true);// check if the data on the page should be refreshed
 if($('#app-main-navigator').get(0).topPage.data&&$('#app-main-navigator').get(0).topPage.data.refresh&&$('#app-main-navigator').get(0).topPage.data.refresh===true){// user wants this page refreshed
 // add & display the preloader for the page
 $('#my-accounts-pull-hook',$thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');// load the user's bank account data from the device secure store
@@ -1217,7 +1222,8 @@ $('#loader-modal').get(0).hide();}},/**
          *
          * @param event
          */pageShow:function pageShow(event){var $thisPage=$(event.target);// get the current page shown
-// check if the data on the page should be refreshed
+// enable the swipeable feature for the app splitter
+$('ons-splitter-side').attr("swipeable",true);// check if the data on the page should be refreshed
 if($('#app-main-navigator').get(0).topPage.data&&$('#app-main-navigator').get(0).topPage.data.refresh&&$('#app-main-navigator').get(0).topPage.data.refresh===true){// user wants this page refreshed
 // add & display the preloader for the page
 $('#saved-recipients-pull-hook',$thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');// load the saved recipients account data from the device secure store

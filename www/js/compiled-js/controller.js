@@ -815,6 +815,15 @@ utopiasoftware.saveup.controller = {
 
 
         /**
+         * method is triggered when page is shown
+         */
+        pageShow: function(){
+            // disable the swipeable feature for the app splitter
+            $('ons-splitter-side').removeAttr("swipeable");
+        },
+
+
+        /**
          * method is used to listen for click events of the main menu items
          *
          * @param label
@@ -1641,6 +1650,8 @@ utopiasoftware.saveup.controller = {
          */
         pageShow: function(event){
             var $thisPage = $(event.target); // get the current page shown
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
 
             // check if the data on the page should be refreshed
             if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.refresh
@@ -2721,6 +2732,8 @@ utopiasoftware.saveup.controller = {
          */
         pageShow: function(event){
             var $thisPage = $(event.target); // get the current page shown
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
 
             // check if the data on the page should be refreshed
             if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.refresh
@@ -3707,6 +3720,8 @@ utopiasoftware.saveup.controller = {
          */
         pageShow: function(event){
             var $thisPage = $(event.target); // get the current page shown
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
 
             // check if the data on the page should be refreshed
             if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.refresh
