@@ -68,8 +68,8 @@
                 <div class="col s8 input-field">
                     <input id="add-recipient-account-number" type="number" required placeholder="NUBAN"
                            onkeyup="utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();"
-                           onfocus="$('#add-account-page ons-list-header').css({'display': 'none'});"
-                           onblur="$('#add-account-page ons-list-header').css({'display': 'block'});"
+                           onfocus="$('#add-recipient-page ons-list-header').css({'display': 'none'});"
+                           onblur="$('#add-recipient-page ons-list-header').css({'display': 'block'});"
                            data-length="10"
                            data-parsley-type="digits"
                            data-parsley-minlength="10"
@@ -81,7 +81,7 @@
                            data-parsley-minlength-message="account number cannot be less than 10 numbers"
                            data-parsley-maxlength-message="account number cannot be more than 10 numbers"
                            data-parsley-remote-message="account number unknown or invalid">
-                    <label for="add-recipient-account-number" class="active hint--top">Account Number</label>
+                    <label for="add-recipient-account-number" class="active hint--top">Recipient Account Number</label>
                 </div>
                 <div id="add-recipient-account-number-validation-loading" class="col s12" style="text-align: center; display: none">
                     <ons-icon icon="ion-load-d" size="32px" style="color: #311b92;" spin></ons-icon>
@@ -106,11 +106,11 @@
                     <input id="add-recipient-account-name" type="text"
                            pattern="[a-zA-Z0-9]{1}[\w\s\-\.]*[a-zA-Z0-9]{1}" required
                            onkeyup="utopiasoftware.saveup.controller.verifyAccountPageViewModel.resetVerifiedAcctDisplay();"
-                           onfocus="$('#add-account-page ons-list-header').css({'display': 'none'});"
-                           onblur="$('#add-account-page ons-list-header').css({'display': 'block'});"
+                           onfocus="$('#add-recipient-page ons-list-header').css({'display': 'none'});"
+                           onblur="$('#add-recipient-page ons-list-header').css({'display': 'block'});"
                            data-parsley-required-message="enter an account name"
                            data-parsley-pattern-message="incorrect name pattern. please check your spelling">
-                    <label for="add-recipient-account-name" class="active hint--top">Account Name</label>
+                    <label for="add-recipient-account-name" class="active hint--top">Recipient Account Name</label>
                 </div>
             </div>
 
