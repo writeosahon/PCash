@@ -1158,7 +1158,7 @@ $('#saved-recipients-pull-hook',$thisPage).removeAttr("disabled");// display a m
 $('#saved-recipients-page-message',$thisPage).css("display","block");// hide the error message from displaying
 $('#saved-recipients-page-error',$thisPage).css("display","none");// hide the my-accounts-list from display
 $('#saved-recipients-list',$thisPage).css("display","none");// enable the 'Add Recipient' button
-$('#saved-recipients-add-recipients-button',$thisPage).removeAttr("disabled");// flag that loading is done
+$('#saved-recipients-add-recipient-button',$thisPage).removeAttr("disabled");// flag that loading is done
 loadingDone();}else{// there are card data available
 // empty the contents of the saved recipients list
 $('#saved-recipients-list',$thisPage).html("");for(var index=0;index<banksAcctsArray.length;index++){// append the stored bank accounts to the "Saved Recipients" list
@@ -1191,7 +1191,7 @@ $('#saved-recipients-pull-hook',$thisPage).removeAttr("disabled");// display a m
 $('#saved-recipients-page-message',$thisPage).css("display","block");// hide the error message from displaying
 $('#saved-recipients-page-error',$thisPage).css("display","none");// hide the my-accounts-list from display
 $('#saved-recipients-list',$thisPage).css("display","none");// enable the 'Add Recipient' button
-$('#saved-recipients-add-recipients-button',$thisPage).removeAttr("disabled");}else{// there are card data available
+$('#saved-recipients-add-recipient-button',$thisPage).removeAttr("disabled");}else{// there are card data available
 // empty the contents of the saved recipients list
 $('#saved-recipients-list',$thisPage).html("");for(var index=0;index<banksAcctsArray.length;index++){// append the stored bank accounts to the "Saved Recipients" list
 // create the bank account content
@@ -1230,7 +1230,7 @@ $('#saved-recipients-pull-hook',$thisPage).removeAttr("disabled");// display a m
 $('#saved-recipients-page-message',$thisPage).css("display","block");// hide the error message from displaying
 $('#saved-recipients-page-error',$thisPage).css("display","none");// hide the my-accounts-list from display
 $('#saved-recipients-list',$thisPage).css("display","none");// enable the 'Add Recipient' button
-$('#saved-recipients-add-recipients-button',$thisPage).removeAttr("disabled");}else{// there are card data available
+$('#saved-recipients-add-recipient-button',$thisPage).removeAttr("disabled");}else{// there are card data available
 // empty the contents of the saved recipients list
 $('#saved-recipients-list',$thisPage).html("");for(var index=0;index<banksAcctsArray.length;index++){// append the stored bank accounts to the "Saved Recipients" list
 // create the bank account content

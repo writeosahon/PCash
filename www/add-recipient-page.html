@@ -7,7 +7,7 @@
 <body>
 <!-- add-recipient page -->
 <ons-page id="add-recipient-page">
-    <ons-toolbar class="toolbar--transparent">
+    <ons-toolbar class="toolbar--transparent" style="background-color: rgba(49, 27, 146, 0.5)">
         <div class="left">
             <ons-toolbar-button onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">
                 <ons-icon icon="md-long-arrow-left" size="20px"></ons-icon>
@@ -22,8 +22,8 @@
         </div>
     </ons-toolbar>
 
-    <div style="background-image: url('css/app-images/add-recipients-image.jpg'); background-position: center;
-    background-size: 100% 100%; background-repeat: no-repeat; -webkit-filter: blur(1px); filter: blur(1px);
+    <div style="background-image: url('css/app-images/add-recipients-background.jpg'); background-position: center;
+    background-size: cover; background-repeat: repeat; -webkit-filter: blur(1px); filter: blur(1px);
     width: 100%; height: 140px; position: relative"><!-- div has background image -->
         <div class="progress" style="position: absolute; top: 0;">
             <div class="indeterminate"></div>
@@ -32,7 +32,7 @@
 
     <form id="add-recipient-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
           data-parsley-excluded="input[type=button], input[type=submit],
-                              input[type=reset], input[type=hidden], [disabled], :hidden, readonly" style="display: none;">
+                              input[type=reset], input[type=hidden], [disabled], :hidden, readonly" style="display: block;">
 
         <ons-list>
             <ons-list-header style="z-index: 2; font-size: 1.3em; margin:0; text-align: center; background-color: #ede7f6; color: #b388ff">

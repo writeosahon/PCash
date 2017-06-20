@@ -3516,7 +3516,7 @@ utopiasoftware.saveup.controller = {
                             // hide the my-accounts-list from display
                             $('#saved-recipients-list', $thisPage).css("display", "none");
                             // enable the 'Add Recipient' button
-                            $('#saved-recipients-add-recipients-button', $thisPage).removeAttr("disabled");
+                            $('#saved-recipients-add-recipient-button', $thisPage).removeAttr("disabled");
                             // flag that loading is done
                             loadingDone();
                         }
@@ -3616,7 +3616,7 @@ utopiasoftware.saveup.controller = {
                         // hide the my-accounts-list from display
                         $('#saved-recipients-list', $thisPage).css("display", "none");
                         // enable the 'Add Recipient' button
-                        $('#saved-recipients-add-recipients-button', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-add-recipient-button', $thisPage).removeAttr("disabled");
                     }
                     else{ // there are card data available
                         // empty the contents of the saved recipients list
@@ -3731,7 +3731,7 @@ utopiasoftware.saveup.controller = {
                         // hide the my-accounts-list from display
                         $('#saved-recipients-list', $thisPage).css("display", "none");
                         // enable the 'Add Recipient' button
-                        $('#saved-recipients-add-recipients-button', $thisPage).removeAttr("disabled");
+                        $('#saved-recipients-add-recipient-button', $thisPage).removeAttr("disabled");
                     }
                     else{ // there are card data available
                         // empty the contents of the saved recipients list
