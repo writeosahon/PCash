@@ -441,7 +441,17 @@ $('#verify-account-form .verify-account-success').css("display","none");$('#veri
 $('#verify-account-bottom-sheet').modal('open');},/**
          * method is used to listen for clicks on the bottom sheet of the verify account page
          * @param label
-         */verifyAcctBottomSheetListItemClicked:function verifyAcctBottomSheetListItemClicked(label){}},/**
+         */verifyAcctBottomSheetListItemClicked:function verifyAcctBottomSheetListItemClicked(label){//todo
+if(label=="add to my accounts"){// 'add to my accounts' button was clicked
+// ask user for secure PIN before proceeding. secure pin MUST match
+ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+// close the 'verify account' the bottom sheets
+$('#verify-account-bottom-sheet').modal('close');// display the secure storage modal to indicate that Bank Account is being securely stored
+$('#secure-storage-modal .modal-message').html("Storing Bank Account on Device...");$('#secure-storage-modal').get(0).show();// show loader
+// add the verifed bank account to the user's secure "My Accounts" storage
+utopiasoftware.saveup.bankAccountOperations.addMyAccount({});}else{// inform user that security check failed/user authentication failed
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}}},/**
      * object is view-model for my-cards-page page
      */myCardsPageViewModel:{/**
          * event is triggered when page is initialised
