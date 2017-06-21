@@ -2230,7 +2230,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that add has been successfully added to secure storage
-                        Materialize.toast('Card updated successfully', 4000);
+                        Materialize.toast('Card updated', 4000);
                     }, 4000);
                 }).
                 catch(function(){
@@ -2299,7 +2299,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that add has been successfully added to secure storage
-                        Materialize.toast('New card added successfully', 4000);
+                        Materialize.toast('New card added', 4000);
                     }, 4000);
                 }).
                 catch(function(err){
@@ -3247,6 +3247,7 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-account-page #add-account-form').get(0).reset();
+                        $('#add-account-page select').material_select();
                         // reset the account number validation check and all its related actions
                         utopiasoftware.saveup.controller.addAccountPageViewModel.
                         isbankAccountNumberValidated($('#add-account-page #add-account-verify-account'));
@@ -3259,7 +3260,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that acct has been successfully added to secure storage
-                        Materialize.toast('Bank Account updated successfully', 4000);
+                        Materialize.toast('Bank Account updated', 4000);
                     }, 4000);
                 }).
                 catch(function(){
@@ -3291,6 +3292,7 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-account-page #add-account-form').get(0).reset();
+                        $('#add-account-page select').material_select();
                         // reset the account number validation check and all its related actions
                         utopiasoftware.saveup.controller.addAccountPageViewModel.
                         isbankAccountNumberValidated($('#add-account-page #add-account-verify-account'));
@@ -3303,7 +3305,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that user's bank account has been successfully added to secure storage
-                        Materialize.toast('New bank account added successfully', 4000);
+                        Materialize.toast('New bank account added', 4000);
                     }, 4000);
                 }).
                 catch(function(err){
@@ -3565,13 +3567,13 @@ utopiasoftware.saveup.controller = {
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.editRecipientButtonClicked(this);">
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.deleteRecipientButtonClicked(this);">
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
@@ -3663,13 +3665,13 @@ utopiasoftware.saveup.controller = {
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.editRecipientButtonClicked(this);">
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.deleteRecipientButtonClicked(this);">
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
@@ -3780,13 +3782,13 @@ utopiasoftware.saveup.controller = {
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.editRecipientButtonClicked(this);">
                                    <ons-icon icon="md-edit" size="25px">
                                 </ons-icon>
                                 </ons-button>
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.deleteRecipientButtonClicked(this);">
                                 <ons-icon icon="md-delete" size="25px"></ons-icon>
                                 </ons-button>
                                 </div></div></div></div></div></div>` ;
@@ -3849,21 +3851,22 @@ utopiasoftware.saveup.controller = {
         deleteRecipientButtonClicked: function(buttonElem){
 
             // confirm that user wants to delete the account before proceeding
-            ons.notification.confirm('Do you want to delete this recipient bank account?', {title: 'Confirm Delete',
+            ons.notification.confirm("Do you want to delete this recipient's bank account?", {title: 'Confirm Delete',
                     buttonLabels: ['No', 'Yes']}) // Ask for confirmation
                 .then(function(index) {
                     if (index === 1) { // YES button clicked
-                        // call the utility method used to delete a specified bank account
-                        utopiasoftware.saveup.bankAccountOperations.deleteMyAccount($(buttonElem).attr("data-id")).
+                        // call the utility method used to delete a specified recipient bank account
+                        utopiasoftware.saveup.savedRecipientsBankAccountOperations.
+                        deleteSavedRecipientAccount($(buttonElem).attr("data-id")).
                         then(function(){ // account has been deleted
                             $(buttonElem).closest('.row').remove(); // remove the account from display
                             // inform the user that card was deleted
-                            Materialize.toast('Bank Account deleted', 3000);
+                            Materialize.toast("Recipient's Bank Account deleted", 3000);
                         }).
                         catch(function(){
                             // inform the user that the specified bank account could not be deleted
                             window.plugins.toast.showWithOptions({
-                                message: "Sorry, the bank account could not be deleted.\n Try again",
+                                message: "Sorry, the recipient's bank account could not be deleted.\n Try again",
                                 duration: 4000,
                                 position: "top",
                                 styling: {
@@ -4234,6 +4237,7 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-recipient-page #add-recipient-form').get(0).reset();
+                        $('#add-recipient-page select').material_select();
                         // reset the account number validation check and all its related actions
                         utopiasoftware.saveup.controller.addRecipientPageViewModel.
                         isbankAccountNumberValidated($('#add-recipient-page #add-recipient-account-verify-account'));
@@ -4246,7 +4250,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that acct has been successfully added to secure storage
-                        Materialize.toast("Recipient's Bank Account updated successfully", 4000);
+                        Materialize.toast("Recipient Account updated", 4000);
                     }, 4000);
                 }).
                 catch(function(){
@@ -4278,6 +4282,7 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-recipient-page #add-recipient-form').get(0).reset();
+                        $('#add-recipient-page select').material_select();
                         // reset the account number validation check and all its related actions
                         utopiasoftware.saveup.controller.addRecipientPageViewModel.
                         isbankAccountNumberValidated($('#add-recipient-page #add-recipient-account-verify-account'));
@@ -4290,7 +4295,7 @@ utopiasoftware.saveup.controller = {
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that user's bank account has been successfully added to secure storage
-                        Materialize.toast("New recipient's bank account added", 4000);
+                        Materialize.toast("Recipient's bank account added", 4000);
                     }, 4000);
                 }).
                 catch(function(err){
