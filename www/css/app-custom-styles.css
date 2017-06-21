@@ -407,6 +407,9 @@ label[data-hint]:after {
     position: absolute;
     top: 0;
 }
+#add-recipient-page .toolbar--material.translucent-toolbar { /** make the toolbar translucent **/
+    background-color: rgba(49, 27, 146, 0.5);
+}
 /** STYLE FOR ADD RECIPIENT PAGE ENDS **/
 
 /** STYLE FOR BANK SELECT ELEMENT IN ADD RECIPIENT PAGE BEGINS **/

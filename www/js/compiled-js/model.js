@@ -108,3 +108,12 @@ $(document).on("init", "#saved-recipients-page", utopiasoftware.saveup.controlle
 
 // listen for when the Saved Recipients page is shown
 $(document).on("show", "#saved-recipients-page", utopiasoftware.saveup.controller.savedRecipientsPageViewModel.pageShow);
+
+// listen for the initialisation of the Add Recipient page
+$(document).on("init", "#add-recipient-page", utopiasoftware.saveup.controller.addRecipientPageViewModel.pageInit);
+
+// listen for the hide event of the Add Recipient page
+$(document).on("hide", "#add-recipient-page", utopiasoftware.saveup.controller.addRecipientPageViewModel.pageHide);
+
+// listen for the destroy event of the Add Recipient page
+$(document).on("destroy", "#add-recipient-page", utopiasoftware.saveup.controller.addRecipientPageViewModel.pageDestroy);

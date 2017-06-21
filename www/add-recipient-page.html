@@ -7,7 +7,7 @@
 <body>
 <!-- add-recipient page -->
 <ons-page id="add-recipient-page">
-    <ons-toolbar class="toolbar--transparent" style="background-color: rgba(49, 27, 146, 0.5)">
+    <ons-toolbar class="toolbar--transparent translucent-toolbar">
         <div class="left">
             <ons-toolbar-button onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">
                 <ons-icon icon="md-long-arrow-left" size="20px"></ons-icon>
@@ -49,7 +49,7 @@
                 <div class="col s8 input-field" style="position: relative">
                     <select id="add-recipient-choose-bank"
                             onchange="$('#hidden-choose-bank-input').val($(this).val()); $('#hidden-choose-bank-input').blur();
-                            utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();">
+                            utopiasoftware.saveup.controller.addRecipientPageViewModel.resetAccountNameDisplay();">
                         <option value="" disabled selected>Choose Bank</option>
                     </select>
                     <label for="add-recipient-choose-bank"></label>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="col s8 input-field">
                     <input id="add-recipient-account-number" type="number" required placeholder="NUBAN"
-                           onkeyup="utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();"
+                           onkeyup="utopiasoftware.saveup.controller.addRecipientPageViewModel.resetAccountNameDisplay();"
                            onfocus="$('#add-recipient-page ons-list-header').css({'display': 'none'});"
                            onblur="$('#add-recipient-page ons-list-header').css({'display': 'block'});"
                            data-length="10"
@@ -88,9 +88,9 @@
                 </div>
                 <div class="col s12" style="text-align: center; padding-top: 1em;">
                     <input id="add-recipient-account-verify-account" type="checkbox" value="verified"
-                           onclick="utopiasoftware.saveup.controller.addAccountPageViewModel.isbankAccountNumberValidated(this);">
+                           onclick="utopiasoftware.saveup.controller.addRecipientPageViewModel.isbankAccountNumberValidated(this);">
                     <label for="add-recipient-account-verify-account">Verify Account Number</label>
-                    <input id="add-account-unique-id" type="hidden"> <!-- used to hold the unique id for the account during update/edit -->
+                    <input id="add-recipient-unique-id" type="hidden"> <!-- used to hold the unique id for the account during update/edit -->
                 </div>
                 <div id="add-recipient-account-verify-account-notice" class="col s12" style="text-align: center;
                 font-size: 0.75em; color: gray; display: none;">
@@ -105,7 +105,7 @@
                 <div class="col s9 input-field">
                     <input id="add-recipient-account-name" type="text"
                            pattern="[a-zA-Z0-9]{1}[\w\s\-\.]*[a-zA-Z0-9]{1}" required
-                           onkeyup="utopiasoftware.saveup.controller.verifyAccountPageViewModel.resetVerifiedAcctDisplay();"
+                           onkeyup="utopiasoftware.saveup.controller.addRecipientPageViewModel.resetAccountNameDisplay();"
                            onfocus="$('#add-recipient-page ons-list-header').css({'display': 'none'});"
                            onblur="$('#add-recipient-page ons-list-header').css({'display': 'block'});"
                            data-parsley-required-message="enter an account name"

@@ -60,6 +60,10 @@ utopiasoftware.saveup.controller = {
             utopiasoftware.saveup.controller.addAccountPageViewModel.accountNumberValidator,
             utopiasoftware.saveup.moneyWaveObject.gateway + 'v1/resolve/account');
 
+        Parsley.addAsyncValidator("recipientaccountnumbercheck",
+            utopiasoftware.saveup.controller.addRecipientPageViewModel.recipientAccountNumberValidator,
+            utopiasoftware.saveup.moneyWaveObject.gateway + 'v1/resolve/account');
+
         /** CUSTOM VALIDATORS FOR PARSLEY ENDS **/
 
         // add listener for when the Internet network connection is offline
@@ -4082,7 +4086,7 @@ utopiasoftware.saveup.controller = {
 
                 // listen for form validation success
                 utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.on('form:success',
-                    utopiasoftware.saveup.controller.addRecipientPageViewModel.addAccountFormValidated);
+                    utopiasoftware.saveup.controller.addRecipientPageViewModel.addRecipientFormValidated);
 
                 /** dynamically create the contents of the various select elements **/
                     // retrieve the sorted array of banks
@@ -4099,29 +4103,29 @@ utopiasoftware.saveup.controller = {
                         }
                     }
 
-                    $('#add-account-choose-bank', $thisPage).append(optionTags); // append all the created option tags
+                    $('#add-recipient-choose-bank', $thisPage).append(optionTags); // append all the created option tags
                     // initialise the select element
-                    $('#add-account-choose-bank', $thisPage).material_select();
+                    $('#add-recipient-choose-bank', $thisPage).material_select();
                     return; // return at this point, so the page can continue initialisation
                 }).
                 then(function(){
 
                     // initialise the character counter plugin
-                    $('#add-account-number', $thisPage).characterCounter();
+                    $('#add-recipient-account-number', $thisPage).characterCounter();
                     return;
                 }).
                 then(function(){
                     // check if the page was sent a bank account id.
                     // if so preload the bank account data into the form
                     if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){
-                        // get the details of the card to be edited
-                        utopiasoftware.saveup.bankAccountOperations.
-                        getMyAccount($('#app-main-navigator').get(0).topPage.data.edit).then(function(bankAcct){
-                            $('#add-account-page #add-account-unique-id').val(bankAcct.uniqueAccountId);
-                            $('#add-account-page #add-account-number').val(bankAcct.bankAccountNumber);
-                            $('#add-account-page #add-account-account-name').val(bankAcct.bankAccountName);
-                            $('#add-account-page #add-account-choose-bank').val(bankAcct.flutterwave_bankCode);
-                            $('#add-account-page #hidden-choose-bank-input').val(bankAcct.flutterwave_bankCode);
+                        // get the details of the account to be edited
+                        utopiasoftware.saveup.savedRecipientsBankAccountOperations.
+                        getSavedRecipientAccount($('#app-main-navigator').get(0).topPage.data.edit).then(function(bankAcct){
+                            $('#add-recipient-page #add-recipient-unique-id').val(bankAcct.uniqueAccountId);
+                            $('#add-recipient-page #add-recipient-account-number').val(bankAcct.bankAccountNumber);
+                            $('#add-recipient-page #add-recipient-account-name').val(bankAcct.bankAccountName);
+                            $('#add-recipient-page #add-recipient-choose-bank').val(bankAcct.flutterwave_bankCode);
+                            $('#add-recipient-page #hidden-choose-bank-input').val(bankAcct.flutterwave_bankCode);
 
                             // re-update the form input fields
                             Materialize.updateTextFields();
@@ -4130,21 +4134,21 @@ utopiasoftware.saveup.controller = {
 
                             // remove the progress indeterminate loader
                             $('.progress', $thisPage).remove();
-                            // make the add account form visible
-                            $('#add-account-form', $thisPage).css("display", "block");
+                            // make the add recipient form visible
+                            $('#add-recipient-form', $thisPage).css("display", "block");
                             // enable the 'Cancel' & 'Save' buttons
-                            $('#add-account-cancel-button, #add-account-save-button', $thisPage).removeAttr("disabled");
+                            $('#add-recipient-cancel-button, #add-recipient-save-button', $thisPage).removeAttr("disabled");
                             // hide the loader
                             $('#loader-modal').get(0).hide();
                         });
                     }
-                    else {
+                    else { // this is not an edit operation, but a CREATE operation
                         // remove the progress indeterminate loader
                         $('.progress', $thisPage).remove();
-                        // make the add account form visible
-                        $('#add-account-form', $thisPage).css("display", "block");
+                        // make the add recipient form visible
+                        $('#add-recipient-form', $thisPage).css("display", "block");
                         // enable the 'Cancel' & 'Save' buttons
-                        $('#add-account-cancel-button, #add-account-save-button', $thisPage).removeAttr("disabled");
+                        $('#add-recipient-cancel-button, #add-recipient-save-button', $thisPage).removeAttr("disabled");
                         // hide the loader
                         $('#loader-modal').get(0).hide();
                     }
@@ -4163,10 +4167,10 @@ utopiasoftware.saveup.controller = {
         pageHide: (event) => {
             try {
                 // remove any tooltip being displayed on all forms on the page
-                $('#add-account-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#add-account-page [data-hint]').removeAttr("data-hint");
+                $('#add-recipient-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#add-recipient-page [data-hint]').removeAttr("data-hint");
                 // reset the form validator object on the page
-                utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.reset();
             }
             catch(err){}
         },
@@ -4178,14 +4182,14 @@ utopiasoftware.saveup.controller = {
         pageDestroy: (event) => {
             try{
                 // remove any tooltip being displayed on all forms on the page
-                $('#add-account-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#add-account-page [data-hint]').removeAttr("data-hint");
+                $('#add-recipient-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#add-recipient-page [data-hint]').removeAttr("data-hint");
                 // destroy the form validator objects on the page
-                utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.destroy();
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.destroy();
                 // destroy the form inputs which need to be destroyed
-                $('#add-account-page select').material_select('destroy');
-                $('#add-account-page #add-account-number').off();
-                $('#add-account-page #add-account-number').removeData();
+                $('#add-recipient-page select').material_select('destroy');
+                $('#add-recipient-page #add-recipient-account-number').off();
+                $('#add-recipient-page #add-recipient-account-number').removeData();
             }
             catch(err){}
         },
@@ -4193,62 +4197,62 @@ utopiasoftware.saveup.controller = {
         /**
          * method is triggered when add card form is successfully validated
          */
-        addAccountFormValidated: function(){
+        addRecipientFormValidated: function(){
 
-            // display the secure storage modal to indicate that Bank Account is being securely stored
-            $('#secure-storage-modal .modal-message').html("Storing Bank Account on Device...");
+            // display the secure storage modal to indicate that Recipient's Bank Account is being securely stored
+            $('#secure-storage-modal .modal-message').html("Storing Recipient's Bank Account on Device...");
             $('#secure-storage-modal').get(0).show(); // show loader
 
             // update the bank account image/avatar property
-            utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage = "css/app-images/avatar-" +
-                utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImageRandomNum + ".png";
+            utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage = "css/app-images/avatar-" +
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImageRandomNum + ".png";
 
             // check if this is an EDIT or CREATE operation
             if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){ //this is an EDIT operation
                 // call the utility method used to delete a specified bank account
-                utopiasoftware.saveup.bankAccountOperations.
-                deleteMyAccount($('#app-main-navigator').get(0).topPage.data.edit).
+                utopiasoftware.saveup.savedRecipientsBankAccountOperations.
+                deleteSavedRecipientAccount($('#app-main-navigator').get(0).topPage.data.edit).
                 then(function(){
                     // create an edited bank account data
                     var editedBankAcctData = {
                         uniqueAccountId: $('#app-main-navigator').get(0).topPage.data.edit,
-                        bankAccountNumber: $('#add-account-form #add-account-number').val(),
-                        bankAccountName: $('#add-account-form #add-account-account-name').val(),
-                        bankName: $('#add-account-form #add-account-choose-bank option:selected').text().trim(),
-                        flutterwave_bankCode: $('#add-account-form #add-account-choose-bank').val(),
-                        bankAccountAvatar: utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage
+                        bankAccountNumber: $('#add-recipient-form #add-recipient-account-number').val(),
+                        bankAccountName: $('#add-recipient-form #add-recipient-account-name').val(),
+                        bankName: $('#add-recipient-form #add-recipient-choose-bank option:selected').text().trim(),
+                        flutterwave_bankCode: $('#add-recipient-form #add-recipient-choose-bank').val(),
+                        bankAccountAvatar: utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage
                     };
 
                     // call the utility method used to add a specified bank account to the bank account collection
-                    return utopiasoftware.saveup.bankAccountOperations.
-                    addMyAccount(editedBankAcctData);
+                    return utopiasoftware.saveup.savedRecipientsBankAccountOperations.
+                    addSavedRecipientAccount(editedBankAcctData);
                 }).
                 then(function(){
                     // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
                     window.setTimeout(function(){
                         // reset the form validator object on the page
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.reset();
                         // reset the form object
-                        $('#add-account-page #add-account-form').get(0).reset();
+                        $('#add-recipient-page #add-recipient-form').get(0).reset();
                         // reset the account number validation check and all its related actions
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.
-                        isbankAccountNumberValidated($('#add-account-page #add-account-verify-account'));
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.
+                        isbankAccountNumberValidated($('#add-recipient-page #add-recipient-account-verify-account'));
                         // reset the bank account properties
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName = "";
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData = "";
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage = "";
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName = "";
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.tokenData = "";
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage = "";
                         // reset the page scroll position to the top
-                        $('#add-account-page .page__content').scrollTop(0);
+                        $('#add-recipient-page .page__content').scrollTop(0);
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that acct has been successfully added to secure storage
-                        Materialize.toast('Bank Account updated successfully', 4000);
+                        Materialize.toast("Recipient's Bank Account updated successfully", 4000);
                     }, 4000);
                 }).
                 catch(function(){
                     ons.notification.alert({title: "Update Error",
                         messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this bank account could not be updated. ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + " Sorry, this recipient's bank account could not be updated. " +
                         '<br>You can try again' + '</span>',
                         cancelable: true
                     });
@@ -4258,42 +4262,42 @@ utopiasoftware.saveup.controller = {
 
                 var newBankAcctData = {
                     uniqueAccountId: "" + utopiasoftware.saveup.model.deviceUUID + Date.now(),
-                    bankAccountNumber: $('#add-account-form #add-account-number').val(),
-                    bankAccountName: $('#add-account-form #add-account-account-name').val(),
-                    bankName: $('#add-account-form #add-account-choose-bank option:selected').text().trim(),
-                    flutterwave_bankCode: $('#add-account-form #add-account-choose-bank').val(),
-                    bankAccountAvatar: utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage
+                    bankAccountNumber: $('#add-recipient-form #add-recipient-account-number').val(),
+                    bankAccountName: $('#add-recipient-form #add-recipient-account-name').val(),
+                    bankName: $('#add-recipient-form #add-recipient-choose-bank option:selected').text().trim(),
+                    flutterwave_bankCode: $('#add-recipient-form #add-recipient-choose-bank').val(),
+                    bankAccountAvatar: utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage
                 };
 
-                utopiasoftware.saveup.bankAccountOperations.
-                addMyAccount(newBankAcctData).
+                utopiasoftware.saveup.savedRecipientsBankAccountOperations.
+                addSavedRecipientAccount(newBankAcctData).
                 then(function(){
                     // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
                     window.setTimeout(function(){
                         // reset the form validator object on the page
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.reset();
                         // reset the form object
-                        $('#add-account-page #add-account-form').get(0).reset();
+                        $('#add-recipient-page #add-recipient-form').get(0).reset();
                         // reset the account number validation check and all its related actions
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.
-                        isbankAccountNumberValidated($('#add-account-page #add-account-verify-account'));
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.
+                        isbankAccountNumberValidated($('#add-recipient-page #add-recipient-account-verify-account'));
                         // reset the bank account properties
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName = "";
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData = "";
-                        utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage = "";
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName = "";
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.tokenData = "";
+                        utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage = "";
                         // reset the page scroll position to the top
-                        $('#add-account-page .page__content').scrollTop(0);
+                        $('#add-recipient-page .page__content').scrollTop(0);
 
                         $('#secure-storage-modal').get(0).hide(); // hide loader
                         // inform user that user's bank account has been successfully added to secure storage
-                        Materialize.toast('New bank account added successfully', 4000);
+                        Materialize.toast("New recipient's bank account added", 4000);
                     }, 4000);
                 }).
                 catch(function(err){
 
                     ons.notification.alert({title: "Save Error",
                         messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this bank account could not be added. ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + " Sorry, this recipient's bank account could not be added. " +
                         '<br>You can try again' + '</span>',
                         cancelable: true
                     });
@@ -4313,24 +4317,24 @@ utopiasoftware.saveup.controller = {
             // check if user wants acct number validated or not
             if($(checkElem).is(":checked")){ // user wants the account number remotely validated
                 // add the necessary attributes to the account number input in order to enable remote account number validation
-                $('#add-account-number').attr("data-parsley-remote-validator", "accountnumbercheck");
+                $('#add-recipient-account-number').attr("data-parsley-remote-validator", "recipientaccountnumbercheck");
                 // also make the account name input disabled & wipe its previous content
-                $('#add-account-account-name').attr("disabled", true);
-                $('#add-account-account-name').val("");
+                $('#add-recipient-account-name').attr("disabled", true);
+                $('#add-recipient-account-name').val("");
                 // remove tooltip from account name
-                $("#add-account-account-name").parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $("#add-account-account-name").parent().find('label:eq(0)').removeAttr("data-hint");
+                $("#add-recipient-account-name").parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $("#add-recipient-account-name").parent().find('label:eq(0)').removeAttr("data-hint");
                 // display the notice that an internet connection is required for verification
-                $('#add-account-verify-account-notice').css("display", "block");
+                $('#add-recipient-account-verify-account-notice').css("display", "block");
             }
             else{ // user does not want account number remotely validated
                 // remove attributes to prevent remote account number validation
-                $('#add-account-number').removeAttr("data-parsley-remote-validator");
+                $('#add-recipient-account-number').removeAttr("data-parsley-remote-validator");
                 // also make the account name input enabled & wipe its previous content
-                $('#add-account-account-name').removeAttr("disabled");
-                $('#add-account-account-name').val("");
+                $('#add-recipient-account-name').removeAttr("disabled");
+                $('#add-recipient-account-name').val("");
                 // hide the notice that an internet connection is required for verification
-                $('#add-account-verify-account-notice').css("display", "none");
+                $('#add-recipient-account-verify-account-notice').css("display", "none");
             }
         },
 
@@ -4342,23 +4346,23 @@ utopiasoftware.saveup.controller = {
         pageContentScrolled: function(event){
 
             // set the current scrolltop position
-            utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition = $(this).scrollTop();
+            utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition = $(this).scrollTop();
 
-            if(utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition >
-                utopiasoftware.saveup.controller.addAccountPageViewModel.previousScrollPosition){ // user scrolled up
+            if(utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition >
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.previousScrollPosition){ // user scrolled up
                 // set the current position as previous position
-                utopiasoftware.saveup.controller.addAccountPageViewModel.previousScrollPosition =
-                    utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition;
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.previousScrollPosition =
+                    utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition;
 
                 // check if the header image left after scrolling is <= height of page toolbar
-                if((140 - utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition) <= 56){
+                if((140 - utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition) <= 56){
                     // the header image left after scrolling is <= height of page toolbar
                     // check if the toolbar for the page has already been made opaque
                     if(this.isToolBarOpaque != true){ // toolbar has not been made opaque
 
-                        $('#add-account-page ons-toolbar').removeClass("toolbar--transparent"); // make the toolbar opaque
+                        $('#add-recipient-page ons-toolbar').removeClass("toolbar--transparent translucent-toolbar"); // make the toolbar opaque
                         // also pin the help header on the page just below the toolbar
-                        $('#add-account-page ons-list-header').css(
+                        $('#add-recipient-page ons-list-header').css(
                             {"display": "block", "position": "fixed", "top": "56px", "width": "100%"});
                         this.isToolBarOpaque = true; // flag that toolbar has been made opaque
                     }
@@ -4367,21 +4371,21 @@ utopiasoftware.saveup.controller = {
                 return;
             }
 
-            if(utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition <
-                utopiasoftware.saveup.controller.addAccountPageViewModel.previousScrollPosition){ // user scrolled down
+            if(utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition <
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.previousScrollPosition){ // user scrolled down
                 // set the current position as previous position
-                utopiasoftware.saveup.controller.addAccountPageViewModel.previousScrollPosition =
-                    utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition;
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.previousScrollPosition =
+                    utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition;
 
                 // check if the header image left after scrolling is > height of page toolbar
-                if((140 - utopiasoftware.saveup.controller.addAccountPageViewModel.currentScrollPosition) > 56){
+                if((140 - utopiasoftware.saveup.controller.addRecipientPageViewModel.currentScrollPosition) > 56){
                     // the header image left after scrolling is > height of page toolbar
                     // check if the toolbar for the page has already been made transparent
                     if(this.isToolBarOpaque == true){ // toolbar has NOT been made transparent
 
-                        $('#add-account-page ons-toolbar').addClass("toolbar--transparent"); // make the toolbar transparent
+                        $('#add-recipient-page ons-toolbar').addClass("toolbar--transparent translucent-toolbar"); // make the toolbar transparent
                         // also unpin the help header on the page from just below the toolbar
-                        $('#add-account-page ons-list-header').css({"display": "block", "position": "static", "top": "56px"});
+                        $('#add-recipient-page ons-list-header').css({"display": "block", "position": "static", "top": "56px"});
                         this.isToolBarOpaque = false; // flag that toolbar has been made transparent
                     }
                 }
@@ -4396,8 +4400,8 @@ utopiasoftware.saveup.controller = {
          * remote account validation has been enabled
          */
         resetAccountNameDisplay: function(){
-            if($('#add-account-page #add-account-verify-account').is(":checked")) { // user wants the account number remotely validated
-                $('#add-account-page #add-account-account-name').val("");
+            if($('#add-recipient-page #add-recipient-account-verify-account').is(":checked")) { // user wants the account number remotely validated
+                $('#add-recipient-page #add-recipient-account-name').val("");
             }
         },
 
@@ -4406,7 +4410,7 @@ utopiasoftware.saveup.controller = {
          *
          * @param jqxhr {jqueryXhr}
          */
-        accountNumberValidator: function(jqxhr){
+        recipientAccountNumberValidator: function(jqxhr){
             var serverResponse = ""; // holds the server response
 
             // check the validator response
@@ -4423,7 +4427,7 @@ utopiasoftware.saveup.controller = {
             }
             else { // the server api response was successful
                 // set the bank account name
-                utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName = serverResponse.data.account_name;
+                utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName = serverResponse.data.account_name;
                 return true; // validation successful
             }
 
