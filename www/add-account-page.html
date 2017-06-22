@@ -48,7 +48,7 @@
                 </div>
                 <div class="col s8 input-field" style="position: relative">
                     <select id="add-account-choose-bank"
-                            onchange="$('#hidden-choose-bank-input').val($(this).val()); $('#hidden-choose-bank-input').blur();
+                            onchange="$('#add-account-page #hidden-choose-bank-input').val($(this).val()); $('#add-account-page #hidden-choose-bank-input').blur();
                             utopiasoftware.saveup.controller.addAccountPageViewModel.resetAccountNameDisplay();">
                         <option value="" disabled selected>Choose Bank</option>
                     </select>

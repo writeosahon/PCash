@@ -450,7 +450,22 @@ if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authenti
 $('#verify-account-bottom-sheet').modal('close');// display the secure storage modal to indicate that Bank Account is being securely stored
 $('#secure-storage-modal .modal-message').html("Storing Bank Account on Device...");$('#secure-storage-modal').get(0).show();// show loader
 // add the verifed bank account to the user's secure "My Accounts" storage
-utopiasoftware.saveup.bankAccountOperations.addMyAccount({});}else{// inform user that security check failed/user authentication failed
+utopiasoftware.saveup.bankAccountOperations.addMyAccount({uniqueAccountId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),bankAccountNumber:$('#verify-account-form #verify-account-number').val(),bankAccountName:$('#verify-account-form #verify-account-name').val(),bankName:$('#verify-account-form #verify-account-choose-bank option:selected').text().trim(),flutterwave_bankCode:$('#verify-account-form #verify-account-choose-bank').val(),bankAccountAvatar:"css/app-images/avatar-"+new Random(Random.engines.nativeMath).integer(1,6)+".png"}).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+window.setTimeout(function(){$('#secure-storage-modal').get(0).hide();// hide loader
+// inform user that user's bank account has been successfully added to secure storage
+Materialize.toast('New bank account added',4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// inform user that security check failed/user authentication failed
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="add to my recipients"){// 'add to my recipients' button was clicked
+// ask user for secure PIN before proceeding. secure pin MUST match
+ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+// close the 'verify account' the bottom sheets
+$('#verify-account-bottom-sheet').modal('close');// display the secure storage modal to indicate that Recipient's Bank Account is being securely stored
+$('#secure-storage-modal .modal-message').html("Storing Recipient's Bank Account on Device...");$('#secure-storage-modal').get(0).show();// show loader
+// add the verifed bank account to the user's secure "My Accounts" storage
+utopiasoftware.saveup.savedRecipientsBankAccountOperations.addSavedRecipientAccount({uniqueAccountId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),bankAccountNumber:$('#verify-account-form #verify-account-number').val(),bankAccountName:$('#verify-account-form #verify-account-name').val(),bankName:$('#verify-account-form #verify-account-choose-bank option:selected').text().trim(),flutterwave_bankCode:$('#verify-account-form #verify-account-choose-bank').val(),bankAccountAvatar:"css/app-images/avatar-"+new Random(Random.engines.nativeMath).integer(1,6)+".png"}).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+window.setTimeout(function(){$('#secure-storage-modal').get(0).hide();// hide loader
+// inform user that recipient's bank account has been successfully added to secure storage
+Materialize.toast("Recipient's bank account added",4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be added. "+'<br>You can try again'+'</span>',cancelable:true});});}else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}}},/**
      * object is view-model for my-cards-page page
      */myCardsPageViewModel:{/**
@@ -1425,7 +1440,7 @@ $('#add-recipient-page #add-recipient-form').get(0).reset();$('#add-recipient-pa
 utopiasoftware.saveup.controller.addRecipientPageViewModel.isbankAccountNumberValidated($('#add-recipient-page #add-recipient-account-verify-account'));// reset the bank account properties
 utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName="";utopiasoftware.saveup.controller.addRecipientPageViewModel.tokenData="";utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage="";// reset the page scroll position to the top
 $('#add-recipient-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
-// inform user that user's bank account has been successfully added to secure storage
+// inform user that recipient's bank account has been successfully added to secure storage
 Materialize.toast("Recipient's bank account added",4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be added. "+'<br>You can try again'+'</span>',cancelable:true});});}},/**
          * method is used to check if user has asked for bank account number to be validated.
          * It sets or remove the appropriate attributes need to activate or deactivate
