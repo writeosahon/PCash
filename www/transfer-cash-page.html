@@ -21,96 +21,10 @@
         </div>
     </ons-toolbar>
 
-    <form id="join-savings-group-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
-          data-parsley-excluded="input[type=button], input[type=submit],
-                              input[type=reset], input[type=hidden], [disabled], :hidden">
-
-        <ons-list>
-            <ons-list-header style="font-size: 1.3em; margin:0; text-align: center; background-color: #ede7f6; color: #b388ff">
-                <span id="join-savings-group-step-1" class="btn-floating deep-purple accent-1 pulse" style="box-shadow: none">
-                    <ons-icon icon="md-saveup-icon-saveup-figure-1"></ons-icon>
-                </span> Cash Recipient
-            </ons-list-header>
-            <div class="row">
-                <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-saveup-icon-saveup-saving-group" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
-                </div>
-                <div class="col s8 input-field">
-                    <select id="join-savings-group-choose-group">
-                        <option value="" disabled selected>Choose Savings Group</option>
-                        <option value="1">Niger Delta Ethics And Value Cooperative Society</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                    <label for="join-savings-group-choose-group" class="hint--top"></label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-assignment-account" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
-                </div>
-                <div class="col s8 input-field">
-                    <input id="create-last-name" type="text" modifier="underbar"
-                           pattern="[a-zA-Z]{1}[\w\s\-\.]*[a-zA-Z]{1}" required float
-                           data-parsley-required-message="your last name is required"
-                           data-parsley-pattern-message="incorrect last name format. please check your spelling">
-                    <label for="create-last-name" class="hint--top">Last Name</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-account-box-phone" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
-                </div>
-                <div class="col s8 input-field inline">
-                    <input id="create-phone" type="tel" required
-                           placeholder="Where app is installed" pattern="(0[1-9]{1}[0-9]{9}|\+234[1-9]{1}[0-9]{9})"
-                           data-parsley-required-message="your phone number is required"
-                           data-parsley-pattern-message="incorrect phone number format"
-                           data-parsley-type-message="incorrect phone number format">
-                    <label for="create-phone" class="active hint--top">Phone Number</label>
-                </div>
-                <div class="col s12" style="text-align: center;">
-                    <label class="hint--top-right">&nbsp;&nbsp;&nbsp;</label>
-                    <input id="create-verify-phone" type="checkbox" required value="verified"
-                           data-parsley-required-message="tick this box for verification">
-                    <label for="create-verify-phone">Verify Phone Number</label>
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-lock" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
-                </div>
-                <div class="col s7 input-field">
-                    <input id="create-secure-pin" type="number" required
-                           data-parsley-type="digits"
-                           data-parsley-minlength="4"
-                           data-parsley-maxlength="8"
-                           placeholder="For secure login"
-                           data-parsley-required-message="create your PIN"
-                           data-parsley-digits-message="your PIN must contain only numbers"
-                           data-parsley-minlength-message="your PIN must be at least 4 numbers"
-                           data-parsley-maxlength-message="your PIN cannot be more than 8 numbers">
-                    <label for="create-secure-pin" class="active hint--top">Create Secure PIN</label>
-                </div>
-                <div class="col s3" style="padding-top: 0.2em;">
-                    <ons-button modifier="quiet" data-saveup-visible="no" style="font-size: 1.2em"
-                                onclick="utopiasoftware.saveup.controller.createAccountPageViewModel.pinVisibilityButtonClicked(this);">
-                        <ons-icon icon="md-eye"></ons-icon></ons-button>
-                </div>
-            </div>
-
-            <ons-list-header style="font-size: 1.3em;">I Agree
-                <div class="list-item__subtitle">
-                    Creating an account means you have agreed to our Terms of Use & Privacy Policy
-                </div>
-            </ons-list-header>
-
-        </ons-list>
-    </form>
+    <ons-tabbar id="transfer-cash-tabbar" animation="slide" position="top">
+        <ons-tab class="card-pay-icon" page="sign-in-page.html" active></ons-tab>
+        <ons-tab class="bank-pay-icon" page="create-account-page.html"></ons-tab>
+    </ons-tabbar>
 
     <ons-bottom-toolbar>
         <ons-row>

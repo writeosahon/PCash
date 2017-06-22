@@ -446,3 +446,30 @@ label[data-hint]:after {
     min-height: 16em !important;
 }
 /** STYLE FOR ONS-LIST ELEMENT IN ADD RECIPIENT PAGE ENDS **/
+
+
+#transfer-cash-tabbar .tabbar--material {
+    background-color: #ede7f6 !important;
+}
+#transfer-cash-tabbar .tabbar--material__button {
+    background-color: transparent;
+    color: rgba(179, 136, 255, 1);
+}
+#transfer-cash-tabbar .tabbar--material__button:after {
+    background-color: #B388FF;
+}
+
+.card-pay-icon {
+    background-position: center;
+    background-size: contain;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    background-image: url("app-images/card-pay-img.png");
+}
+.bank-pay-icon {
+    background-position: center;
+    background-size: contain;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    background-image: url("app-images/bank-pay-img.png");
+}
