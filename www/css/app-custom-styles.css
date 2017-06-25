@@ -448,6 +448,7 @@ label[data-hint]:after {
 /** STYLE FOR ONS-LIST ELEMENT IN ADD RECIPIENT PAGE ENDS **/
 
 
+/** STYLE FOR TRANSFER CASH PAGE BEGINS **/
 #transfer-cash-tabbar .tabbar--material {
     background-color: #ede7f6 !important;
 }
@@ -459,17 +460,63 @@ label[data-hint]:after {
     background-color: #B388FF;
 }
 
-.card-pay-icon {
+.card-pay-icon { /** COLOURED CARD-PAY TAB ICON **/
     background-position: center;
     background-size: contain;
     background-origin: content-box;
     background-repeat: no-repeat;
     background-image: url("app-images/card-pay-img.png");
 }
-.bank-pay-icon {
+.bank-pay-icon { /** COLOURED BANK-PAY TAB ICON **/
     background-position: center;
     background-size: contain;
     background-origin: content-box;
     background-repeat: no-repeat;
     background-image: url("app-images/bank-pay-img.png");
 }
+/** STYLE FOR TRANSFER CASH PAGE ENDS **/
+
+/** STYLE FOR PAY PROGRESS INDICATOR BEGINS **/
+.postcash-pay-progress{
+    border-top: 3px solid #8a2be2;
+    margin-top: 16px;
+}
+.postcash-pay-progress .postcash-pay-progress-milestone {
+    display: block;
+    height: 1em;
+    width: 1em;
+    padding: 2px;
+    border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    background-image: linear-gradient(0deg, rgba(255, 255, 255,0.6) 0%, rgba(255, 255, 255,0.6) 100%),
+    linear-gradient(0deg, rgba(138, 43, 226, 1) 0%,rgba(138, 43, 226, 1) 100%);
+    background-clip: border-box;
+    margin-top: -25%;
+}
+.postcash-pay-progress .postcash-pay-progress-milestone-text {
+    display: block;
+    color: rgba(138, 43, 226, 0.6);
+    font-size: 0.6em;
+    text-align: left;
+    margin-top: -40%;
+}
+.postcash-pay-progress .postcash-pay-progress-milestone-active {
+    display: block;
+    height: 1em;
+    width: 1em;
+    padding: 2px;
+    border-radius: 50%;
+    border: 1px solid #8a2be2;
+    background-clip: content-box;
+    background-color: #8a2be2;
+    margin-top: -25%;
+}
+.postcash-pay-progress .postcash-pay-progress-milestone-text-active {
+    display: block;
+    color: #8a2be2;
+    font-size: 0.6em;
+    text-align: left;
+    margin-top: -40%;
+}
+/** STYLE FOR PAY PROGRESS INDICATOR ENDS **/
