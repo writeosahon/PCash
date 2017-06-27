@@ -17,7 +17,7 @@
                               input[type=reset], input[type=hidden], [disabled], :hidden" style="display: block;">
 
         <ons-list>
-            <ons-list-header style="font-size: 1.2em; margin:0;">
+            <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
                 Your Card Details
                 <span id="transfer-cash-card-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
                              onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-card-page-help-popover', this)">
@@ -27,7 +27,7 @@
 
             <div class="row">
                 <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-saveup-icon-saveup-credit-card" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                    <ons-icon icon="md-saveup-icon-saveup-credit-card" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s10 input-field">
                     <input id="transfer-cash-card-number" class="autocomplete" type="text" placeholder="Card Alias/Card Number"
@@ -39,7 +39,7 @@
 
             <div class="row">
                 <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-card" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                    <ons-icon icon="md-card" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s5 input-field">
                     <input id="transfer-cash-card-cvv" type="number" required
@@ -56,66 +56,30 @@
 
             <div class="row">
                 <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-label" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                    <ons-icon icon="md-saveup-icon-saveup-reset-pin" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                 </div>
-                <div class="col s10 input-field">
-                    <input id="add-card-alias" type="text" placeholder="Nickname for card" required
-                           data-parsley-required-message="a card alias is required"
-                           onfocus="$('#add-card-page ons-list-header').css({'display': 'none'});"
-                           onblur="$('#add-card-page ons-list-header').css({'display': 'block'});">
-                    <label for="add-card-alias" class="active hint--top">Card Alias</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-saveup-icon-saveup-credit-card" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
-                </div>
-                <div class="col s8 input-field">
-                    <input id="add-card-card-number" type="number" required
-                           data-length="20"
+                <div class="col s7 input-field">
+                    <input id="transfer-cash-card-pin" type="number" required
                            data-parsley-type="digits"
-                           data-parsley-minlength="16"
-                           data-parsley-maxlength="20"
-                           data-parsley-remote
-                           data-parsley-remote-options='{ "type": "GET", "dataType": "text", "timeout": 240000}'
-                           data-parsley-required-message="Card Number is required"
-                           data-parsley-digits-message="Card Number must contain only numbers"
-                           data-parsley-minlength-message="Card Number must be at least 16 digits"
-                           data-parsley-maxlength-message="Card Number cannot be more than 20 digits"
-                           data-parsley-remote-message="Card Number unknown or invalid"
-                    onfocus="$('#add-card-page ons-list-header').css({'display': 'none'});"
-                           onblur="$('#add-card-page ons-list-header').css({'display': 'block'});">
-                    <label for="add-card-card-number" class="hint--top">Card Number</label>
-                </div>
-                <div id="add-card-number-validation-loading" class="col s12" style="text-align: center; display: none">
-                    <ons-icon icon="ion-load-d" size="32px" style="color: #311b92;" spin></ons-icon>
-                </div>
-                <div class="col s12" style="text-align: center; padding-top: 1em;">
-                    <input id="add-card-verify-card" type="checkbox" value="verified"
-                           onclick="utopiasoftware.saveup.controller.addCardPageViewModel.isCardNumberValidated(this);">
-                    <label for="add-card-verify-card">Verify Card Number</label>
-                </div>
-                <div id="add-card-verify-card-notice" class="col s12" style="text-align: center;
-                font-size: 0.75em; color: gray; display: none;">
-                    NOTE: active Internet connection is required to verify card number
+                           data-parsley-minlength="4"
+                           data-parsley-maxlength="4"
+
+                           data-parsley-required-message="create your PIN"
+                           data-parsley-digits-message="your PIN must contain only numbers"
+                           data-parsley-minlength-message="your PIN must be at least 4 numbers"
+                           data-parsley-maxlength-message="your PIN cannot be more than 4 numbers">
+                    <label for="transfer-cash-card-pin" class="hint--top">Card ATM/PIN</label>
                 </div>
             </div>
 
-            <div id="add-card-image-container" class="row" style="display: none">
-                <div class="col s4">
-                    <img id="add-card-image" src="css/app-images/blank.png" style="width: 100%; height: auto; vertical-align: bottom">
-                </div>
-                <div id="add-card-image-type" class="col s8"></div> <!-- used to display the brand of the card -->
-            </div>
 
             <div class="row" style="position: relative;">
                 <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-calendar" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                    <ons-icon icon="md-calendar" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s4 input-field" style="position: relative">
-                    <select id="add-card-expiry-month"
-                            onchange="$('#hidden-card-expiry-month-input').val($(this).val()); $('#hidden-card-expiry-month-input').blur();">
+                    <select id="transfer-cash-card-expiry-month"
+                            onchange="$('#transfer-cash-card-page #hidden-card-expiry-month-input').val($(this).val()); $('#transfer-cash-card-page #hidden-card-expiry-month-input').blur();">
                         <option value="" disabled selected>Month</option>
                         <option value="01">01</option>
                         <option value="02">02</option>
@@ -130,7 +94,7 @@
                         <option value="11">11</option>
                         <option value="12">12</option>
                     </select>
-                    <label for="add-card-expiry-month">Card Expires</label>
+                    <label for="transfer-cash-card-expiry-month">Card Expires</label>
                     <input id="hidden-card-expiry-month-input" type="text" required
                            data-parsley-trigger-after-failure="focusout"
                            data-parsley-required-message="no month"
@@ -142,11 +106,11 @@
                 </div>
 
                 <div class="col s5 input-field" style="position: relative">
-                    <select id="add-card-expiry-year"
-                            onchange="$('#hidden-card-expiry-year-input').val($(this).val()); $('#hidden-card-expiry-year-input').blur();">
+                    <select id="transfer-cash-card-expiry-year"
+                            onchange="$('#transfer-cash-card-page #hidden-card-expiry-year-input').val($(this).val()); $('#transfer-cash-card-page #hidden-card-expiry-year-input').blur();">
                         <option value="" disabled selected>Year</option>
                     </select>
-                    <label for="add-card-expiry-year">Card Expires</label>
+                    <label for="transfer-cash-card-expiry-year">Card Expires</label>
                     <input id="hidden-card-expiry-year-input" type="text" required
                            data-parsley-trigger-after-failure="focusout"
                            data-parsley-required-message="no year"
@@ -159,6 +123,10 @@
                 <div class="col s12" style="height: 100px;">
                 </div>
             </div>
+            <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
+                Recipient Details
+            </ons-list-header>
+
         </ons-list>
     </form>
 

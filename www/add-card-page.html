@@ -134,7 +134,7 @@
                 </div>
                 <div class="col s4 input-field" style="position: relative">
                     <select id="add-card-expiry-month"
-                            onchange="$('#hidden-card-expiry-month-input').val($(this).val()); $('#hidden-card-expiry-month-input').blur();">
+                            onchange="$('#add-card-page #hidden-card-expiry-month-input').val($(this).val()); $('#add-card-page #hidden-card-expiry-month-input').blur();">
                         <option value="" disabled selected>Month</option>
                         <option value="01">01</option>
                         <option value="02">02</option>
@@ -162,7 +162,7 @@
 
                 <div class="col s5 input-field" style="position: relative">
                     <select id="add-card-expiry-year"
-                            onchange="$('#hidden-card-expiry-year-input').val($(this).val()); $('#hidden-card-expiry-year-input').blur();">
+                            onchange="$('#add-card-page #hidden-card-expiry-year-input').val($(this).val()); $('#add-card-page #hidden-card-expiry-year-input').blur();">
                         <option value="" disabled selected>Year</option>
                     </select>
                     <label for="add-card-expiry-year">Card Expires</label>

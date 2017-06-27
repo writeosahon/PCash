@@ -533,3 +533,8 @@ label[data-hint]:after {
     background-image: linear-gradient(45deg, #b388ff, #b388ff 50%, #b388ff 50%);
 }
 /** STYLE FOR TRANSFER-CASH-CARD HELP POPOVER ENDS **/
+
+
+#transfer-cash-card-page #transfer-cash-card-pin{
+    -webkit-text-security: disc;
+}

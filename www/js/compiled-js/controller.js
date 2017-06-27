@@ -4831,7 +4831,7 @@ utopiasoftware.saveup.controller = {
                 }, function(){});
 
                 /** dynamically create the contents of the various select elements **/
-                /*var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
+                var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
                 var yearOption = (new Date()).getFullYear(); // get the current year
                 // add current year to the options tag
                 optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
@@ -4844,12 +4844,10 @@ utopiasoftware.saveup.controller = {
                     optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
                 }
 
-                $('#add-card-expiry-year', $thisPage).append(optionTags); // append all the created option tags
+                $('#transfer-cash-card-expiry-year', $thisPage).append(optionTags); // append all the created option tags
 
                 // initialise all the select element
                 $('select', $thisPage).material_select();
-                // initialise the character counter plugin
-                $('#add-card-card-number', $thisPage).characterCounter(); */
 
                 /*
                 // check if the page was sent a financial card id.

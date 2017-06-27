@@ -1675,25 +1675,15 @@ cardsArrayData.forEach(function(arrayElem){// function to convert each array ele
 autoCompleteData[arrayElem.cardNickName+" - "+arrayElem.cardNumber]=arrayElem.cardImage;});// intialise widget
 $('input.autocomplete').autocomplete({data:autoCompleteData,onAutocomplete:function onAutocomplete(val){// Callback function when value is autcompleted.
 },minLength:1// The minimum length of the input for the autocomplete to start. Default: 1.
-});},function(){});/** dynamically create the contents of the various select elements **//*var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
-                var yearOption = (new Date()).getFullYear(); // get the current year
-                // add current year to the options tag
-                optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
-
-                // add 3 more years to the option tags for the Card Expiry Year
-                for(var index = 0; index < 3; index++){
-                    // increase the yearOption by 1
-                    yearOption += 1;
-                    // add current year to the options tag
-                    optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
-                }
-
-                $('#add-card-expiry-year', $thisPage).append(optionTags); // append all the created option tags
-
-                // initialise all the select element
-                $('select', $thisPage).material_select();
-                // initialise the character counter plugin
-                $('#add-card-card-number', $thisPage).characterCounter(); *//*
+});},function(){});/** dynamically create the contents of the various select elements **/var optionTags="";// string to hold all created option tags for the Card Expiry Year
+var yearOption=new Date().getFullYear();// get the current year
+// add current year to the options tag
+optionTags+='<option value="'+yearOption+'">'+yearOption+'</option>';// add 3 more years to the option tags for the Card Expiry Year
+for(var index=0;index<3;index++){// increase the yearOption by 1
+yearOption+=1;// add current year to the options tag
+optionTags+='<option value="'+yearOption+'">'+yearOption+'</option>';}$('#transfer-cash-card-expiry-year',$thisPage).append(optionTags);// append all the created option tags
+// initialise all the select element
+$('select',$thisPage).material_select();/*
                 // check if the page was sent a financial card id.
                 // if so preload the financial card data into the form
                 if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){
