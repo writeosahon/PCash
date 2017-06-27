@@ -27,13 +27,30 @@
 
             <div class="row">
                 <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-account" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                    <ons-icon icon="md-saveup-icon-saveup-credit-card" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s10 input-field">
-                    <input id="add-card-card-holder" type="text" placeholder="(OPTIONAL)"
-                           pattern="[a-zA-Z]{1}[\w\s\-\.]*[a-zA-Z]{1}"
-                           data-parsley-pattern-message="incorrect name pattern. please check your spelling">
-                    <label for="add-card-card-holder" class="active hint--top">Name On Card</label>
+                    <input id="transfer-cash-card-number" class="autocomplete" type="text" placeholder="Card Alias/Card Number"
+                           required
+                           data-parsley-required-message="card alias or card number required">
+                    <label for="transfer-cash-card-number" class="active hint--top">Card Alias or Card Number</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s2" style="text-align: center;">
+                    <ons-icon icon="md-card" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                </div>
+                <div class="col s5 input-field">
+                    <input id="transfer-cash-card-cvv" type="number" required
+                           data-parsley-type="digits"
+                           data-parsley-minlength="3"
+                           data-parsley-maxlength="3"
+                           data-parsley-required-message="Card CVV is required"
+                           data-parsley-digits-message="Card CVV must contain only numbers"
+                           data-parsley-minlength-message="Card CVV must be 3 digits"
+                           data-parsley-maxlength-message="Card CVV must be 3 digits">
+                    <label for="transfer-cash-card-cvv" class="hint--top">Card CVV</label>
                 </div>
             </div>
 
@@ -92,25 +109,6 @@
                 <div id="add-card-image-type" class="col s8"></div> <!-- used to display the brand of the card -->
             </div>
 
-            <div class="row">
-                <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-card" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
-                </div>
-                <div class="col s5 input-field">
-                    <input id="add-card-cvv" type="number" required
-                           data-parsley-type="digits"
-                           data-parsley-minlength="3"
-                           data-parsley-maxlength="3"
-                           data-parsley-required-message="CVV is required"
-                           data-parsley-digits-message="CVV must contain only numbers"
-                           data-parsley-minlength-message="CVV must be 3 digits"
-                           data-parsley-maxlength-message="CVV must be 3 digits"
-                           onfocus="$('#add-card-page ons-list-header').css({'display': 'none'});"
-                           onblur="$('#add-card-page ons-list-header').css({'display': 'block'});">
-                    <label for="add-card-cvv" class="hint--top">CVV</label>
-                </div>
-            </div>
-
             <div class="row" style="position: relative;">
                 <div class="col s2" style="text-align: center;">
                     <ons-icon icon="md-calendar" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
@@ -159,7 +157,6 @@
 
             <div class="row"><!-- this row is just meant to provide the extra height needed to display the various select options -->
                 <div class="col s12" style="height: 100px;">
-                    <input id="add-card-unique-id" type="hidden"><!-- used to hold the unique id for the account during update/edit -->
                 </div>
             </div>
         </ons-list>
@@ -174,15 +171,6 @@
             </ons-col>
         </ons-row>
     </ons-bottom-toolbar>
-
-    <!-- tap target for feature discovery. This is not directly visible on the page -->
-    <div class="tap-target" data-activates="add-card-help-1" style="background-color: #82b1ff; color: #ffffff;">
-        <div class="tap-target-content">
-            <h5 style="padding-left: 2em;">Store Your Card</h5>
-            <p style="width: 50%; margin-left: 3%;">
-                Add your bank cards to your secure digital wallet</p>
-        </div>
-    </div>
 
 </ons-page>
 </body>

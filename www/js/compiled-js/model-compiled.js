@@ -120,4 +120,7 @@ $(document).on("hide", "#add-recipient-page", utopiasoftware.saveup.controller.a
 // listen for the destroy event of the Add Recipient page
 $(document).on("destroy", "#add-recipient-page", utopiasoftware.saveup.controller.addRecipientPageViewModel.pageDestroy);
 
+// listen for the initialisation of the Transfer-Cash-Card page
+$(document).on("init", "#transfer-cash-card-page", utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageInit);
+
 //# sourceMappingURL=model-compiled.js.map

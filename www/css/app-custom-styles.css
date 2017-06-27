@@ -480,6 +480,7 @@ label[data-hint]:after {
 .postcash-pay-progress{
     border-top: 3px solid #8a2be2;
     margin-top: 16px;
+    overflow-y: visible;
 }
 .postcash-pay-progress .postcash-pay-progress-milestone {
     display: block;
@@ -492,14 +493,14 @@ label[data-hint]:after {
     background-image: linear-gradient(0deg, rgba(255, 255, 255,0.6) 0%, rgba(255, 255, 255,0.6) 100%),
     linear-gradient(0deg, rgba(138, 43, 226, 1) 0%,rgba(138, 43, 226, 1) 100%);
     background-clip: border-box;
-    margin-top: -25%;
+    margin-top: -0.5em;
 }
 .postcash-pay-progress .postcash-pay-progress-milestone-text {
     display: block;
     color: rgba(138, 43, 226, 0.6);
     font-size: 0.6em;
     text-align: left;
-    margin-top: -40%;
+    margin-top: -1.5em;
 }
 .postcash-pay-progress .postcash-pay-progress-milestone-active {
     display: block;
@@ -510,13 +511,25 @@ label[data-hint]:after {
     border: 1px solid #8a2be2;
     background-clip: content-box;
     background-color: #8a2be2;
-    margin-top: -25%;
+    margin-top: -0.5em;
 }
 .postcash-pay-progress .postcash-pay-progress-milestone-text-active {
     display: block;
     color: #8a2be2;
     font-size: 0.6em;
     text-align: left;
-    margin-top: -40%;
+    margin-top: -1.5em;
 }
 /** STYLE FOR PAY PROGRESS INDICATOR ENDS **/
+
+
+/** STYLE FOR TRANSFER-CASH-CARD HELP POPOVER BEGINS **/
+#transfer-cash-card-page-help-popover,
+#transfer-cash-card-page-help-popover .popover__content {
+    background-color: #b388ff;
+}
+#transfer-cash-card-page-help-popover .popover__arrow,
+#transfer-cash-card-page-help-popover .popover--right__arrow {
+    background-image: linear-gradient(45deg, #b388ff, #b388ff 50%, #b388ff 50%);
+}
+/** STYLE FOR TRANSFER-CASH-CARD HELP POPOVER ENDS **/
