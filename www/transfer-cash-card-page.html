@@ -171,9 +171,11 @@
     <ons-bottom-toolbar>
         <ons-row>
             <ons-col width="100%" style="text-align: center;">
-                <ons-button id="add-card-cancel-button" modifier="quiet" disabled style="color: red;"
-                            onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">Cancel</ons-button>
-                <ons-button id="add-card-save-button" modifier="quiet" disabled>Save</ons-button>
+                <ons-button id="transfer-cash-card-cancel-button-1" disabled style="background-color: red;"
+                            onclick="$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');">
+                    <ons-icon icon="md-close-circle"></ons-icon> Cancel</ons-button>
+                <ons-button id="transfer-cash-card-button" disabled style="background-color: #B388FF;">
+                    <ons-icon icon="md-saveup-icon-saveup-cash"></ons-icon> Transfer Cash</ons-button>
             </ons-col>
         </ons-row>
     </ons-bottom-toolbar>
