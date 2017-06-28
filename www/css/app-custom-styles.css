@@ -532,9 +532,48 @@ label[data-hint]:after {
 #transfer-cash-card-page-help-popover .popover--right__arrow {
     background-image: linear-gradient(45deg, #b388ff, #b388ff 50%, #b388ff 50%);
 }
+#transfer-cash-card-page-help-popover-2,
+#transfer-cash-card-page-help-popover-2 .popover__content {
+    background-color: #b388ff;
+}
+#transfer-cash-card-page-help-popover-2 .popover__arrow,
+#transfer-cash-card-page-help-popover-2 .popover--right__arrow {
+    background-image: linear-gradient(45deg, #b388ff, #b388ff 50%, #b388ff 50%);
+}
 /** STYLE FOR TRANSFER-CASH-CARD HELP POPOVER ENDS **/
 
 
+/** STYLE FOR CARD PIN INPUT IN TRANSFER-CASH-CARD PAGE BEGINS **/
 #transfer-cash-card-page #transfer-cash-card-pin{
     -webkit-text-security: disc;
 }
+/** STYLE FOR CARD PIN INPUT IN TRANSFER-CASH-CARD PAGE ENDS **/
+
+
+/** STYLE FOR BANK SELECT ELEMENT IN TRANSFER-CASH-CARD PAGE BEGINS **/
+#transfer-cash-card-page .page--material__content .dropdown-content{
+    max-height: 200px !important;
+    overflow-y: scroll;
+    background-color: rgb(237,231,246);
+}
+#transfer-cash-card-page .page--material__content .dropdown-content li:hover,
+#transfer-cash-card-page .page--material__content .dropdown-content li.active,
+#transfer-cash-card-page .page--material__content .dropdown-content li.selected {
+    background-color: #b388ff;
+}
+#transfer-cash-card-page .page--material__content .dropdown-content li.active.selected {
+    background-color: #b388ff;
+}
+#transfer-cash-card-page .page--material__content .dropdown-content li:hover > span,
+#transfer-cash-card-page .page--material__content .dropdown-content li.active > span,
+#transfer-cash-card-page .page--material__content .dropdown-content li.selected > span,
+#transfer-cash-card-page .page--material__content .dropdown-content li:hover > a,
+#transfer-cash-card-page .page--material__content .dropdown-content li.active > a,
+#transfer-cash-card-page .page--material__content .dropdown-content li.selected > a {
+    color: #ffffff;
+}
+#transfer-cash-card-page .page--material__content .dropdown-content li.active.selected > span,
+#transfer-cash-card-page .page--material__content .dropdown-content li.active.selected > a {
+    color: #ffffff;
+}
+/** STYLE FOR BANK SELECT ELEMENT IN TRANSFER-CASH-CARD PAGE ENDS **/

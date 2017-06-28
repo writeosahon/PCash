@@ -120,3 +120,6 @@ $(document).on("destroy", "#add-recipient-page", utopiasoftware.saveup.controlle
 
 // listen for the initialisation of the Transfer-Cash-Card page
 $(document).on("init", "#transfer-cash-card-page", utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageInit);
+
+// listen for when the Transfer-Cash-Card page is shown
+$(document).on("show", "#transfer-cash-card-page", utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageShow);

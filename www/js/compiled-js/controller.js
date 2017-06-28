@@ -4669,8 +4669,8 @@ utopiasoftware.saveup.controller = {
                     $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
                 };
 
-                // listen for the scroll event of the page content
-                $('#transfer-cash-card-page .page__content').on("scroll",
+                // listen for the scroll event of the page carousel content
+                $('#transfer-cash-card-page ons-carousel').on("scroll",
                     utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageContentScrolled);
 
                 // initialise the form validation
@@ -4820,7 +4820,7 @@ utopiasoftware.saveup.controller = {
 
                     });
                     // intialise widget
-                    $('input.autocomplete').autocomplete({
+                    $('#transfer-cash-card-number.autocomplete').autocomplete({
                         data: autoCompleteData,
                         onAutocomplete: function(val) {
                             // Callback function when value is autcompleted.
@@ -4828,26 +4828,65 @@ utopiasoftware.saveup.controller = {
                         minLength: 1 // The minimum length of the input for the autocomplete to start. Default: 1.
                     });
 
-                }, function(){});
+                    // call the method to retrieve saved bank account recipient's used to populate recipient autocomplete widget
+                    return utopiasoftware.saveup.savedRecipientsBankAccountOperations.loadSavedRecipientsAccountsData();
 
-                /** dynamically create the contents of the various select elements **/
-                var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
-                var yearOption = (new Date()).getFullYear(); // get the current year
-                // add current year to the options tag
-                optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
+                }, function(){return [];}).
+                then(function(savedRecipientsArray){
+                    var autoCompleteData = {}; // holds the data used to initialise the autocomplete widget
+                    savedRecipientsArray.forEach(function(arrayElem){ // function to convert each array element to a format for autocomplete
+                        autoCompleteData[arrayElem.bankAccountName + " - " +  arrayElem.bankAccountNumber] =
+                            arrayElem.bankAccountAvatar;
 
-                // add 3 more years to the option tags for the Card Expiry Year
-                for(var index = 0; index < 3; index++){
-                    // increase the yearOption by 1
-                    yearOption += 1;
+                    });
+                    // initialise widget
+                    $('#transfer-cash-card-recipient-account-name.autocomplete').autocomplete({
+                        data: autoCompleteData,
+                        onAutocomplete: function(val) {
+                            // Callback function when value is autcompleted.
+                        },
+                        minLength: 1 // The minimum length of the input for the autocomplete to start. Default: 1.
+                    });
+                    return utopiasoftware.saveup.sortBanksData(); // retrieve data for banks
+                }, function(){return [];}).
+                then(function(bankArrayData){
+                    var optionTags = ""; // string to hold all created option tags
+
+                    // get each object in bank array and use it to create the 'bank' select element
+                    for(var index = 0; index < bankArrayData.length; index++){
+                        var bankObject = bankArrayData[index]; // get the bank object
+                        // update the banks select element option tags
+                        for(var prop in bankObject){
+                            optionTags += '<option value="' + prop + '">' + bankObject[prop] + '</option>';
+                        }
+                    }
+
+                    $('#transfer-cash-card-choose-bank', $thisPage).append(optionTags); // append all the created option tags
+                    // initialise the 'bank' select element
+                    $('#transfer-cash-card-choose-bank', $thisPage).material_select();
+                    return; // return at this point, so the page can continue initialisation
+                }, function(){}).
+                then(function(){
+                    /** dynamically create the contents of the 'year' select elements **/
+                    var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
+                    var yearOption = (new Date()).getFullYear(); // get the current year
                     // add current year to the options tag
                     optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
-                }
 
-                $('#transfer-cash-card-expiry-year', $thisPage).append(optionTags); // append all the created option tags
+                    // add 3 more years to the option tags for the Card Expiry Year
+                    for(var index = 0; index < 3; index++){
+                        // increase the yearOption by 1
+                        yearOption += 1;
+                        // add current year to the options tag
+                        optionTags += '<option value="' + yearOption + '">' + yearOption + '</option>';
+                    }
 
-                // initialise all the select element
-                $('select', $thisPage).material_select();
+                    $('#transfer-cash-card-expiry-year', $thisPage).append(optionTags); // append all the created option tags
+
+                    // initialise all the select element
+                    $('select', $thisPage).material_select();
+                }, function(){});
+
 
                 /*
                 // check if the page was sent a financial card id.
