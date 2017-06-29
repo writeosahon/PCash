@@ -16,7 +16,7 @@
         <ons-carousel-item>
             <form id="transfer-cash-card-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
                   data-parsley-excluded="input[type=button], input[type=submit],
-                              input[type=reset], input[type=hidden], [disabled], :hidden" style="display: block;">
+                              input[type=reset], input[type=hidden], [disabled], :hidden" style="display: none;">
 
                 <ons-list>
                     <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
@@ -49,7 +49,7 @@
                                    data-parsley-minlength="3"
                                    data-parsley-maxlength="3"
                                    data-parsley-required-message="Card CVV is required"
-                                   data-parsley-digits-message="Card CVV must contain only numbers"
+                                   data-parsley-type-message="Card CVV must contain only numbers"
                                    data-parsley-minlength-message="Card CVV must be 3 digits"
                                    data-parsley-maxlength-message="Card CVV must be 3 digits">
                             <label for="transfer-cash-card-cvv" class="hint--top">Card CVV</label>
@@ -66,7 +66,7 @@
                                    data-parsley-minlength="4"
                                    data-parsley-maxlength="4"
                                    data-parsley-required-message="enter card PIN"
-                                   data-parsley-digits-message="card PIN must contain only numbers"
+                                   data-parsley-type-message="card PIN must contain only numbers"
                                    data-parsley-minlength-message="card PIN must be at least 4 numbers"
                                    data-parsley-maxlength-message="card PIN cannot be more than 4 numbers">
                             <label for="transfer-cash-card-pin" class="hint--top">Card ATM PIN</label>
@@ -121,8 +121,33 @@
                     </div>
 
                     <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
+                        Transfer Amount
+                        <span id="transfer-cash-card-help-3" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                              onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-card-page-help-popover-3', this)">
+                    <ons-icon icon="fa-question"></ons-icon>
+                </span>
+                    </ons-list-header>
+
+                    <div class="row">
+                        <div class="col s2" style="text-align: center;">
+                            <ons-icon icon="md-saveup-icon-saveup-cash" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
+                        </div>
+                        <div class="col s9 input-field">
+                            <input id="transfer-cash-card-amount" required
+                                   data-parsley-type="number" type="tel"
+                                   min="500"
+                                   max="50000"
+                                   data-parsley-required-message="enter amount to transfer"
+                                   data-parsley-type-message="provide a valid cash amount"
+                                   data-parsley-min-message="minimum amount per transfer is 500"
+                                   data-parsley-max-message="maximum amount per transfer is 50,000">
+                            <label for="transfer-cash-card-amount" class="hint--top">Amount</label>
+                        </div>
+                    </div>
+
+                    <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
                         Recipient Details
-                        <span id="transfer-cash-card-help-2" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                        <span id="transfer-cash-card-help-4" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
                               onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-card-page-help-popover-2', this)">
                     <ons-icon icon="fa-question"></ons-icon>
                 </span>
@@ -136,7 +161,7 @@
                             <input id="transfer-cash-card-recipient-account-name" class="autocomplete" type="text"
                                    required
                                    data-parsley-required-message="enter a recipient's account name or account number">
-                            <label for="transfer-cash-card-recipient-account-name" class="active hint--top">Recipient Account Name or Account Number</label>
+                            <label for="transfer-cash-card-recipient-account-name" class="hint--top">Recipient Account Name or Account Number</label>
                         </div>
                     </div>
 
@@ -168,9 +193,9 @@
         </ons-carousel-item>
     </ons-carousel>
 
-    <ons-bottom-toolbar>
+    <ons-bottom-toolbar style="height: 50px;">
         <ons-row>
-            <ons-col width="100%" style="text-align: center;">
+            <ons-col width="100%" style="text-align: center; padding-top: 0.5em">
                 <ons-button id="transfer-cash-card-cancel-button-1" disabled style="background-color: red;"
                             onclick="$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');">
                     <ons-icon icon="md-close-circle"></ons-icon> Cancel</ons-button>

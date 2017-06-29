@@ -126,4 +126,10 @@ $(document).on("init", "#transfer-cash-card-page", utopiasoftware.saveup.control
 // listen for when the Transfer-Cash-Card page is shown
 $(document).on("show", "#transfer-cash-card-page", utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageShow);
 
+// listen for the hide event of the Transfer-Cash-Card page
+$(document).on("hide", "#transfer-cash-card-page", utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageHide);
+
+// listen for the destroy event of the Transfer-Cash-Card page
+$(document).on("destroy", "#transfer-cash-card-page", utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageDestroy);
+
 //# sourceMappingURL=model-compiled.js.map
