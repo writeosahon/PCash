@@ -140,7 +140,8 @@
                                    data-parsley-required-message="enter amount to transfer"
                                    data-parsley-type-message="provide a valid cash amount"
                                    data-parsley-min-message="minimum amount per transfer is 500"
-                                   data-parsley-max-message="maximum amount per transfer is 50,000">
+                                   data-parsley-max-message="maximum amount per transfer is 50,000"
+                            onchange="$(this).val(kendo.toString(kendo.parseFloat($(this).val()), 'n2'));">
                             <label for="transfer-cash-card-amount" class="hint--top">Amount</label>
                         </div>
                     </div>
