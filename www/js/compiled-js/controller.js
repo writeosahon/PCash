@@ -4673,8 +4673,18 @@ utopiasoftware.saveup.controller = {
                 $('#transfer-cash-card-page ons-carousel').on("scroll",
                     utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageContentScrolled);
 
-                // initialise the form validation
-                utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator = $('#transfer-cash-card-form').parsley();
+                // initialise the form validation objects.
+                    $('#transfer-cash-card-amount').parsley({ // used solely for the transfer-cash-smount input
+                        value: function(parsley) {
+                            // convert the amount back to a plain text without the thousand separator
+                            let parsedNumber = kendo.parseFloat($('#transfer-cash-card-amount').val());
+                            return (parsedNumber ? parsedNumber : $('#transfer-cash-card-amount').val());
+                        }
+                    });
+
+                utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator =
+                    $('#transfer-cash-card-form').parsley(); // used for the form in general
+
 
                  // attach listener for the 'save' button click
                 $('#transfer-cash-card-button').get(0).onclick = function(){
@@ -4696,6 +4706,7 @@ utopiasoftware.saveup.controller = {
                     $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
                     $(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");
                 });
+
 
                 // listen for form validation success
                 /*utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('form:success',

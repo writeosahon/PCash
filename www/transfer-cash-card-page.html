@@ -135,14 +135,14 @@
                         <div class="col s9 input-field">
                             <input id="transfer-cash-card-amount" required
                                    data-parsley-type="number" type="tel"
-                                   min="500"
-                                   max="50000"
+                                   data-parsley-min="500"
+                                   data-parsley-max="50000"
                                    data-parsley-required-message="enter amount to transfer"
                                    data-parsley-type-message="provide a valid cash amount"
                                    data-parsley-min-message="minimum amount per transfer is 500"
                                    data-parsley-max-message="maximum amount per transfer is 50,000"
                             onchange="$(this).val(kendo.toString(kendo.parseFloat($(this).val()), 'n2'));">
-                            <label for="transfer-cash-card-amount" class="hint--top">Amount</label>
+                            <label for="transfer-cash-card-amount" class="hint--top">Amount (NGN)</label>
                         </div>
                     </div>
 
