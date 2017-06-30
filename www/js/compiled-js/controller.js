@@ -4674,7 +4674,7 @@ utopiasoftware.saveup.controller = {
                     utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageContentScrolled);
 
                 // initialise the form validation objects.
-                    $('#transfer-cash-card-amount').parsley({ // used solely for the transfer-cash-smount input
+                    $('#transfer-cash-card-page #transfer-cash-card-amount').parsley({ // used solely for the transfer-cash-amount input
                         value: function(parsley) {
                             // convert the amount back to a plain text without the thousand separator
                             let parsedNumber = kendo.parseFloat($('#transfer-cash-card-amount').val());

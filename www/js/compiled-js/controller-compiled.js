@@ -1536,7 +1536,7 @@ if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
 $('ons-splitter').get(0).left.close();return;// exit the method
 }$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// listen for the scroll event of the page carousel content
 $('#transfer-cash-card-page ons-carousel').on("scroll",utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageContentScrolled);// initialise the form validation objects.
-$('#transfer-cash-card-amount').parsley({// used solely for the transfer-cash-smount input
+$('#transfer-cash-card-page #transfer-cash-card-amount').parsley({// used solely for the transfer-cash-amount input
 value:function value(parsley){// convert the amount back to a plain text without the thousand separator
 var parsedNumber=kendo.parseFloat($('#transfer-cash-card-amount').val());return parsedNumber?parsedNumber:$('#transfer-cash-card-amount').val();}});utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator=$('#transfer-cash-card-form').parsley();// used for the form in general
 // attach listener for the 'save' button click

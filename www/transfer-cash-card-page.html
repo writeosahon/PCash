@@ -56,12 +56,31 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!-- this row is invisible unless card is unknown, local mastercard or verve -->
+                    <div class="row postcash-transfer-cash-card-hidden-info" style="display: none">
+                        <div class="col s2" style="text-align: center;">
+                            <ons-icon icon="fa-cc-mastercard" size="28px" style="color: #311b92;"></ons-icon>
+                        </div>
+                        <div class="col s10" style="">
+                            <input id="transfer-cash-card-verify-card-type" type="checkbox" class="filled-in"
+                                   value="local MasterCard or Verve"
+                                   onclick="">
+                            <label for="transfer-cash-card-verify-card-type">local MasterCard or Verve</label>
+                        </div>
+                        <div id="add-card-verify-card-notice" class="col s12" style="text-align: center;
+                font-size: 0.75em; color: gray;">
+                            (please tick above box if your card is a local MasterCard or Verve Card)
+                        </div>
+                    </div>
+
+                    <!-- this row is invisible unless card is unknown, local mastercard or verve -->
+                    <div class="row postcash-transfer-cash-card-hidden-info" style="display: none">
                         <div class="col s2" style="text-align: center;">
                             <ons-icon icon="md-saveup-icon-saveup-reset-pin" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                         </div>
                         <div class="col s7 input-field">
-                            <input id="transfer-cash-card-pin" type="number" required
+                            <!-- input is disabled by default -->
+                            <input id="transfer-cash-card-pin" type="number" required disabled
                                    data-parsley-type="digits"
                                    data-parsley-minlength="4"
                                    data-parsley-maxlength="4"
