@@ -70,7 +70,7 @@ $('#pin-security-check').find('input').addClass("utopiasoftware-no-style");},/**
 $('ons-splitter').get(0).left.close().then(function(){// ask user for secure PIN before proceeding. secure pin MUST match
 return ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true});}).then(function(userInput){// user has provided a secured PIN , now authenticate it
 if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
-$('#app-main-navigator').get(0).bringPageTop("transfer-cash-page.html",{});// navigate to the specified page
+$('#app-main-navigator').get(0).pushPage("transfer-cash-page.html",{});// navigate to the specified page
 }else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="verify account"){// 'verify account' button was clicked
 // close the side menu
@@ -1506,6 +1506,8 @@ utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName=serve
      */transferCashCardPageViewModel:{/**
          * used to hold the parsley form validation object for the page
          */formValidator:null,/**
+         * used to hold the parsley field validation object for the 'transfer amount' input
+         */transferAmountFieldValidator:null,/**
          * property used to keep track of the immediate last scroll position of the
          * page content
          */previousScrollPosition:0,/**
@@ -1535,12 +1537,12 @@ $('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check i
 if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
 $('ons-splitter').get(0).left.close();return;// exit the method
 }$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// listen for the scroll event of the page carousel content
-$('#transfer-cash-card-page ons-carousel').on("scroll",utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageContentScrolled);// initialise the form validation objects.
-$('#transfer-cash-card-page #transfer-cash-card-amount').parsley({// used solely for the transfer-cash-amount input
+$('ons-carousel',$thisPage).on("scroll",utopiasoftware.saveup.controller.transferCashCardPageViewModel.pageContentScrolled);// initialise the form validation objects.
+utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferAmountFieldValidator=$('#transfer-cash-card-amount',$thisPage).parsley({// used solely for the transfer-cash-amount input
 value:function value(parsley){// convert the amount back to a plain text without the thousand separator
-var parsedNumber=kendo.parseFloat($('#transfer-cash-card-amount').val());return parsedNumber?parsedNumber:$('#transfer-cash-card-amount').val();}});utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator=$('#transfer-cash-card-form').parsley();// used for the form in general
-// attach listener for the 'save' button click
-$('#transfer-cash-card-button').get(0).onclick=function(){// run the validation method for the transfer-cash-card form
+var parsedNumber=kendo.parseFloat($('#transfer-cash-card-amount',$thisPage).val());return parsedNumber?parsedNumber:$('#transfer-cash-card-amount',$thisPage).val();}});utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator=$('#transfer-cash-card-form',$thisPage).parsley();// used for the form in general
+// attach listener for the 'transfer cash' card button click
+$('#transfer-cash-card-button',$thisPage).get(0).onclick=function(){// run the validation method for the transfer-cash-card form
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.whenValidate();};// listen for form field validation failure event
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.on('field:error',function(fieldInstance){// get the element that triggered the field validation error and use it to display tooltip
 // display tooltip
@@ -1552,13 +1554,13 @@ $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always
 utopiasoftware.saveup.financialCardOperations.loadCardData().then(function(cardsArrayData){var autoCompleteData={};// holds the data used to initialise the autocomplete widget
 cardsArrayData.forEach(function(arrayElem){// function to convert each array element to a format for autocomplete
 autoCompleteData[arrayElem.cardNickName+" - "+arrayElem.cardNumber]=arrayElem.cardImage;});// intialise widget
-$('#transfer-cash-card-number.autocomplete').autocomplete({data:autoCompleteData,onAutocomplete:function onAutocomplete(val){// Callback function when value is autcompleted.
+$('#transfer-cash-card-number.autocomplete',$thisPage).autocomplete({data:autoCompleteData,onAutocomplete:function onAutocomplete(val){// Callback function when value is autcompleted.
 },minLength:1// The minimum length of the input for the autocomplete to start. Default: 1.
 });// call the method to retrieve saved bank account recipient's used to populate recipient autocomplete widget
 return utopiasoftware.saveup.savedRecipientsBankAccountOperations.loadSavedRecipientsAccountsData();},function(){return[];}).then(function(savedRecipientsArray){var autoCompleteData={};// holds the data used to initialise the autocomplete widget
 savedRecipientsArray.forEach(function(arrayElem){// function to convert each array element to a format for autocomplete
 autoCompleteData[arrayElem.bankAccountName+" - "+arrayElem.bankAccountNumber]=arrayElem.bankAccountAvatar;});// initialise widget
-$('#transfer-cash-card-recipient-account-name.autocomplete').autocomplete({data:autoCompleteData,onAutocomplete:function onAutocomplete(val){// Callback function when value is autcompleted.
+$('#transfer-cash-card-recipient-account-name.autocomplete',$thisPage).autocomplete({data:autoCompleteData,onAutocomplete:function onAutocomplete(val){// Callback function when value is autcompleted.
 },minLength:1// The minimum length of the input for the autocomplete to start. Default: 1.
 });return utopiasoftware.saveup.sortBanksData();// retrieve data for banks
 },function(){return[];}).then(function(bankArrayData){var optionTags="";// string to hold all created option tags
@@ -1639,15 +1641,17 @@ $('#loader-modal').get(0).hide();},function(){});/*
 $('ons-splitter-side').attr("swipeable",true);},/**
          * method is triggered when the create-account page is hidden
          * @param event
-         */pageHide:function pageHide(event){try{// remove any tooltip being displayed on all forms on the page
-$('#transfer-cash-card-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#transfer-cash-card-page [data-hint]').removeAttr("data-hint");// reset the transfer-cash-card form validator object on the page
-utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.reset();}catch(err){}},/**
+         */pageHide:function pageHide(event){var $thisPage=$(event.target);// get the current page shown
+try{// remove any tooltip being displayed on all forms on the page
+$('#transfer-cash-card-page [data-hint]',$thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#transfer-cash-card-page [data-hint]',$thisPage).removeAttr("data-hint");// reset the transfer-cash-card form validator object on the page
+utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferAmountFieldValidator.reset();utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.reset();}catch(err){}},/**
          * method is triggered when the sign-in page is destroyed
          * @param event
-         */pageDestroy:function pageDestroy(event){try{// remove any tooltip being displayed on all forms on the page
-$('#transfer-cash-card-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#transfer-cash-card-page [data-hint]').removeAttr("data-hint");// destroy the form validator objects on the page
-utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.destroy();// destroy the form inputs which need to be destroyed
-$('#transfer-cash-card-page select').material_select('destroy');$('#transfer-cash-card-page input.autocomplete').off();$('#transfer-cash-card-page input.autocomplete').removeData();}catch(err){}},/**
+         */pageDestroy:function pageDestroy(event){var $thisPage=$(event.target);// get the current page shown
+try{// remove any tooltip being displayed on all forms on the page
+$('#transfer-cash-card-page [data-hint]',$thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#transfer-cash-card-page [data-hint]',$thisPage).removeAttr("data-hint");// destroy the form validator objects on the page
+utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferAmountFieldValidator.reset();utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.destroy();// destroy the form inputs which need to be destroyed
+$('#transfer-cash-card-page select',$thisPage).material_select('destroy');$('#transfer-cash-card-page input.autocomplete',$thisPage).off();$('#transfer-cash-card-page input.autocomplete',$thisPage).removeData();}catch(err){}},/**
          * method is triggered when add card form is successfully validated
          */addCardFormValidated:function addCardFormValidated(){// display the secure storage modal to indicate that card is being securely stored
 $('#secure-storage-modal .modal-message').html("Storing Card on Device...");$('#secure-storage-modal').get(0).show();// show loader
@@ -1703,13 +1707,13 @@ utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosi
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.previousScrollPosition=utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosition;// check if the user has scrolled at least 10px up
 if(utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosition>=10){// the user scrolled at least 10px up
 // check if the tab-bar is visible
-if($('#transfer-cash-tabbar').get(0).visible==true){// tab-bar is visible
-$('#transfer-cash-tabbar').get(0).setTabbarVisibility(false);// hide the tab-bar
+if($('.transfer-cash-tabbar').last().get(0).visible==true){// tab-bar is visible
+$('.transfer-cash-tabbar').last().get(0).setTabbarVisibility(false);// hide the tab-bar
 }}return;}if(utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosition<utopiasoftware.saveup.controller.transferCashCardPageViewModel.previousScrollPosition){// user scrolled down
 // set the current position as previous position
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.previousScrollPosition=utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosition;// check if the tabbar is hidden
-if($('#transfer-cash-tabbar').get(0).visible==false){// tab-bar is hidden
-$('#transfer-cash-tabbar').get(0).setTabbarVisibility(true);// show the tab-bar
+if($('.transfer-cash-tabbar').last().get(0).visible==false){// tab-bar is hidden
+$('.transfer-cash-tabbar').last().get(0).setTabbarVisibility(true);// show the tab-bar
 }return;}},/**
          * custom parsley validator for financial cards (including visa, master, verve)
          *

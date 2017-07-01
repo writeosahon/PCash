@@ -39,7 +39,24 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="position: relative">
+                        <div class="postcash-preloader-form-container" style="position: absolute; top: 0; bottom: 0;
+                        height: 100%; width: 100%; z-index: 5; text-align: center !important;
+                        background-color: rgba(255, 255, 255, 0.7); display: none;">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col s2" style="text-align: center;">
                             <ons-icon icon="md-card" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                         </div>
@@ -94,6 +111,23 @@
 
 
                     <div class="row" style="position: relative;">
+                        <div class="postcash-preloader-form-container" style="position: absolute; top: 0; bottom: 0;
+                        height: 100%; width: 100%; z-index: 5; text-align: center !important;
+                        background-color: rgba(255, 255, 255, 0.7); display: none;">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col s2" style="text-align: center;">
                             <ons-icon icon="md-calendar" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                         </div>
@@ -213,7 +247,7 @@
         </ons-carousel-item>
     </ons-carousel>
 
-    <ons-bottom-toolbar style="height: 50px;">
+    <ons-bottom-toolbar style="height: 50px; background: rgb(197, 197, 197)">
         <ons-row>
             <ons-col width="100%" style="text-align: center; padding-top: 0.5em">
                 <ons-button id="transfer-cash-card-cancel-button-1" disabled style="background-color: red;"

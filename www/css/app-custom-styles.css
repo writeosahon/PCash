@@ -449,14 +449,14 @@ label[data-hint]:after {
 
 
 /** STYLE FOR TRANSFER CASH PAGE BEGINS **/
-#transfer-cash-tabbar .tabbar--material {
+.transfer-cash-tabbar .tabbar--material {
     background-color: #ede7f6 !important;
 }
-#transfer-cash-tabbar .tabbar--material__button {
+.transfer-cash-tabbar .tabbar--material__button {
     background-color: transparent;
     color: rgba(179, 136, 255, 1);
 }
-#transfer-cash-tabbar .tabbar--material__button:after {
+.transfer-cash-tabbar .tabbar--material__button:after {
     background-color: #B388FF;
 }
 
