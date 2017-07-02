@@ -563,6 +563,7 @@ label[data-hint]:after {
     max-height: 200px !important;
     overflow-y: scroll;
     background-color: rgb(237,231,246);
+    z-index: 6;
 }
 #transfer-cash-card-page .page--material__content .dropdown-content li:hover,
 #transfer-cash-card-page .page--material__content .dropdown-content li.active,
