@@ -1691,7 +1691,10 @@ Materialize.toast('New card added',4000);},4000);}).catch(function(err){ons.noti
          *
          * @param inputElem
          */cardNumberChanged:function cardNumberChanged(inputElem){// display the preloaders that block input so certain card information can be autofilled
-$('.postcash-preloader-transfer-cash-card-form-container').css("display","block");},/**
+$('.postcash-preloader-transfer-cash-card-form-container').css("display","block");// split the input value so can can extract just the card number
+var valueSplitArray=$(inputElem).val().split(" - ");//get the card number from the array
+var cardNumber=valueSplitArray.pop();// get the financial card object from secure storage using the retrieved card number
+utopiasoftware.saveup.financialCardOperations.getCardByNumber(cardNumber).then().catch();},/**
          * method is used to listen for scroll event of the page content
          *
          * @param event

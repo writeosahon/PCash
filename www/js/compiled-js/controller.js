@@ -5060,6 +5060,14 @@ utopiasoftware.saveup.controller = {
         cardNumberChanged: function(inputElem){
             // display the preloaders that block input so certain card information can be autofilled
             $('.postcash-preloader-transfer-cash-card-form-container').css("display", "block");
+            // split the input value so can can extract just the card number
+            var valueSplitArray = $(inputElem).val().split(" - ");
+            //get the card number from the array
+            var cardNumber = valueSplitArray.pop();
+            // get the financial card object from secure storage using the retrieved card number
+            utopiasoftware.saveup.financialCardOperations.getCardByNumber(cardNumber).
+            then().
+            catch();
         },
 
 

@@ -248,7 +248,7 @@ var utopiasoftware = {
             /**
              * public object holds the keys for the gateway
              */
-            key: {"secret": "sk_test_91815f725eeca4db7d43a08e46bd682d4d669a72"},
+            key: {"secret": "sk_test_91815f725eeca4db7d43a08e46bd682d4d669a72"}
         },
 
         /**
@@ -319,6 +319,44 @@ var utopiasoftware = {
                     then(function(cardObject){ // get the financial card object
                         if(!cardObject){ // no financial card was discovered
                             throw "error"; // throw an error
+                        }
+                        else { // a financial card was found
+                            resolve(cardObject); // resolve the promise with the card object
+                        }
+                    }).catch(function(err){ // an error occurred OR no card was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+
+            /**
+             * method is used to retrieve data details of a financial card BASED ON THE CARD NUMBER
+             * @param cardNumber {String} the card number of the financial card to be retrieved
+
+             * @returns {Promise} returns a promise that resolves to the
+             * data details of the financial card or rejects with an error
+             */
+            getCardByNumber: function(cardNumber){
+
+                // return a Promise object for the method
+                return new Promise(function(resolve, reject){
+                    // get all the stored cards on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                    then(function(instanceId){
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).
+                    then(function(secureCardDataArray){
+                        secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an array object
+                        return secureCardDataArray.find(function(arrayElem){ // find the right financial card based on the card number
+                            if(arrayElem.cardNumber === cardNumber){ // this is the financial card that is required
+                                return true
+                            }
+                        });
+                    }).
+                    then(function(cardObject){ // get the financial card object
+                        if(!cardObject){ // no financial card was discovered
+                            resolve(null); // resolve the promise with null
                         }
                         else { // a financial card was found
                             resolve(cardObject); // resolve the promise with the card object
