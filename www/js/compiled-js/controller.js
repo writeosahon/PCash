@@ -5059,15 +5059,80 @@ utopiasoftware.saveup.controller = {
          */
         cardNumberChanged: function(inputElem){
             // display the preloaders that block input so certain card information can be autofilled
-            $('.postcash-preloader-transfer-cash-card-form-container').css("display", "block");
+            $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
+                transferCashCardPageViewModel.formValidator.$element).css("display", "block");
             // split the input value so can can extract just the card number
             var valueSplitArray = $(inputElem).val().split(" - ");
             //get the card number from the array
             var cardNumber = valueSplitArray.pop();
             // get the financial card object from secure storage using the retrieved card number
             utopiasoftware.saveup.financialCardOperations.getCardByNumber(cardNumber).
-            then().
-            catch();
+            then(function(cardObject){
+                // autofill the contents of the cash transfer form (card section) with the contents of card object
+                if(! cardObject){ // card object is null
+                    throw "error";
+                }
+
+                $('#transfer-cash-card-cvv', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(cardObject.cvv);
+                $('#transfer-cash-card-expiry-month', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryMonth);
+                $('#transfer-cash-card-expiry-year', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryYear);
+                $('#hidden-card-expiry-month-input', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryMonth);
+                $('#hidden-card-expiry-year-input', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryYear);
+                // update the display of the updated fields
+                Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).material_select();
+                // remove any tooltip being displayed on the transfer cash form
+                $('#transfer-cash-card-page [data-hint]', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('#transfer-cash-card-page [data-hint]', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).removeAttr("data-hint");
+
+                if(cardObject.cardBrand == "Unknown" || cardObject.cardLocale == "Unknown"){ // card brand/locale is unknown
+                    // display the verify card brand/locale checkbox
+                    $('.postcash-transfer-cash-card-hidden-info:eq(0)', utopiasoftware.saveup.controller.
+                        transferCashCardPageViewModel.formValidator.$element).css("display", "block");
+                }
+                else{ // card brand/locale is known
+                    // hide the verify card brand/locale checkbox
+                    $('.postcash-transfer-cash-card-hidden-info:eq(0)', utopiasoftware.saveup.controller.
+                        transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+                }
+
+                if((cardObject.cardBrand == "Mastercard" || cardObject.cardBrand == "Verve") &&
+                    cardObject.cardLocale == "local"){ // card is a local mastercard or verve
+                    // display the card atm pin input & enable it
+                    $('.postcash-transfer-cash-card-hidden-info:eq(1)', utopiasoftware.saveup.controller.
+                        transferCashCardPageViewModel.formValidator.$element).css("display", "block");
+                    $('#transfer-cash-card-pin', utopiasoftware.saveup.controller.
+                        transferCashCardPageViewModel.formValidator.$element).removeAttr("disabled");
+                }
+                else { // card is not a local mastercard or verve
+                    // hide the card atm pin input & disable it
+                    $('.postcash-transfer-cash-card-hidden-info:eq(1)', utopiasoftware.saveup.controller.
+                        transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+                    $('#transfer-cash-card-pin', utopiasoftware.saveup.controller.
+                        transferCashCardPageViewModel.formValidator.$element).attr("disabled", true);
+                }
+
+                // hide the preloaders that block input, autofill has been completed
+                $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+
+            }).
+            catch(function(){ // an error occurred OR user entered a card that has not be previously saved
+                // display the verify card brand/locale checkbox
+                $('.postcash-transfer-cash-card-hidden-info:eq(0)', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "block");
+                // hide the preloaders that block input
+                $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+            });
         },
 
 
