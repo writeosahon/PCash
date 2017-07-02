@@ -4730,7 +4730,7 @@ utopiasoftware.saveup.controller = {
                     $('#transfer-cash-card-number.autocomplete', $thisPage).autocomplete({
                         data: autoCompleteData,
                         onAutocomplete: function(val) {
-                            // Callback function when value is autcompleted.
+                            // callback function when value is autocompleted
                         },
                         minLength: 1 // The minimum length of the input for the autocomplete to start. Default: 1.
                     });
@@ -5053,25 +5053,15 @@ utopiasoftware.saveup.controller = {
 
 
         /**
-         * method is used to check if user has asked for card number to be validated.
-         * It sets or remove the appropriate attributes need to activate or deactivate
-         * remote card validation
+         * method is triggered when the card number autocomplete input is changed
+         *
+         * @param inputElem
          */
-        isCardNumberValidated: function(checkElem){
-            // check if user wants card number validated or not
-            if($(checkElem).is(":checked")){ // user wants the card number remotely validated
-                // add the necessary attributes to the card number input in order to enable remote card number validation
-                $('#add-card-card-number').attr("data-parsley-remote-validator", "financialcardcheck");
-                // display the notice that an internet connection is required for verification
-                $('#add-card-verify-card-notice').css("display", "block");
-            }
-            else{ // user does not want card number remotely validated
-                // remove attributes to prevent remote card number validation
-                $('#add-card-card-number').removeAttr("data-parsley-remote-validator");
-                // hide the notice that an internet connection is required for verification
-                $('#add-card-verify-card-notice').css("display", "none");
-            }
+        cardNumberChanged: function(inputElem){
+            // display the preloaders that block input so certain card information can be autofilled
+            $('.postcash-preloader-transfer-cash-card-form-container').css("display", "block");
         },
+
 
         /**
          * method is used to listen for scroll event of the page content
@@ -5116,71 +5106,6 @@ utopiasoftware.saveup.controller = {
 
                 return;
             }
-        },
-
-        /**
-         * custom parsley validator for financial cards (including visa, master, verve)
-         *
-         * @param jqxhr {jqueryXhr}
-         */
-        financialCardValidator: function(jqxhr){
-            var serverResponse = ""; // holds the server response
-
-            // check the validator response
-            if(jqxhr.status != 200){ // request was NOT success
-                // set new card brand as unknown
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-                // set the new card locale as unknown
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-                return false;
-            }
-
-            // convert the server response to json
-            serverResponse = JSON.parse(jqxhr.responseText.trim());
-
-            if(serverResponse.status != true){ // the server api response was NOT successful
-                // set new card brand as unknown
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-                // set the new card locale as unknown
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-                return false;
-            }
-
-            if(serverResponse.data.brand == "" || serverResponse.data.brand == "Unknown"){ // card could not be identified
-                // set new card brand as unknown
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-                // set the new card locale as unknown
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-                return false;
-            }
-
-            // get the brand of the new card
-            if(serverResponse.data.brand.toLocaleUpperCase().indexOf("MASTER") >= 0){ // brand is a Mastercard
-                // set new card brand as mastercard
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Mastercard";
-            }
-            if(serverResponse.data.brand.toLocaleUpperCase().indexOf("VISA") >= 0){ // brand is a Visa
-                // set new card brand as visa
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Visa";
-            }
-            if(serverResponse.data.brand.toLocaleUpperCase().indexOf("VERVE") >= 0){ // brand is a Verve
-                // set new card brand as verve
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Verve";
-            }
-
-            // get the general locale of the new card
-            if(serverResponse.data.country_name.indexOf("Nigeria") >= 0){ // card is local
-                // set the new card locale
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "local";
-
-            }
-            if(serverResponse.data.country_name.indexOf("Nigeria") < 0){ // card is international
-                // set the new card locale
-                utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "international";
-
-            }
-
-            return true; // validation successful
         }
 
     }

@@ -32,15 +32,17 @@
                             <ons-icon icon="md-saveup-icon-saveup-credit-card" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                         </div>
                         <div class="col s10 input-field">
-                            <input id="transfer-cash-card-number" class="autocomplete" type="text" placeholder="Card Alias/Card Number"
-                                   required
-                                   data-parsley-required-message="card alias or card number required">
+                            <input id="transfer-cash-card-number" class="autocomplete" type="text"
+                                   placeholder="Card Alias/Card Number" required
+                                   data-parsley-required-message="card alias or card number required"
+                            onchange="utopiasoftware.saveup.controller.transferCashCardPageViewModel.cardNumberChanged(this);">
                             <label for="transfer-cash-card-number" class="active hint--top">Card Alias or Card Number</label>
                         </div>
                     </div>
 
                     <div class="row" style="position: relative">
-                        <div class="postcash-preloader-form-container" style="position: absolute; top: 0; bottom: 0;
+                        <!-- container holds invisible preloader, shown when field information is being updated -->
+                        <div class="postcash-preloader-transfer-cash-card-form-container" style="position: absolute; top: 0; bottom: 0;
                         height: 100%; width: 100%; z-index: 5; text-align: center !important;
                         background-color: rgba(255, 255, 255, 0.7); display: none;">
                             <div class="preloader-wrapper big active">
@@ -84,7 +86,7 @@
                                    onclick="">
                             <label for="transfer-cash-card-verify-card-type">local MasterCard or Verve</label>
                         </div>
-                        <div id="add-card-verify-card-notice" class="col s12" style="text-align: center;
+                        <div class="col s12" style="text-align: center;
                 font-size: 0.75em; color: gray;">
                             (please tick above box if your card is a local MasterCard or Verve Card)
                         </div>
@@ -111,7 +113,8 @@
 
 
                     <div class="row" style="position: relative;">
-                        <div class="postcash-preloader-form-container" style="position: absolute; top: 0; bottom: 0;
+                        <!-- container holds invisible preloader, shown when field information is being updated -->
+                        <div class="postcash-preloader-transfer-cash-card-form-container" style="position: absolute; top: 0; bottom: 0;
                         height: 100%; width: 100%; z-index: 5; text-align: center !important;
                         background-color: rgba(255, 255, 255, 0.7); display: none;">
                             <div class="preloader-wrapper big active">
