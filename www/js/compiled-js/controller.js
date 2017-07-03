@@ -5086,9 +5086,9 @@ utopiasoftware.saveup.controller = {
                     transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryYear);
 
                 // remove any tooltip being displayed on the transfer cash form
-                $('#transfer-cash-card-page [data-hint]', utopiasoftware.saveup.controller.
+                $('[data-hint]', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#transfer-cash-card-page [data-hint]', utopiasoftware.saveup.controller.
+                $('[data-hint]', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).removeAttr("data-hint");
 
                 if(cardObject.cardBrand == "Unknown" || cardObject.cardLocale == "Unknown"){ // card brand/locale is unknown
@@ -5223,6 +5223,62 @@ utopiasoftware.saveup.controller = {
 
                 return;
             }
+        },
+
+        /**
+         * method is triggered when the recipient account number autocomplete input is changed
+         *
+         * @param inputElem
+         */
+        recipientAccountNumberChanged: function(inputElem){
+            // display the preloaders that block input so certain card information can be autofilled
+            $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
+                transferCashCardPageViewModel.formValidator.$element).css("display", "block");
+            // split the input value so can can extract just the recipient account number
+            var valueSplitArray = $(inputElem).val().split(" - ");
+            //get the account number from the array
+            var accountNumber = valueSplitArray.pop();
+            // get the recipient account object from secure storage using the retrieved account number
+            utopiasoftware.saveup.savedRecipientsBankAccountOperations.getSavedRecipientAccountByNumber(accountNumber).
+            then(function(acctObject){
+                // autofill the contents of the cash transfer form (recipient section) with the contents of recipient account object
+                if(! acctObject){ // account object is null
+                    throw "error";
+                }
+
+                $('#transfer-cash-card-choose-bank', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
+                $('#hidden-choose-bank-input', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
+
+                // remove any tooltip being displayed on the transfer cash form
+                $('[data-hint]', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).removeAttr("data-hint");
+
+
+                // update the display of the updated fields
+                //Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).material_select();
+
+                // hide the preloaders that block input, autofill has been completed
+                $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+
+            }).
+            catch(function(){ // an error occurred OR user entered a recipient account that has not been previously saved
+
+                // update the display of the updated fields
+                //Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).material_select();
+
+                // hide the preloaders that block input
+                $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+            });
         }
 
     }

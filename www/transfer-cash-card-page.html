@@ -217,7 +217,8 @@
                         <div class="col s9 input-field">
                             <input id="transfer-cash-card-recipient-account-name" class="autocomplete" type="text"
                                    required
-                                   data-parsley-required-message="enter a recipient's account name or account number">
+                                   data-parsley-required-message="enter a recipient's account name or account number"
+                            onchange="utopiasoftware.saveup.controller.transferCashCardPageViewModel.recipientAccountNumberChanged(this);">
                             <label for="transfer-cash-card-recipient-account-name" class="hint--top">Recipient Account Name or Account Number</label>
                         </div>
                     </div>

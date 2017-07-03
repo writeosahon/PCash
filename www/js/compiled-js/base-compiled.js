@@ -330,7 +330,7 @@ var utopiasoftware = {
              * method is used to retrieve data details of a financial card BASED ON THE CARD NUMBER
              * @param cardNumber {String} the card number of the financial card to be retrieved
                * @returns {Promise} returns a promise that resolves to the
-             * data details of the financial card or rejects with an error
+             * data details of the financial card, null if no data or rejects with an error
              */
             getCardByNumber: function getCardByNumber(cardNumber) {
 
@@ -666,7 +666,7 @@ var utopiasoftware = {
 
                 // return a Promise object for the method
                 return new Promise(function (resolve, reject) {
-                    // get all the stored cards on the user's device
+                    // get all the stored recipient accounts on the user's device
                     Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-saved-recipients-bank-accounts' })).then(function (instanceId) {
                         return Promise.resolve(intel.security.secureData.getData(instanceId));
                     }).then(function (secureBankAcctDataArray) {
@@ -689,6 +689,44 @@ var utopiasoftware = {
                         }
                     }).catch(function (err) {
                         // an error occurred OR no account was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+            /**
+             * method is used to retrieve data details of a specific recipient's bank account BASED ON THE ACCOUNT NUMBER
+             * @param bankAcctNumber {String} the bank account number of the saved recipient to be retrieved
+               * @returns {Promise} returns a promise that resolves to the
+             * data details of the specific user bank account, null if no data or rejects with an error
+             */
+            getSavedRecipientAccountByNumber: function getSavedRecipientAccountByNumber(bankAcctNumber) {
+
+                // return a Promise object for the method
+                return new Promise(function (resolve, reject) {
+                    // get all the saved recipient account on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-saved-recipients-bank-accounts' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).then(function (secureBankAcctDataArray) {
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an array object
+                        return secureBankAcctDataArray.find(function (arrayElem) {
+                            // find the right recipient account based on the account number
+                            if (arrayElem.bankAccountNumber === bankAcctNumber) {
+                                // this is the bank acct that is required
+                                return true;
+                            }
+                        });
+                    }).then(function (bankAcctObject) {
+                        // get the bank account object
+                        if (!bankAcctObject) {
+                            // no bank account was discovered
+                            resolve(null); // resolve the promise with null
+                        } else {
+                            // a bank account was found
+                            resolve(bankAcctObject); // resolve the promise with the bank account object
+                        }
+                    }).catch(function (err) {
+                        // an error occurred OR no bank account was found
                         reject(err); // reject the promise with an error
                     });
                 });

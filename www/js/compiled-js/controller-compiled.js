@@ -1698,7 +1698,7 @@ var cardNumber=valueSplitArray.pop();// get the financial card object from secur
 utopiasoftware.saveup.financialCardOperations.getCardByNumber(cardNumber).then(function(cardObject){// autofill the contents of the cash transfer form (card section) with the contents of card object
 if(!cardObject){// card object is null
 throw"error";}$('#transfer-cash-card-cvv',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(cardObject.cvv);$('#transfer-cash-card-expiry-month',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryMonth);$('#transfer-cash-card-expiry-year',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryYear);$('#hidden-card-expiry-month-input',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryMonth);$('#hidden-card-expiry-year-input',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryYear);// remove any tooltip being displayed on the transfer cash form
-$('#transfer-cash-card-page [data-hint]',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#transfer-cash-card-page [data-hint]',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).removeAttr("data-hint");if(cardObject.cardBrand=="Unknown"||cardObject.cardLocale=="Unknown"){// card brand/locale is unknown
+$('[data-hint]',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('[data-hint]',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).removeAttr("data-hint");if(cardObject.cardBrand=="Unknown"||cardObject.cardLocale=="Unknown"){// card brand/locale is unknown
 // display the verify card brand/locale checkbox
 $('.postcash-transfer-cash-card-hidden-info:eq(0)',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).css("display","block");}else{// card brand/locale is known
 // hide the verify card brand/locale checkbox
@@ -1740,6 +1740,24 @@ $('.transfer-cash-tabbar').last().get(0).setTabbarVisibility(false);// hide the 
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.previousScrollPosition=utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosition;// check if the tabbar is hidden
 if($('.transfer-cash-tabbar').last().get(0).visible==false){// tab-bar is hidden
 $('.transfer-cash-tabbar').last().get(0).setTabbarVisibility(true);// show the tab-bar
-}return;}}}};
+}return;}},/**
+         * method is triggered when the recipient account number autocomplete input is changed
+         *
+         * @param inputElem
+         */recipientAccountNumberChanged:function recipientAccountNumberChanged(inputElem){// display the preloaders that block input so certain card information can be autofilled
+$('.postcash-preloader-transfer-cash-card-form-container',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).css("display","block");// split the input value so can can extract just the recipient account number
+var valueSplitArray=$(inputElem).val().split(" - ");//get the account number from the array
+var accountNumber=valueSplitArray.pop();// get the recipient account object from secure storage using the retrieved account number
+utopiasoftware.saveup.savedRecipientsBankAccountOperations.getSavedRecipientAccountByNumber(accountNumber).then(function(acctObject){// autofill the contents of the cash transfer form (recipient section) with the contents of recipient account object
+if(!acctObject){// account object is null
+throw"error";}$('#transfer-cash-card-choose-bank',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);$('#hidden-choose-bank-input',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);// remove any tooltip being displayed on the transfer cash form
+$('[data-hint]',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('[data-hint]',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).removeAttr("data-hint");// update the display of the updated fields
+//Materialize.updateTextFields();
+$('select',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).material_select();// hide the preloaders that block input, autofill has been completed
+$('.postcash-preloader-transfer-cash-card-form-container',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).css("display","none");}).catch(function(){// an error occurred OR user entered a recipient account that has not been previously saved
+// update the display of the updated fields
+//Materialize.updateTextFields();
+$('select',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).material_select();// hide the preloaders that block input
+$('.postcash-preloader-transfer-cash-card-form-container',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).css("display","none");});}}};
 
 //# sourceMappingURL=controller-compiled.js.map
