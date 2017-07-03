@@ -83,7 +83,7 @@
                         <div class="col s10" style="">
                             <input id="transfer-cash-card-verify-card-type" type="checkbox" class="filled-in"
                                    value="local MasterCard or Verve"
-                                   onclick="">
+                            onclick="utopiasoftware.saveup.controller.transferCashCardPageViewModel.verifyCardTypeCheckboxClicked(this);">
                             <label for="transfer-cash-card-verify-card-type">local MasterCard or Verve</label>
                         </div>
                         <div class="col s12" style="text-align: center;
@@ -223,6 +223,24 @@
                     </div>
 
                     <div class="row" style="position: relative;">
+                        <!-- container holds invisible preloader, shown when field information is being updated -->
+                        <div class="postcash-preloader-transfer-cash-card-form-container" style="position: absolute; top: 0; bottom: 0;
+                        height: 100%; width: 100%; z-index: 5; text-align: center !important;
+                        background-color: rgba(255, 255, 255, 0.7); display: none;">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col s2" style="text-align: center;">
                             <ons-icon icon="md-saveup-icon-saveup-saving-group" size="28px" style="color: #311B92; padding-top: 1em;"></ons-icon>
                         </div>

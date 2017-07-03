@@ -220,6 +220,7 @@ utopiasoftware.saveup.controller = {
                 }).
                 then(function(userInput){ // user has provided a secured PIN , now authenticate it
                     if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                        $('#transfer-cash-page').remove(); // remove previous transfer cash pages
                         $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {}); // navigate to the specified page
                     }
                     else{ // inform user that security check failed/user authentication failed
@@ -4881,8 +4882,8 @@ utopiasoftware.saveup.controller = {
             var $thisPage = $(event.target); // get the current page shown
             try {
                 // remove any tooltip being displayed on all forms on the page
-                $('#transfer-cash-card-page [data-hint]', $thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#transfer-cash-card-page [data-hint]', $thisPage).removeAttr("data-hint");
+                $('[data-hint]', $thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', $thisPage).removeAttr("data-hint");
                 // reset the transfer-cash-card form validator object on the page
                 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferAmountFieldValidator.reset();
                 utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.reset();
@@ -4898,15 +4899,15 @@ utopiasoftware.saveup.controller = {
             var $thisPage = $(event.target); // get the current page shown
             try{
                 // remove any tooltip being displayed on all forms on the page
-                $('#transfer-cash-card-page [data-hint]', $thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
-                $('#transfer-cash-card-page [data-hint]', $thisPage).removeAttr("data-hint");
+                $('[data-hint]', $thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', $thisPage).removeAttr("data-hint");
                 // destroy the form validator objects on the page
                 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferAmountFieldValidator.reset();
                 utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.destroy();
                 // destroy the form inputs which need to be destroyed
-                $('#transfer-cash-card-page select', $thisPage).material_select('destroy');
-                $('#transfer-cash-card-page input.autocomplete', $thisPage).off();
-                $('#transfer-cash-card-page input.autocomplete', $thisPage).removeData();
+                $('select', $thisPage).material_select('destroy');
+                $('input.autocomplete', $thisPage).off();
+                $('input.autocomplete', $thisPage).removeData();
             }
             catch(err){}
         },
@@ -5083,10 +5084,7 @@ utopiasoftware.saveup.controller = {
                     transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryMonth);
                 $('#hidden-card-expiry-year-input', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).val(cardObject.cardExpiryYear);
-                // update the display of the updated fields
-                Materialize.updateTextFields();
-                $('select', utopiasoftware.saveup.controller.
-                    transferCashCardPageViewModel.formValidator.$element).material_select();
+
                 // remove any tooltip being displayed on the transfer cash form
                 $('#transfer-cash-card-page [data-hint]', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
@@ -5120,6 +5118,11 @@ utopiasoftware.saveup.controller = {
                         transferCashCardPageViewModel.formValidator.$element).attr("disabled", true);
                 }
 
+                // update the display of the updated fields
+                Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).material_select();
+
                 // hide the preloaders that block input, autofill has been completed
                 $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).css("display", "none");
@@ -5129,10 +5132,51 @@ utopiasoftware.saveup.controller = {
                 // display the verify card brand/locale checkbox
                 $('.postcash-transfer-cash-card-hidden-info:eq(0)', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).css("display", "block");
+                // hide the card atm pin input & disable it
+                $('.postcash-transfer-cash-card-hidden-info:eq(1)', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+                $('#transfer-cash-card-pin', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).attr("disabled", true);
+
+                // update the display of the updated fields
+                Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).material_select();
+
                 // hide the preloaders that block input
                 $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).css("display", "none");
             });
+        },
+
+
+        /**
+         * method is triggered when the verify card type checkbox input is clicked
+         *
+         * @param inputElem
+         */
+        verifyCardTypeCheckboxClicked: function(inputElem){
+            // find out if input checkbox is checked or not
+            if($('#transfer-cash-card-verify-card-type', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).is(':checked')){ // the input was checked
+
+                // display the card atm pin input & enable it
+                $('.postcash-transfer-cash-card-hidden-info:eq(1)', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "block");
+                $('#transfer-cash-card-pin', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).removeAttr("disabled");
+            }
+            else{ // the input was unchecked
+
+                // hide the card atm pin input & disable it
+                $('.postcash-transfer-cash-card-hidden-info:eq(1)', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+                $('#transfer-cash-card-pin', utopiasoftware.saveup.controller.
+                    transferCashCardPageViewModel.formValidator.$element).attr("disabled", true);
+            }
+
+            // update the display of the updated field
+            Materialize.updateTextFields();
         },
 
 
