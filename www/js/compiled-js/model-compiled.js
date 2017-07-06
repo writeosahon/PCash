@@ -33,7 +33,12 @@ utopiasoftware.saveup.model = {
   /**
    * holds details about the currently logged in user
    */
-  appUserDetails: null
+  appUserDetails: null,
+
+  /**
+   * holds the merchant fee for transactions
+   */
+  fee: 20.00
 };
 
 // register the event listener for when all Hybrid plugins and document DOM are ready

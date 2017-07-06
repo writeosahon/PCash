@@ -4715,9 +4715,9 @@ utopiasoftware.saveup.controller = {
                 });
 
 
-                // listen for form validation success
-                /*utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('form:success',
-                    utopiasoftware.saveup.controller.addCardPageViewModel.addCardFormValidated); */
+                // listen for transfer-cash-card form validation success
+                utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.on('form:success',
+                    utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardFormValidated);
 
                 // initialise the card number autocomplete widget
                 utopiasoftware.saveup.financialCardOperations.loadCardData().
@@ -4913,12 +4913,139 @@ utopiasoftware.saveup.controller = {
         },
 
         /**
-         * method is triggered when add card form is successfully validated
+         * method is triggered when transfer-cash-card form is successfully validated
          */
-        addCardFormValidated: function(){
+        transferCashCardFormValidated: function(){
+
+            // check if Internet Connection is available before proceeding
+            if(navigator.connection.type === Connection.NONE){ // no Internet Connection
+                // inform the user that they cannot proceed without Internet
+                window.plugins.toast.showWithOptions({
+                    message: "You cannot transfer cash without an Internet Connection",
+                    duration: 4500,
+                    position: "top",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#ff0000', //red
+                        textColor: '#FFFFFF',
+                        textSize: 14
+                    }
+                }, function(toastEvent){
+                    if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
+                        window.plugins.toast.hide();
+                    }
+                });
+
+                return; // exit method immediately
+            }
+
+            // confirm transfer-cash-card operation
+            ons.notification.confirm({title: '<ons-icon icon="md-alert-triangle" size="36px" ' +
+                'style="color: orange;"></ons-icon> Confirm Transfer',
+                messageHTML: '<span>Cash transfers cannot be undone or reversed when completed. <br>' +
+                'Do you want to continue?</span>',
+                cancelable: false,
+                buttonLabels: ["No", "Yes"]
+            }).
+            then(function(buttonIndex){
+                if(buttonIndex === 1){ // user wants to continue transfer
+                    // display message to user
+                    $('#loader-modal-message').html("Initiating Transfer...");
+                    $('#loader-modal').get(0).show(); // show loader
+                    // retrieve the necessary authorisation token
+                    return utopiasoftware.saveup.moneyWaveObject.useToken;
+                }
+                else{ // user terminated transfer
+                    return null;
+                }
+            }).
+            then(function(token){
+
+                $('.transfer-cash-card-carousel').get(0).next({animation: 'none'}).
+                then(function(){
+                    // update the transaction indicators
+                    $('.postcash-pay-progress .col:eq(0) span:eq(0)').
+                    removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                    $('.postcash-pay-progress .col:eq(0) span:eq(1)').
+                    removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                    $('.postcash-pay-progress .col:eq(1) span:eq(0)').
+                    removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');
+                    $('.postcash-pay-progress .col:eq(1) span:eq(1)').
+                    removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
+
+                    // hide the transfer bottom-toolbar
+                    $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
+                    // enable the 'Authorize' button & show the authorise bottom toolbar
+                    $('#transfer-cash-card-authorise-button').removeAttr("disabled");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-block').css("display", "block");
+
+                    $('#loader-modal').get(0).hide(); // hide loader
+                });
+                /*if(token === null){ // user already terminated transfer
+                    return null;
+                }
+                else{ // use retrieved token to initiate transfer
+
+                    //create the cash transfer data
+                    var cashTransferData = {
+                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
+                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
+                        phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
+                        email: (!utopiasoftware.saveup.model.appUserDetails.email) ||
+                        utopiasoftware.saveup.model.appUserDetails.email == "" ?
+                            (utopiasoftware.saveup.model.appUserDetails.firstName +
+                            utopiasoftware.saveup.model.appUserDetails.lastName) + "@mymail.com" :
+                            utopiasoftware.saveup.model.appUserDetails.email,
+                        apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
+                        medium: "mobile",
+                        fee: utopiasoftware.saveup.model.fee,
+                        redirecturl: "https://google.com"
+                    };
+
+                    // initiate the cash transfer request
+                    return new Promise(function(resolve, reject){
+                        var verifyAccountRequest = $.ajax(
+                            {
+                                url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/resolve/account",
+                                type: "post",
+                                contentType: "application/json",
+                                beforeSend: function(jqxhr) {
+                                    jqxhr.setRequestHeader("Authorization", tokenData);
+                                },
+                                dataType: "json",
+                                timeout: 240000, // wait for 4 minutes before timeout of request
+                                processData: false,
+                                data: JSON.stringify({
+                                    account_number: $('#verify-account-form #verify-account-number').val(),
+                                    bank_code: $('#verify-account-form #verify-account-choose-bank').val()
+                                })
+                            }
+                        );
+
+                        // server responded to account verification request
+                        verifyAccountRequest.done(function(responseData){
+                            if(responseData.status === "success"){ // the server responded with a successful account verification
+                                // set the name of the account which has been verified
+                                $('#verify-account-form #verify-account-name').val(responseData.data.account_name);
+                                resolve(); // resolve the account verification promise
+                            }
+                            else { // the server responded unsuccessfully
+                                reject(); // reject the account verification promise
+                            }
+                        });
+
+                        // server responded with a failure to the verification request
+                        verifyAccountRequest.fail(function(){
+                            reject(); // reject the account verification promise
+                        });
+                    });
+                } */
+            }).
+            catch();
 
             // display the secure storage modal to indicate that card is being securely stored
-            $('#secure-storage-modal .modal-message').html("Storing Card on Device...");
+            /*$('#secure-storage-modal .modal-message').html("Storing Card on Device...");
             $('#secure-storage-modal').get(0).show(); // show loader
 
             // check if this is an EDIT or CREATE operation
@@ -5048,7 +5175,7 @@ utopiasoftware.saveup.controller = {
                     });
                 });
 
-            }
+            } */
 
         },
 

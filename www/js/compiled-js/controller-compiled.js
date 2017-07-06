@@ -1549,9 +1549,8 @@ utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.on(
 // display tooltip
 $(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint",fieldInstance.getErrorsMessages()[0]);});// listen for form field validation success event
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.on('field:success',function(fieldInstance){// remove tooltip from element
-$(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");});// listen for form validation success
-/*utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.on('form:success',
-                    utopiasoftware.saveup.controller.addCardPageViewModel.addCardFormValidated); */// initialise the card number autocomplete widget
+$(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");});// listen for transfer-cash-card form validation success
+utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardFormValidated);// initialise the card number autocomplete widget
 utopiasoftware.saveup.financialCardOperations.loadCardData().then(function(cardsArrayData){var autoCompleteData={};// holds the data used to initialise the autocomplete widget
 cardsArrayData.forEach(function(arrayElem){// function to convert each array element to a format for autocomplete
 autoCompleteData[arrayElem.cardNickName+" - "+arrayElem.cardNumber]=arrayElem.cardImage;});// intialise widget
@@ -1653,41 +1652,213 @@ try{// remove any tooltip being displayed on all forms on the page
 $('[data-hint]',$thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('[data-hint]',$thisPage).removeAttr("data-hint");// destroy the form validator objects on the page
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferAmountFieldValidator.reset();utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.destroy();// destroy the form inputs which need to be destroyed
 $('select',$thisPage).material_select('destroy');$('input.autocomplete',$thisPage).off();$('input.autocomplete',$thisPage).removeData();}catch(err){}},/**
-         * method is triggered when add card form is successfully validated
-         */addCardFormValidated:function addCardFormValidated(){// display the secure storage modal to indicate that card is being securely stored
-$('#secure-storage-modal .modal-message').html("Storing Card on Device...");$('#secure-storage-modal').get(0).show();// show loader
-// check if this is an EDIT or CREATE operation
-if($('#app-main-navigator').get(0).topPage.data&&$('#app-main-navigator').get(0).topPage.data.edit){//this is an EDIT operation
-// card the utility method used to delete a specified card
-utopiasoftware.saveup.financialCardOperations.deleteCard($('#app-main-navigator').get(0).topPage.data.edit).then(function(){// create an edited card data
-var editedCardData={cardUniqueId:$('#app-main-navigator').get(0).topPage.data.edit,cardHolderName:$('#add-card-form #add-card-card-holder').val(),cardNickName:$('#add-card-form #add-card-alias').val(),cardNumber:$('#add-card-form #add-card-card-number').val(),cvv:$('#add-card-form #add-card-cvv').val(),cardExpiryMonth:$('#add-card-form #add-card-expiry-month').val(),cardExpiryYear:$('#add-card-form #add-card-expiry-year').val(),cardBrand:utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,cardLocale:utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,cardImage:utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage};// card the utility method used to add a specified card to the card collection
-return utopiasoftware.saveup.financialCardOperations.addCard(editedCardData);}).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
-window.setTimeout(function(){// reset the form validator object on the page
-utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();// reset the form object
-$('#add-card-page #add-card-form').get(0).reset();// reset the card number validation check and all its related actions
-utopiasoftware.saveup.controller.addCardPageViewModel.isCardNumberValidated($('#add-card-page #add-card-verify-card'));// reset the new card brand, card general locale & card image
-utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand="Unknown";utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale="Unknown";utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage="";// hide the card image row
-$('#add-card-page #add-card-image-container').css("display","none");// reset the page scroll position to the top
-$('#add-card-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
-// inform user that add has been successfully added to secure storage
-Materialize.toast('Card updated',4000);},4000);}).catch(function(){ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
-var newCardData={cardUniqueId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),cardHolderName:$('#add-card-form #add-card-card-holder').val(),cardNickName:$('#add-card-form #add-card-alias').val(),cardNumber:$('#add-card-form #add-card-card-number').val(),cvv:$('#add-card-form #add-card-cvv').val(),cardExpiryMonth:$('#add-card-form #add-card-expiry-month').val(),cardExpiryYear:$('#add-card-form #add-card-expiry-year').val(),cardBrand:utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,cardLocale:utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,cardImage:utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage};// get the previous stored cards on the user's device
-Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).then(function(instanceId){return Promise.resolve(intel.security.secureData.getData(instanceId));},function(errObject){if(errObject.code==1){// the secure card storage has not been created before
-return'[]';// return an empty card data array
-}else{// another error occurred (which is considered severe)
-throw errObject;}}).then(function(secureCardDataArray){secureCardDataArray=JSON.parse(secureCardDataArray);// convert the string data to an object
-secureCardDataArray.unshift(newCardData);// add the card to the beginning of the array collection
-// store the updated card collection securely on user's device
-return intel.security.secureData.createFromData({'data':JSON.stringify(secureCardDataArray)});}).then(function(instanceId){return intel.security.secureStorage.write({'id':'postcash-user-cards','instanceID':instanceId});}).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
-window.setTimeout(function(){// reset the form validator object on the page
-utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();// reset the form object
-$('#add-card-page #add-card-form').get(0).reset();// reset the card number validation check and all its related actions
-utopiasoftware.saveup.controller.addCardPageViewModel.isCardNumberValidated($('#add-card-page #add-card-verify-card'));// reset the new card brand, card general locale & card image
-utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand="Unknown";utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale="Unknown";utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage="";// hide the card image row
-$('#add-card-page #add-card-image-container').css("display","none");// reset the page scroll position to the top
-$('#add-card-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
-// inform user that add has been successfully added to secure storage
-Materialize.toast('New card added',4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}},/**
+         * method is triggered when transfer-cash-card form is successfully validated
+         */transferCashCardFormValidated:function transferCashCardFormValidated(){// check if Internet Connection is available before proceeding
+if(navigator.connection.type===Connection.NONE){// no Internet Connection
+// inform the user that they cannot proceed without Internet
+window.plugins.toast.showWithOptions({message:"You cannot transfer cash without an Internet Connection",duration:4500,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
+textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
+window.plugins.toast.hide();}});return;// exit method immediately
+}// confirm transfer-cash-card operation
+ons.notification.confirm({title:'<ons-icon icon="md-alert-triangle" size="36px" '+'style="color: orange;"></ons-icon> Confirm Transfer',messageHTML:'<span>Cash transfers cannot be undone or reversed when completed. <br>'+'Do you want to continue?</span>',cancelable:false,buttonLabels:["No","Yes"]}).then(function(buttonIndex){if(buttonIndex===1){// user wants to continue transfer
+// display message to user
+$('#loader-modal-message').html("Initiating Transfer...");$('#loader-modal').get(0).show();// show loader
+// retrieve the necessary authorisation token
+return utopiasoftware.saveup.moneyWaveObject.useToken;}else{// user terminated transfer
+return null;}}).then(function(token){$('.transfer-cash-card-carousel').get(0).next({animation:'none'}).then(function(){// update the transaction indicators
+$('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide the transfer bottom-toolbar
+$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// enable the 'Authorize' button & show the authorise bottom toolbar
+$('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-block').css("display","block");$('#loader-modal').get(0).hide();// hide loader
+});/*if(token === null){ // user already terminated transfer
+                    return null;
+                }
+                else{ // use retrieved token to initiate transfer
+
+                    //create the cash transfer data
+                    var cashTransferData = {
+                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
+                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
+                        phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
+                        email: (!utopiasoftware.saveup.model.appUserDetails.email) ||
+                        utopiasoftware.saveup.model.appUserDetails.email == "" ?
+                            (utopiasoftware.saveup.model.appUserDetails.firstName +
+                            utopiasoftware.saveup.model.appUserDetails.lastName) + "@mymail.com" :
+                            utopiasoftware.saveup.model.appUserDetails.email,
+                        apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
+                        medium: "mobile",
+                        fee: utopiasoftware.saveup.model.fee,
+                        redirecturl: "https://google.com"
+                    };
+
+                    // initiate the cash transfer request
+                    return new Promise(function(resolve, reject){
+                        var verifyAccountRequest = $.ajax(
+                            {
+                                url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/resolve/account",
+                                type: "post",
+                                contentType: "application/json",
+                                beforeSend: function(jqxhr) {
+                                    jqxhr.setRequestHeader("Authorization", tokenData);
+                                },
+                                dataType: "json",
+                                timeout: 240000, // wait for 4 minutes before timeout of request
+                                processData: false,
+                                data: JSON.stringify({
+                                    account_number: $('#verify-account-form #verify-account-number').val(),
+                                    bank_code: $('#verify-account-form #verify-account-choose-bank').val()
+                                })
+                            }
+                        );
+
+                        // server responded to account verification request
+                        verifyAccountRequest.done(function(responseData){
+                            if(responseData.status === "success"){ // the server responded with a successful account verification
+                                // set the name of the account which has been verified
+                                $('#verify-account-form #verify-account-name').val(responseData.data.account_name);
+                                resolve(); // resolve the account verification promise
+                            }
+                            else { // the server responded unsuccessfully
+                                reject(); // reject the account verification promise
+                            }
+                        });
+
+                        // server responded with a failure to the verification request
+                        verifyAccountRequest.fail(function(){
+                            reject(); // reject the account verification promise
+                        });
+                    });
+                } */}).catch();// display the secure storage modal to indicate that card is being securely stored
+/*$('#secure-storage-modal .modal-message').html("Storing Card on Device...");
+            $('#secure-storage-modal').get(0).show(); // show loader
+
+            // check if this is an EDIT or CREATE operation
+            if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){ //this is an EDIT operation
+                // card the utility method used to delete a specified card
+                utopiasoftware.saveup.financialCardOperations.
+                deleteCard($('#app-main-navigator').get(0).topPage.data.edit).
+                then(function(){
+                    // create an edited card data
+                    var editedCardData = {
+                        cardUniqueId: $('#app-main-navigator').get(0).topPage.data.edit,
+                        cardHolderName: $('#add-card-form #add-card-card-holder').val(),
+                        cardNickName: $('#add-card-form #add-card-alias').val(),
+                        cardNumber: $('#add-card-form #add-card-card-number').val(),
+                        cvv: $('#add-card-form #add-card-cvv').val(),
+                        cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
+                        cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
+                        cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
+                        cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
+                        cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
+                    };
+
+                    // card the utility method used to add a specified card to the card collection
+                    return utopiasoftware.saveup.financialCardOperations.
+                    addCard(editedCardData);
+                }).
+                then(function(){
+                    // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+                    window.setTimeout(function(){
+                        // reset the form validator object on the page
+                        utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
+                        // reset the form object
+                        $('#add-card-page #add-card-form').get(0).reset();
+                        // reset the card number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
+                        // reset the new card brand, card general locale & card image
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
+                        // hide the card image row
+                        $('#add-card-page #add-card-image-container').css("display", "none");
+                        // reset the page scroll position to the top
+                        $('#add-card-page .page__content').scrollTop(0);
+
+                        $('#secure-storage-modal').get(0).hide(); // hide loader
+                        // inform user that add has been successfully added to secure storage
+                        Materialize.toast('Card updated', 4000);
+                    }, 4000);
+                }).
+                catch(function(){
+                    ons.notification.alert({title: "Update Error",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be updated. ' +
+                        '<br>You can try again' + '</span>',
+                        cancelable: true
+                    });
+                });
+            }
+            else { // this is a CREATE/ADD OPERATION
+
+                var newCardData = {
+                    cardUniqueId: "" + utopiasoftware.saveup.model.deviceUUID + Date.now(),
+                    cardHolderName: $('#add-card-form #add-card-card-holder').val(),
+                    cardNickName: $('#add-card-form #add-card-alias').val(),
+                    cardNumber: $('#add-card-form #add-card-card-number').val(),
+                    cvv: $('#add-card-form #add-card-cvv').val(),
+                    cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
+                    cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
+                    cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
+                    cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
+                    cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
+                };
+
+                // get the previous stored cards on the user's device
+                Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
+                then(function(instanceId){
+                    return Promise.resolve(intel.security.secureData.getData(instanceId));
+                }, function(errObject){
+                    if(errObject.code == 1){ // the secure card storage has not been created before
+                        return '[]'; // return an empty card data array
+                    }
+                    else{ // another error occurred (which is considered severe)
+                        throw errObject;
+                    }
+                }).
+                then(function(secureCardDataArray){
+                    secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
+                    secureCardDataArray.unshift(newCardData); // add the card to the beginning of the array collection
+                    // store the updated card collection securely on user's device
+                    return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
+                }).
+                then(function(instanceId){
+                    return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
+                }).
+                then(function(){
+                    // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
+                    window.setTimeout(function(){
+                        // reset the form validator object on the page
+                        utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
+                        // reset the form object
+                        $('#add-card-page #add-card-form').get(0).reset();
+                        // reset the card number validation check and all its related actions
+                        utopiasoftware.saveup.controller.addCardPageViewModel.
+                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
+                        // reset the new card brand, card general locale & card image
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
+                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
+                        // hide the card image row
+                        $('#add-card-page #add-card-image-container').css("display", "none");
+                        // reset the page scroll position to the top
+                        $('#add-card-page .page__content').scrollTop(0);
+
+                        $('#secure-storage-modal').get(0).hide(); // hide loader
+                        // inform user that add has been successfully added to secure storage
+                        Materialize.toast('New card added', 4000);
+                    }, 4000);
+                }).
+                catch(function(err){
+
+                    ons.notification.alert({title: "Save Error",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be added. ' +
+                        '<br>You can try again' + '</span>',
+                        cancelable: true
+                    });
+                });
+
+            } */},/**
          * method is triggered when the card number autocomplete input is changed
          *
          * @param inputElem
