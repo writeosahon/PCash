@@ -461,7 +461,8 @@ $('#secure-storage-modal .modal-message').html("Storing Bank Account on Device..
 utopiasoftware.saveup.bankAccountOperations.addMyAccount({uniqueAccountId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),bankAccountNumber:$('#verify-account-form #verify-account-number').val(),bankAccountName:$('#verify-account-form #verify-account-name').val(),bankName:$('#verify-account-form #verify-account-choose-bank option:selected').text().trim(),flutterwave_bankCode:$('#verify-account-form #verify-account-choose-bank').val(),bankAccountAvatar:"css/app-images/avatar-"+new Random(Random.engines.nativeMath).integer(1,6)+".png"}).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
 window.setTimeout(function(){$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that user's bank account has been successfully added to secure storage
-Materialize.toast('New bank account added',4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// inform user that security check failed/user authentication failed
+Materialize.toast('New bank account added',4000);},4000);}).catch(function(err){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="add to my recipients"){// 'add to my recipients' button was clicked
 // ask user for secure PIN before proceeding. secure pin MUST match
 ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
@@ -473,7 +474,8 @@ $('#secure-storage-modal .modal-message').html("Storing Recipient's Bank Account
 utopiasoftware.saveup.savedRecipientsBankAccountOperations.addSavedRecipientAccount({uniqueAccountId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),bankAccountNumber:$('#verify-account-form #verify-account-number').val(),bankAccountName:$('#verify-account-form #verify-account-name').val(),bankName:$('#verify-account-form #verify-account-choose-bank option:selected').text().trim(),flutterwave_bankCode:$('#verify-account-form #verify-account-choose-bank').val(),bankAccountAvatar:"css/app-images/avatar-"+new Random(Random.engines.nativeMath).integer(1,6)+".png"}).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
 window.setTimeout(function(){$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that recipient's bank account has been successfully added to secure storage
-Materialize.toast("Recipient's bank account added",4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be added. "+'<br>You can try again'+'</span>',cancelable:true});});}else{// inform user that security check failed/user authentication failed
+Materialize.toast("Recipient's bank account added",4000);},4000);}).catch(function(err){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be added. "+'<br>You can try again'+'</span>',cancelable:true});});}else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}}},/**
      * object is view-model for my-cards-page page
      */myCardsPageViewModel:{/**
@@ -753,7 +755,8 @@ utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand="Unknown";uto
 $('#add-card-page #add-card-image-container').css("display","none");// reset the page scroll position to the top
 $('#add-card-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that add has been successfully added to secure storage
-Materialize.toast('Card updated',4000);},4000);}).catch(function(){ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
+Materialize.toast('Card updated',4000);},4000);}).catch(function(){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
 var newCardData={cardUniqueId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),cardHolderName:$('#add-card-form #add-card-card-holder').val(),cardNickName:$('#add-card-form #add-card-alias').val(),cardNumber:$('#add-card-form #add-card-card-number').val(),cvv:$('#add-card-form #add-card-cvv').val(),cardExpiryMonth:$('#add-card-form #add-card-expiry-month').val(),cardExpiryYear:$('#add-card-form #add-card-expiry-year').val(),cardBrand:utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,cardLocale:utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,cardImage:utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage};// get the previous stored cards on the user's device
 Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).then(function(instanceId){return Promise.resolve(intel.security.secureData.getData(instanceId));},function(errObject){if(errObject.code==1){// the secure card storage has not been created before
 return'[]';// return an empty card data array
@@ -770,7 +773,8 @@ utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand="Unknown";uto
 $('#add-card-page #add-card-image-container').css("display","none");// reset the page scroll position to the top
 $('#add-card-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that add has been successfully added to secure storage
-Materialize.toast('New card added',4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}},/**
+Materialize.toast('New card added',4000);},4000);}).catch(function(err){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this card could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}},/**
          * method is used to check if user has asked for card number to be validated.
          * It sets or remove the appropriate attributes need to activate or deactivate
          * remote card validation
@@ -1105,7 +1109,8 @@ utopiasoftware.saveup.controller.addAccountPageViewModel.isbankAccountNumberVali
 utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName="";utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData="";utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage="";// reset the page scroll position to the top
 $('#add-account-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that acct has been successfully added to secure storage
-Materialize.toast('Bank Account updated',4000);},4000);}).catch(function(){ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
+Materialize.toast('Bank Account updated',4000);},4000);}).catch(function(){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be updated. '+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
 var newBankAcctData={uniqueAccountId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),bankAccountNumber:$('#add-account-form #add-account-number').val(),bankAccountName:$('#add-account-form #add-account-account-name').val(),bankName:$('#add-account-form #add-account-choose-bank option:selected').text().trim(),flutterwave_bankCode:$('#add-account-form #add-account-choose-bank').val(),bankAccountAvatar:utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage};utopiasoftware.saveup.bankAccountOperations.addMyAccount(newBankAcctData).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
 window.setTimeout(function(){// reset the form validator object on the page
 utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.reset();// reset the form object
@@ -1114,7 +1119,8 @@ utopiasoftware.saveup.controller.addAccountPageViewModel.isbankAccountNumberVali
 utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName="";utopiasoftware.saveup.controller.addAccountPageViewModel.tokenData="";utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountImage="";// reset the page scroll position to the top
 $('#add-account-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that user's bank account has been successfully added to secure storage
-Materialize.toast('New bank account added',4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}},/**
+Materialize.toast('New bank account added',4000);},4000);}).catch(function(err){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+' Sorry, this bank account could not be added. '+'<br>You can try again'+'</span>',cancelable:true});});}},/**
          * method is used to check if user has asked for bank account number to be validated.
          * It sets or remove the appropriate attributes need to activate or deactivate
          * remote account validation
@@ -1440,7 +1446,8 @@ utopiasoftware.saveup.controller.addRecipientPageViewModel.isbankAccountNumberVa
 utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName="";utopiasoftware.saveup.controller.addRecipientPageViewModel.tokenData="";utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage="";// reset the page scroll position to the top
 $('#add-recipient-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that acct has been successfully added to secure storage
-Materialize.toast("Recipient Account updated",4000);},4000);}).catch(function(){ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be updated. "+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
+Materialize.toast("Recipient Account updated",4000);},4000);}).catch(function(){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Update Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be updated. "+'<br>You can try again'+'</span>',cancelable:true});});}else{// this is a CREATE/ADD OPERATION
 var newBankAcctData={uniqueAccountId:""+utopiasoftware.saveup.model.deviceUUID+Date.now(),bankAccountNumber:$('#add-recipient-form #add-recipient-account-number').val(),bankAccountName:$('#add-recipient-form #add-recipient-account-name').val(),bankName:$('#add-recipient-form #add-recipient-choose-bank option:selected').text().trim(),flutterwave_bankCode:$('#add-recipient-form #add-recipient-choose-bank').val(),bankAccountAvatar:utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage};utopiasoftware.saveup.savedRecipientsBankAccountOperations.addSavedRecipientAccount(newBankAcctData).then(function(){// wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
 window.setTimeout(function(){// reset the form validator object on the page
 utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.reset();// reset the form object
@@ -1449,7 +1456,8 @@ utopiasoftware.saveup.controller.addRecipientPageViewModel.isbankAccountNumberVa
 utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName="";utopiasoftware.saveup.controller.addRecipientPageViewModel.tokenData="";utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountImage="";// reset the page scroll position to the top
 $('#add-recipient-page .page__content').scrollTop(0);$('#secure-storage-modal').get(0).hide();// hide loader
 // inform user that recipient's bank account has been successfully added to secure storage
-Materialize.toast("Recipient's bank account added",4000);},4000);}).catch(function(err){ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be added. "+'<br>You can try again'+'</span>',cancelable:true});});}},/**
+Materialize.toast("Recipient's bank account added",4000);},4000);}).catch(function(err){$('#secure-storage-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Save Error",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(err.message||"")+" Sorry, this recipient's bank account could not be added. "+'<br>You can try again'+'</span>',cancelable:true});});}},/**
          * method is used to check if user has asked for bank account number to be validated.
          * It sets or remove the appropriate attributes need to activate or deactivate
          * remote account validation
@@ -1665,69 +1673,36 @@ ons.notification.confirm({title:'<ons-icon icon="md-alert-triangle" size="36px" 
 $('#loader-modal-message').html("Initiating Transfer...");$('#loader-modal').get(0).show();// show loader
 // retrieve the necessary authorisation token
 return utopiasoftware.saveup.moneyWaveObject.useToken;}else{// user terminated transfer
-return null;}}).then(function(token){$('.transfer-cash-card-carousel').get(0).next({animation:'none'}).then(function(){// update the transaction indicators
+return null;}}).then(function(token){if(token===null){// user already terminated transfer
+return null;}else{// use retrieved token to initiate transfer
+//create the cash transfer data
+var cashTransferData={firstname:utopiasoftware.saveup.model.appUserDetails.firstName,lastname:utopiasoftware.saveup.model.appUserDetails.lastName,phonenumber:utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,email:!utopiasoftware.saveup.model.appUserDetails.email||utopiasoftware.saveup.model.appUserDetails.email==""?utopiasoftware.saveup.model.appUserDetails.firstName+utopiasoftware.saveup.model.appUserDetails.lastName+"@mymail.com":utopiasoftware.saveup.model.appUserDetails.email,apiKey:utopiasoftware.saveup.moneyWaveObject.key.apiKey,medium:"mobile",fee:utopiasoftware.saveup.model.fee,redirecturl:"https://cedr.ue1.biz",card_no:$('#transfer-cash-card-number','#transfer-cash-card-page').val().split(" - ").pop(),cvv:$('#transfer-cash-card-cvv','#transfer-cash-card-page').val(),expiry_year:$('#transfer-cash-card-expiry-year','#transfer-cash-card-page').val(),expiry_month:$('#transfer-cash-card-expiry-month','#transfer-cash-card-page').val(),amount:kendo.parseFloat($('#transfer-cash-card-amount','#transfer-cash-card-page').val()),narration:$('#transfer-cash-card-narration','#transfer-cash-card-page').val(),recipient_bank:$('#transfer-cash-card-choose-bank','#transfer-cash-card-page').val(),recipient_account_number:$('#transfer-cash-card-recipient-account-name','#transfer-cash-card-page').val().split(" - ").pop()};// check if user want to transfer using a local mastercard OR verve
+if(!$('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user wants to transfer using a local mastercard or verve
+cashTransferData.charge_auth="PIN";cashTransferData.pin=$('#transfer-cash-card-pin','#transfer-cash-card-page').val();}// initiate the cash transfer request
+return new Promise(function(resolve,reject){var cashTransferRequest=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer",type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
+processData:false,data:JSON.stringify(cashTransferData)});// server responded to cash transfer request
+cashTransferRequest.done(function(responseData){if(responseData.status==="success"){// the server responded with a successful transfer initiation
+resolve(responseData);// resolve the cash transfer promise
+}else{// the server responded unsuccessfully
+reject(responseData);// reject the cash transfer promise
+}});// server responded with a failure to the cash transfer request
+cashTransferRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}}).then(function(responseData){if(responseData==null){return null;}// update the display info for the card transaction
+$('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-card-authorize-fee','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-card-authorize-total','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-card-authorize-message','#transfer-cash-card-page').html(responseData.data.transfer.flutterChargeResponseMessage);// check whether to display the authorisation form OR authorisation iframe
+if($('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user does not require the ATM pin
+// update the src attribute for the authorization iframe
+$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').attr("src",responseData.data.authurl);//  display the authorization iframe
+$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","block");// hide the authorization form
+$('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","none");}else{// display the authorization form
+$('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","block");//  hide the authorization iframe
+$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","none");}// update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide the transfer bottom-toolbar
 $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// enable the 'Authorize' button & show the authorise bottom toolbar
-$('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-block').css("display","block");$('#loader-modal').get(0).hide();// hide loader
-});/*if(token === null){ // user already terminated transfer
-                    return null;
-                }
-                else{ // use retrieved token to initiate transfer
-
-                    //create the cash transfer data
-                    var cashTransferData = {
-                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
-                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
-                        phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
-                        email: (!utopiasoftware.saveup.model.appUserDetails.email) ||
-                        utopiasoftware.saveup.model.appUserDetails.email == "" ?
-                            (utopiasoftware.saveup.model.appUserDetails.firstName +
-                            utopiasoftware.saveup.model.appUserDetails.lastName) + "@mymail.com" :
-                            utopiasoftware.saveup.model.appUserDetails.email,
-                        apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
-                        medium: "mobile",
-                        fee: utopiasoftware.saveup.model.fee,
-                        redirecturl: "https://google.com"
-                    };
-
-                    // initiate the cash transfer request
-                    return new Promise(function(resolve, reject){
-                        var verifyAccountRequest = $.ajax(
-                            {
-                                url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/resolve/account",
-                                type: "post",
-                                contentType: "application/json",
-                                beforeSend: function(jqxhr) {
-                                    jqxhr.setRequestHeader("Authorization", tokenData);
-                                },
-                                dataType: "json",
-                                timeout: 240000, // wait for 4 minutes before timeout of request
-                                processData: false,
-                                data: JSON.stringify({
-                                    account_number: $('#verify-account-form #verify-account-number').val(),
-                                    bank_code: $('#verify-account-form #verify-account-choose-bank').val()
-                                })
-                            }
-                        );
-
-                        // server responded to account verification request
-                        verifyAccountRequest.done(function(responseData){
-                            if(responseData.status === "success"){ // the server responded with a successful account verification
-                                // set the name of the account which has been verified
-                                $('#verify-account-form #verify-account-name').val(responseData.data.account_name);
-                                resolve(); // resolve the account verification promise
-                            }
-                            else { // the server responded unsuccessfully
-                                reject(); // reject the account verification promise
-                            }
-                        });
-
-                        // server responded with a failure to the verification request
-                        verifyAccountRequest.fail(function(){
-                            reject(); // reject the account verification promise
-                        });
-                    });
-                } */}).catch();// display the secure storage modal to indicate that card is being securely stored
+$('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-block').css("display","block");// transition to 'authorize' block
+return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){return null;}$('#loader-modal').get(0).hide();// hide loader
+}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
+if(error==null){// the user decided NOT to proceed with the transfer
+return;// do nothing
+}ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.data||"")+' Sorry, your cash transfer failed. '+'<br>You can try again'+'</span>',cancelable:true});});// display the secure storage modal to indicate that card is being securely stored
 /*$('#secure-storage-modal .modal-message').html("Storing Card on Device...");
             $('#secure-storage-modal').get(0).show(); // show loader
 
@@ -1828,6 +1803,7 @@ $('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-ca
                     // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
                     window.setTimeout(function(){
                         // reset the form validator object on the page
+
                         utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
                         // reset the form object
                         $('#add-card-page #add-card-form').get(0).reset();
