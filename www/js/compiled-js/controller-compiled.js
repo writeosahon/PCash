@@ -1687,17 +1687,19 @@ resolve(responseData);// resolve the cash transfer promise
 reject(responseData);// reject the cash transfer promise
 }});// server responded with a failure to the cash transfer request
 cashTransferRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}}).then(function(responseData){if(responseData==null){return null;}// update the display info for the card transaction
-$('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-card-authorize-fee','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-card-authorize-total','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-card-authorize-message','#transfer-cash-card-page').html(responseData.data.transfer.flutterChargeResponseMessage);// check whether to display the authorisation form OR authorisation iframe
+$('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-card-authorize-fee','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-card-authorize-total','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-card-authorize-message','#transfer-cash-card-page').html(responseData.data.transfer.flutterChargeResponseMessage);// store the transaction reference in the session storage
+window.sessionStorage.setItem("transaction_ref",responseData.data.transfer.flutterChargeReference);// hide the transfer bottom-toolbar
+$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// check whether to display the authorisation form OR authorisation iframe
 if($('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user does not require the ATM pin
 // update the src attribute for the authorization iframe
 $('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').attr("src",responseData.data.authurl);//  display the authorization iframe
 $('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","block");// hide the authorization form
-$('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","none");}else{// display the authorization form
+$('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","none");// disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
+$('#transfer-cash-card-authorise-button').attr("disabled",true);$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","block");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");}else{// display the authorization form
 $('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","block");//  hide the authorization iframe
-$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","none");}// update the transaction indicators
-$('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide the transfer bottom-toolbar
-$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// enable the 'Authorize' button & show the authorise bottom toolbar
-$('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-block').css("display","block");// transition to 'authorize' block
+$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","none");// enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
+$('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","block");}// update the transaction indicators
+$('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// transition to 'authorize' block
 return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){return null;}$('#loader-modal').get(0).hide();// hide loader
 }).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 if(error==null){// the user decided NOT to proceed with the transfer
@@ -1835,6 +1837,13 @@ return;// do nothing
                 });
 
             } */},/**
+         * method is used to check authorization of a card cash transfer
+         */transferCashCardAuthorize:function transferCashCardAuthorize(iframeElem,iframeSrc){// check if user has completed transfer authorisation
+if(iframeSrc.startsWith("https://cedr.ue1.biz")){}// user completed transfer authorisation
+//
+// display message to user
+$('#loader-modal-message').html("Authorizing Transfer...");$('#loader-modal').get(0).show();// show loader
+},/**
          * method is triggered when the card number autocomplete input is changed
          *
          * @param inputElem

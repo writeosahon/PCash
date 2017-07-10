@@ -277,7 +277,7 @@
                 </ons-list>
             </form>
         </ons-carousel-item>
-        <ons-carousel-item>
+        <ons-carousel-item style="position: relative">
             <ons-list>
             <ons-list-item modifier="longdivider">
                 <ons-row>
@@ -330,8 +330,10 @@
                 </form>
             </ons-list>
 
-            <iframe id="transfer-cash-card-authorise-iframe" onload="console.log(this.src)"
-            src="" style="width: 90%; height: 60%; margin-left: 5%; margin-right: 5%; display: none"></iframe>
+            <iframe id="transfer-cash-card-authorise-iframe" onload="
+            utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardAuthorize(this, this.src)"
+            src="" style="width: 90%; height: 60%; margin-left: 5%; margin-right: 5%; display: none;
+            position: fixed; bottom: 0"></iframe>
         </ons-carousel-item>
     </ons-carousel>
 
@@ -347,8 +349,17 @@
             </ons-col>
         </ons-row>
 
-        <!-- block is displayed when a user want to authorise a transfer -->
-        <ons-row class="transfer-cash-card-page-bottom-toolbar-authorize-block" style="display: none">
+        <!-- block is displayed when a user want to authorise visa or international card transfer -->
+        <ons-row class="transfer-cash-card-page-bottom-toolbar-authorize-otp-block" style="display: none">
+            <ons-col width="100%" style="text-align: center; padding-top: 0.5em">
+                <ons-button id="transfer-cash-card-cancel-button-1" disabled style="background-color: red;"
+                            onclick="$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');">
+                    <ons-icon icon="md-close-circle"></ons-icon> Cancel</ons-button>
+            </ons-col>
+        </ons-row>
+
+        <!-- block is displayed when a user want to authorise verve or local mastercard transfer -->
+        <ons-row class="transfer-cash-card-page-bottom-toolbar-authorize-pin-block" style="display: none">
             <ons-col width="100%" style="text-align: center; padding-top: 0.5em">
                 <ons-button id="transfer-cash-card-cancel-button-1" disabled style="background-color: red;"
                             onclick="$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');">

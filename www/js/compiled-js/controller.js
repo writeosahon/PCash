@@ -5059,6 +5059,12 @@ utopiasoftware.saveup.controller = {
                 $('#transfer-cash-card-authorize-message', '#transfer-cash-card-page').
                 html(responseData.data.transfer.flutterChargeResponseMessage);
 
+                // store the transaction reference in the session storage
+                window.sessionStorage.setItem("transaction_ref", responseData.data.transfer.flutterChargeReference);
+
+                // hide the transfer bottom-toolbar
+                $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
+
                 // check whether to display the authorisation form OR authorisation iframe
                 if($('#transfer-cash-card-pin', '#transfer-cash-card-form').is(':disabled')){ // user does not require the ATM pin
 
@@ -5070,11 +5076,19 @@ utopiasoftware.saveup.controller = {
                     $('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "block");
                     // hide the authorization form
                     $('#transfer-cash-card-authorise-form', '#transfer-cash-card-page').css("display", "none");
+                    // disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
+                    $('#transfer-cash-card-authorise-button').attr("disabled", true);
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "block");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
                 }
                 else{ // display the authorization form
                     $('#transfer-cash-card-authorise-form', '#transfer-cash-card-page').css("display", "block");
                     //  hide the authorization iframe
                     $('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "none");
+                    // enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
+                    $('#transfer-cash-card-authorise-button').removeAttr("disabled");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "block");
                 }
 
                 // update the transaction indicators
@@ -5087,12 +5101,6 @@ utopiasoftware.saveup.controller = {
                 removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');
                 $('.postcash-pay-progress .col:eq(1) span:eq(1)').
                 removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
-
-                // hide the transfer bottom-toolbar
-                $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
-                // enable the 'Authorize' button & show the authorise bottom toolbar
-                $('#transfer-cash-card-authorise-button').removeAttr("disabled");
-                $('.transfer-cash-card-page-bottom-toolbar-authorize-block').css("display", "block");
 
                 // transition to 'authorize' block
                 return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
@@ -5254,6 +5262,21 @@ utopiasoftware.saveup.controller = {
 
             } */
 
+        },
+
+
+        /**
+         * method is used to check authorization of a card cash transfer
+         */
+        transferCashCardAuthorize: function(iframeElem, iframeSrc){
+
+            // check if user has completed transfer authorisation
+            if(iframeSrc.startsWith("https://cedr.ue1.biz")){ // user completed transfer authorisation
+                //
+            }
+            // display message to user
+            $('#loader-modal-message').html("Authorizing Transfer...");
+            $('#loader-modal').get(0).show(); // show loader
         },
 
 
