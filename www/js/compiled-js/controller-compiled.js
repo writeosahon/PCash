@@ -1673,8 +1673,8 @@ ons.notification.confirm({title:'<ons-icon icon="md-alert-triangle" size="36px" 
 $('#loader-modal-message').html("Initiating Transfer...");$('#loader-modal').get(0).show();// show loader
 // retrieve the necessary authorisation token
 return utopiasoftware.saveup.moneyWaveObject.useToken;}else{// user terminated transfer
-return null;}}).then(function(token){if(token===null){// user already terminated transfer
-return null;}else{// use retrieved token to initiate transfer
+throw null;}}).then(function(token){if(token===null){// user already terminated transfer
+throw null;}else{// use retrieved token to initiate transfer
 //create the cash transfer data
 var cashTransferData={firstname:utopiasoftware.saveup.model.appUserDetails.firstName,lastname:utopiasoftware.saveup.model.appUserDetails.lastName,phonenumber:utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,email:!utopiasoftware.saveup.model.appUserDetails.email||utopiasoftware.saveup.model.appUserDetails.email==""?utopiasoftware.saveup.model.appUserDetails.firstName+utopiasoftware.saveup.model.appUserDetails.lastName+"@mymail.com":utopiasoftware.saveup.model.appUserDetails.email,apiKey:utopiasoftware.saveup.moneyWaveObject.key.apiKey,medium:"mobile",fee:utopiasoftware.saveup.model.fee,redirecturl:"https://cedr.ue1.biz",card_no:$('#transfer-cash-card-number','#transfer-cash-card-page').val().split(" - ").pop(),cvv:$('#transfer-cash-card-cvv','#transfer-cash-card-page').val(),expiry_year:$('#transfer-cash-card-expiry-year','#transfer-cash-card-page').val(),expiry_month:$('#transfer-cash-card-expiry-month','#transfer-cash-card-page').val(),amount:kendo.parseFloat($('#transfer-cash-card-amount','#transfer-cash-card-page').val()),narration:$('#transfer-cash-card-narration','#transfer-cash-card-page').val(),recipient_bank:$('#transfer-cash-card-choose-bank','#transfer-cash-card-page').val(),recipient_account_number:$('#transfer-cash-card-recipient-account-name','#transfer-cash-card-page').val().split(" - ").pop()};// check if user want to transfer using a local mastercard OR verve
 if(!$('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user wants to transfer using a local mastercard or verve
@@ -1686,9 +1686,9 @@ resolve(responseData);// resolve the cash transfer promise
 }else{// the server responded unsuccessfully
 reject(responseData);// reject the cash transfer promise
 }});// server responded with a failure to the cash transfer request
-cashTransferRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}}).then(function(responseData){if(responseData==null){return null;}// update the display info for the card transaction
-$('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-card-authorize-fee','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-card-authorize-total','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-card-authorize-message','#transfer-cash-card-page').html(responseData.data.transfer.flutterChargeResponseMessage);// store the transaction reference in the session storage
-window.sessionStorage.setItem("transaction_ref",responseData.data.transfer.flutterChargeReference);// hide the transfer bottom-toolbar
+cashTransferRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}}).then(function(responseData){if(responseData==null){throw null;}// update the display info for the card transaction
+$('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-card-authorize-fee','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-card-authorize-total','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-card-authorize-message','#transfer-cash-card-page').html(responseData.data.transfer.flutterChargeResponseMessage);// store the transaction id in the session storage
+window.sessionStorage.setItem("transaction_id",responseData.data.transfer.id);// hide the transfer bottom-toolbar
 $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// check whether to display the authorisation form OR authorisation iframe
 if($('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user does not require the ATM pin
 // update the src attribute for the authorization iframe
@@ -1700,149 +1700,31 @@ $('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display"
 $('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","none");// enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
 $('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","block");}// update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// transition to 'authorize' block
-return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){return null;}$('#loader-modal').get(0).hide();// hide loader
+return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){throw null;}$('#loader-modal').get(0).hide();// hide loader
 }).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 if(error==null){// the user decided NOT to proceed with the transfer
 return;// do nothing
-}ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.data||"")+' Sorry, your cash transfer failed. '+'<br>You can try again'+'</span>',cancelable:true});});// display the secure storage modal to indicate that card is being securely stored
-/*$('#secure-storage-modal .modal-message').html("Storing Card on Device...");
-            $('#secure-storage-modal').get(0).show(); // show loader
-
-            // check if this is an EDIT or CREATE operation
-            if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){ //this is an EDIT operation
-                // card the utility method used to delete a specified card
-                utopiasoftware.saveup.financialCardOperations.
-                deleteCard($('#app-main-navigator').get(0).topPage.data.edit).
-                then(function(){
-                    // create an edited card data
-                    var editedCardData = {
-                        cardUniqueId: $('#app-main-navigator').get(0).topPage.data.edit,
-                        cardHolderName: $('#add-card-form #add-card-card-holder').val(),
-                        cardNickName: $('#add-card-form #add-card-alias').val(),
-                        cardNumber: $('#add-card-form #add-card-card-number').val(),
-                        cvv: $('#add-card-form #add-card-cvv').val(),
-                        cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
-                        cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
-                        cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
-                        cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
-                        cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
-                    };
-
-                    // card the utility method used to add a specified card to the card collection
-                    return utopiasoftware.saveup.financialCardOperations.
-                    addCard(editedCardData);
-                }).
-                then(function(){
-                    // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
-                    window.setTimeout(function(){
-                        // reset the form validator object on the page
-                        utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
-                        // reset the form object
-                        $('#add-card-page #add-card-form').get(0).reset();
-                        // reset the card number validation check and all its related actions
-                        utopiasoftware.saveup.controller.addCardPageViewModel.
-                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
-                        // reset the new card brand, card general locale & card image
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
-                        // hide the card image row
-                        $('#add-card-page #add-card-image-container').css("display", "none");
-                        // reset the page scroll position to the top
-                        $('#add-card-page .page__content').scrollTop(0);
-
-                        $('#secure-storage-modal').get(0).hide(); // hide loader
-                        // inform user that add has been successfully added to secure storage
-                        Materialize.toast('Card updated', 4000);
-                    }, 4000);
-                }).
-                catch(function(){
-                    ons.notification.alert({title: "Update Error",
-                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be updated. ' +
-                        '<br>You can try again' + '</span>',
-                        cancelable: true
-                    });
-                });
-            }
-            else { // this is a CREATE/ADD OPERATION
-
-                var newCardData = {
-                    cardUniqueId: "" + utopiasoftware.saveup.model.deviceUUID + Date.now(),
-                    cardHolderName: $('#add-card-form #add-card-card-holder').val(),
-                    cardNickName: $('#add-card-form #add-card-alias').val(),
-                    cardNumber: $('#add-card-form #add-card-card-number').val(),
-                    cvv: $('#add-card-form #add-card-cvv').val(),
-                    cardExpiryMonth: $('#add-card-form #add-card-expiry-month').val(),
-                    cardExpiryYear: $('#add-card-form #add-card-expiry-year').val(),
-                    cardBrand: utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand,
-                    cardLocale: utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale,
-                    cardImage: utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage
-                };
-
-                // get the previous stored cards on the user's device
-                Promise.resolve(intel.security.secureStorage.read({'id':'postcash-user-cards'})).
-                then(function(instanceId){
-                    return Promise.resolve(intel.security.secureData.getData(instanceId));
-                }, function(errObject){
-                    if(errObject.code == 1){ // the secure card storage has not been created before
-                        return '[]'; // return an empty card data array
-                    }
-                    else{ // another error occurred (which is considered severe)
-                        throw errObject;
-                    }
-                }).
-                then(function(secureCardDataArray){
-                    secureCardDataArray = JSON.parse(secureCardDataArray); // convert the string data to an object
-                    secureCardDataArray.unshift(newCardData); // add the card to the beginning of the array collection
-                    // store the updated card collection securely on user's device
-                    return intel.security.secureData.createFromData({'data': JSON.stringify(secureCardDataArray)});
-                }).
-                then(function(instanceId){
-                    return intel.security.secureStorage.write({'id':'postcash-user-cards', 'instanceID': instanceId });
-                }).
-                then(function(){
-                    // wait for approximately 4 secs for the saving animation to run (at least once before concluding animation
-                    window.setTimeout(function(){
-                        // reset the form validator object on the page
-
-                        utopiasoftware.saveup.controller.addCardPageViewModel.formValidator.reset();
-                        // reset the form object
-                        $('#add-card-page #add-card-form').get(0).reset();
-                        // reset the card number validation check and all its related actions
-                        utopiasoftware.saveup.controller.addCardPageViewModel.
-                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
-                        // reset the new card brand, card general locale & card image
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
-                        // hide the card image row
-                        $('#add-card-page #add-card-image-container').css("display", "none");
-                        // reset the page scroll position to the top
-                        $('#add-card-page .page__content').scrollTop(0);
-
-                        $('#secure-storage-modal').get(0).hide(); // hide loader
-                        // inform user that add has been successfully added to secure storage
-                        Materialize.toast('New card added', 4000);
-                    }, 4000);
-                }).
-                catch(function(err){
-
-                    ons.notification.alert({title: "Save Error",
-                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + (err.message || "") + ' Sorry, this card could not be added. ' +
-                        '<br>You can try again' + '</span>',
-                        cancelable: true
-                    });
-                });
-
-            } */},/**
+}ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.data||"")+' Sorry, your cash transfer failed. '+'<br>You can try again'+'</span>',cancelable:true});});},/**
          * method is used to check authorization of a card cash transfer
-         */transferCashCardAuthorize:function transferCashCardAuthorize(iframeElem,iframeSrc){// check if user has completed transfer authorisation
-if(iframeSrc.startsWith("https://cedr.ue1.biz")){}// user completed transfer authorisation
-//
+         * (AUTHORIZATION VIA OTP)
+         */transferCashCardOtpAuthorize:function transferCashCardOtpAuthorize(iframeElem,iframeSrc){// check if user has completed transfer authorisation
+if(iframeSrc.startsWith("https://cedr.ue1.biz")){// user completed transfer authorisation
 // display message to user
-$('#loader-modal-message').html("Authorizing Transfer...");$('#loader-modal').get(0).show();// show loader
+$('#loader-modal-message').html("Checking Authorization...");$('#loader-modal').get(0).show();// show loader
+// get the authorisation token
+utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){// initiate the cash transfer authorisation check
+return new Promise(function(resolve,reject){var cashTransferAuthorisation=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer/"+window.sessionStorage.getItem("transaction_id"),type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
+processData:false,data:JSON.stringify({})});// server responded to cash transfer authorisation check
+cashTransferAuthorisation.done(function(responseData){if(responseData.status==="success"){// the server responded with a successful transfer authorisation
+resolve(responseData);// resolve the cash transfer authorisation promise
+}else{// the server responded unsuccessfully
+reject(responseData);// reject the cash transfer authorisation promise
+}});// server responded with a failure to the cash authorisation check
+cashTransferAuthorisation.fail(function(jqxhr){reject(JSON.parse(jqxhr.responseText.trim()));});});}).then(function(responseData){if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase()=="APPROVED"){// cash transfer was success
+//todo
+}else{throw responseData;// cash transfer could not be authorised
+}}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status again at... OR resend the cash transfer'+'</span>',cancelable:true});});}// check if the transaction was successful
 },/**
          * method is triggered when the card number autocomplete input is changed
          *
