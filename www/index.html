@@ -458,7 +458,8 @@
     <div style="text-align: center; margin-top: 1.2em">
         <ons-button style="background-color: #311b92; border-radius: 1em"
         onclick="$('#financial-operations-success-modal .circle').removeClass('show');
-        $('#financial-operations-success-modal').get(0).hide();">
+        $('#financial-operations-success-modal').get(0).hide().
+        then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});">
             Done
         </ons-button>
     </div>

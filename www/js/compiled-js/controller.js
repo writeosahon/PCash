@@ -5236,12 +5236,11 @@ utopiasoftware.saveup.controller = {
                         'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
                         '<br>You can check this transaction status again at... OR resend the cash transfer' + '</span>',
                         cancelable: true
-                    });
+                    }).
+                    then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});
 
                 });
             }
-
-            // check if the transaction was successful
 
         },
 
