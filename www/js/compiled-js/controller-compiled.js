@@ -1732,8 +1732,7 @@ return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}else{t
 }}).then(function(){// show transaction confirmation modal
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
-ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status again at... OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});}// check if the transaction was successful
-},/**
+ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status again at... OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});}},/**
          * method is triggered when the card number autocomplete input is changed
          *
          * @param inputElem
