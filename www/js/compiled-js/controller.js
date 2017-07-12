@@ -84,6 +84,16 @@ utopiasoftware.saveup.controller = {
 
         }, false);
 
+        // add listener for when a message is posted to the app by an iframe during cash transfers
+        window.addEventListener("message", function(event){
+            // check that event is from the expected origin & carrying the proper message
+            if(event.origin == "https://postcash.000webhostapp.com" && event.data == "c done"){
+                // call the method to handle the event i.e transfer-cash-card authorisation
+                utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardOtpAuthorize();
+                return; // exit method
+            }
+        }, false);
+
         try {
             // lock the orientation of the device to 'PORTRAIT'
             screen.lockOrientation('portrait');
@@ -4928,7 +4938,7 @@ utopiasoftware.saveup.controller = {
             if(navigator.connection.type === Connection.NONE){ // no Internet Connection
                 // inform the user that they cannot proceed without Internet
                 window.plugins.toast.showWithOptions({
-                    message: "You cannot transfer cash without an Internet Connection",
+                    message: "You cannot transfer cash without an active Internet Connection",
                     duration: 4500,
                     position: "top",
                     styling: {
@@ -4978,15 +4988,12 @@ utopiasoftware.saveup.controller = {
                         firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
                         lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
                         phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
-                        email: (!utopiasoftware.saveup.model.appUserDetails.email) ||
-                        utopiasoftware.saveup.model.appUserDetails.email == "" ?
-                            (utopiasoftware.saveup.model.appUserDetails.firstName +
-                            utopiasoftware.saveup.model.appUserDetails.lastName) + "@mymail.com" :
-                            utopiasoftware.saveup.model.appUserDetails.email,
+                        email: (utopiasoftware.saveup.model.appUserDetails.firstName +
+                        utopiasoftware.saveup.model.appUserDetails.lastName) + Date.now() + "@mymail.com",
                         apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
                         medium: "mobile",
                         fee: utopiasoftware.saveup.model.fee,
-                        redirecturl: "https://cedr.ue1.biz",
+                        redirecturl: "https://postcash.000webhostapp.com/transfer-cash-card.html",
                         card_no: $('#transfer-cash-card-number', '#transfer-cash-card-page').val().split(" - ").pop(),
                         cvv: $('#transfer-cash-card-cvv', '#transfer-cash-card-page').val(),
                         expiry_year: $('#transfer-cash-card-expiry-year', '#transfer-cash-card-page').val(),
@@ -5059,7 +5066,7 @@ utopiasoftware.saveup.controller = {
                 $('#transfer-cash-card-authorize-message', '#transfer-cash-card-page').
                 html(responseData.data.transfer.flutterChargeResponseMessage);
 
-                // store the transaction id in the session storage
+                // store the transaction id & transaction reference in the session storage
                 window.sessionStorage.setItem("transaction_id", responseData.data.transfer.id);
 
                 // hide the transfer bottom-toolbar
@@ -5135,10 +5142,10 @@ utopiasoftware.saveup.controller = {
          * method is used to check authorization of a card cash transfer
          * (AUTHORIZATION VIA OTP)
          */
-        transferCashCardOtpAuthorize: function(iframeElem, iframeSrc){
+        transferCashCardOtpAuthorize: function(){
 
             // check if user has completed transfer authorisation
-            if(iframeSrc.startsWith("https://cedr.ue1.biz")){ // user completed transfer authorisation
+            if(true){ // user completed transfer authorisation
                 // display message to user
                 $('#loader-modal-message').html("Checking Authorization...");
                 $('#loader-modal').get(0).show(); // show loader
@@ -5182,11 +5189,43 @@ utopiasoftware.saveup.controller = {
                 }).
                 then(function(responseData){
                     if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase() == "APPROVED"){ // cash transfer was success
-                        //todo
+                        // update the transaction indicators
+                        $('.postcash-pay-progress .col:eq(0) span:eq(0)').
+                        removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                        $('.postcash-pay-progress .col:eq(0) span:eq(1)').
+                        removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                        $('.postcash-pay-progress .col:eq(1) span:eq(0)').
+                        removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                        $('.postcash-pay-progress .col:eq(1) span:eq(1)').
+                        removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                        $('.postcash-pay-progress .col:eq(2) span:eq(0)').
+                        removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');
+                        $('.postcash-pay-progress .col:eq(2) span:eq(1)').
+                        removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
+
+                        // hide ALL the bottom-toolbar blocks
+                        $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
+                        $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
+                        $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
+
+                        $('#loader-modal').get(0).hide(); // hide loader
+                        return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
                     }
                     else{
                         throw responseData; // cash transfer could not be authorised
                     }
+                }).
+                then(function(){
+                    // show transaction confirmation modal
+                    return $('#financial-operations-success-modal').get(0).show();
+                }).
+                then(function(){
+                    // show the financial operations success modal after 1 second
+                    window.setTimeout(function(){
+                        $('#financial-operations-success-modal .circle').addClass("show");
+                    }, 1000);
                 }).
                 catch(function(error){
 

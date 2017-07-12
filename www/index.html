@@ -439,11 +439,29 @@
 </ons-modal>
 
 <!-- modal for displaying authorised financial transactions/operations messages -->
-<ons-modal id="financial-operations-success-modal" direction="up">
-    <div style="text-align: center">
+<ons-modal id="financial-operations-success-modal" direction="up" style="background: rgba(0, 0, 0, 0)">
+    <div class="circle" style="text-align: center">
+
         <img src="css/app-images/approved-icon-img.png">
+
+        <div class="mask-top-container">
+            <div class="mask-top"></div>
+        </div>
+        <div class="mask-bottom-container">
+            <div class="mask-bottom"></div>
+        </div>
+
     </div>
-    <div class="modal-message" style="text-align: center; color: #311b92"></div>
+    <div class="modal-message" style="text-align: center; color: #311b92;
+    font-size: 1.1em; font-weight: bold">Cash Transfer Completed!</div>
+
+    <div style="text-align: center; margin-top: 1.2em">
+        <ons-button style="background-color: #311b92; border-radius: 1em"
+        onclick="$('#financial-operations-success-modal .circle').removeClass('show');
+        $('#financial-operations-success-modal').get(0).hide();">
+            Done
+        </ons-button>
+    </div>
 </ons-modal>
 
 <!-- bottom sheet modal. This is not directly visible on the page  -->
