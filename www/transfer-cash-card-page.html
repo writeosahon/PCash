@@ -322,7 +322,6 @@
                         <ons-icon icon="md-saveup-icon-saveup-reset-pin" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                     </div>
                     <div class="col s7 input-field">
-                        <!-- input is disabled by default -->
                         <input id="transfer-cash-card-otp" type="number">
                         <label for="transfer-cash-card-otp">OTP TOKEN</label>
                     </div>
@@ -367,7 +366,8 @@
                 <ons-button id="transfer-cash-card-cancel-button-3" style="background-color: red;"
                             onclick="$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');">
                     <ons-icon icon="md-close-circle"></ons-icon> Cancel</ons-button>
-                <ons-button id="transfer-cash-card-authorise-button"  style="background-color: #B388FF;">
+                <ons-button id="transfer-cash-card-authorise-button"  style="background-color: #B388FF;"
+                            onclick="utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardPinAuthorize()">
                     <ons-icon icon="md-check-circle"></ons-icon> Authorize</ons-button>
             </ons-col>
         </ons-row>

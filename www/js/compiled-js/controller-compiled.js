@@ -1690,9 +1690,10 @@ resolve(responseData);// resolve the cash transfer promise
 }else{// the server responded unsuccessfully
 reject(responseData);// reject the cash transfer promise
 }});// server responded with a failure to the cash transfer request
-cashTransferRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}}).then(function(responseData){if(responseData==null){throw null;}// update the display info for the card transaction
+cashTransferRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}}).then(function(responseData){if(responseData==null){// user already terminated transfer
+throw null;}// update the display info for the card transaction
 $('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-card-authorize-fee','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-card-authorize-total','#transfer-cash-card-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-card-authorize-message','#transfer-cash-card-page').html(responseData.data.transfer.flutterChargeResponseMessage);// store the transaction id & transaction reference in the session storage
-window.sessionStorage.setItem("transaction_id",responseData.data.transfer.id);// hide the transfer bottom-toolbar
+window.sessionStorage.setItem("transaction_id",responseData.data.transfer.id);window.sessionStorage.setItem("transaction_ref",responseData.data.transfer.flutterChargeReference);// hide the transfer bottom-toolbar
 $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// check whether to display the authorisation form OR authorisation iframe
 if($('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user does not require the ATM pin
 // update the src attribute for the authorization iframe
@@ -1704,7 +1705,8 @@ $('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display"
 $('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","none");// enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
 $('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","block");}// update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// transition to 'authorize' block
-return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){throw null;}$('#loader-modal').get(0).hide();// hide loader
+return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){// user already terminated transfer
+throw null;}$('#loader-modal').get(0).hide();// hide loader
 }).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 if(error==null){// the user decided NOT to proceed with the transfer
 return;// do nothing
@@ -1733,6 +1735,34 @@ return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}else{t
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status again at... OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});}},/**
+         * method is used to check authorization of a card cash transfer
+         * (AUTHORIZATION VIA PIN)
+         */transferCashCardPinAuthorize:function transferCashCardPinAuthorize(){// check if Internet Connection is available before proceeding
+if(navigator.connection.type===Connection.NONE){// no Internet Connection
+// inform the user that they cannot proceed without Internet
+window.plugins.toast.showWithOptions({message:"You cannot transfer cash without an active Internet Connection",duration:4500,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
+textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
+window.plugins.toast.hide();}});return;// exit method immediately
+}// display message to user
+$('#loader-modal-message').html("Checking Authorization...");$('#loader-modal').get(0).show();// show loader
+// get the authorisation token
+utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){// initiate the cash transfer request
+return new Promise(function(resolve,reject){var cashTransferAuthoriseRequest=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer/charge/auth/card",type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
+processData:false,data:JSON.stringify({transactionRef:window.sessionStorage.getItem("transaction_ref"),otp:$('#transfer-cash-card-otp','#transfer-cash-card-page').val()})});// server responded to cash transfer request
+cashTransferAuthoriseRequest.done(function(responseData){if(responseData.status==="success"){// the server responded with a successful transfer initiation
+resolve(responseData);// resolve the cash transfer promise
+}else{// the server responded unsuccessfully
+reject(responseData);// reject the cash transfer promise
+}});// server responded with a failure to the cash transfer request
+cashTransferAuthoriseRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}).then(function(responseData){if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED")>-1){// cash transfer was success
+// update the transaction indicators
+$('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(2) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(2) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide ALL the bottom-toolbar blocks
+$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");$('#loader-modal').get(0).hide();// hide loader
+return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}else{throw responseData;// cash transfer could not be authorised
+}}).then(function(){// show transaction confirmation modal
+return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
+window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status again at... OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});},/**
          * method is triggered when the card number autocomplete input is changed
          *
          * @param inputElem
