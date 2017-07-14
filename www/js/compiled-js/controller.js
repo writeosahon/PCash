@@ -1423,6 +1423,11 @@ utopiasoftware.saveup.controller = {
          */
         verifyAcctBottomSheetListItemClicked: function(label){
 
+            if(label == "add to my recipients"){ // 'Transfer Cash to account' button was clicked
+
+                return;
+            }
+
             if(label == "add to my accounts"){ // 'add to my accounts' button was clicked
 
                 // ask user for secure PIN before proceeding. secure pin MUST match
