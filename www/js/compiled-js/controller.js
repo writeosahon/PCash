@@ -5055,10 +5055,16 @@ utopiasoftware.saveup.controller = {
                     });
                 }
             }).
-            then(function(responseData){
-                if(responseData == null){ // user already terminated transfer
+            then(function(responseData){ // securely store the transaction history from the responseData on the user's device
+                return Promise.all([utopiasoftware.saveup.transactionHistoryOperations.
+                addTransactionHistory(responseData.data.transfer), Promise.resolve(responseData)]);
+            }).
+            then(function(responseDataArray){
+                if(responseDataArray == null || responseDataArray[1] == null){ // user already terminated transfer
                     throw null;
                 }
+
+                var responseData = responseDataArray[1]; // retrieve the response from the server
 
                 // update the display info for the card transaction
 
@@ -5224,6 +5230,10 @@ utopiasoftware.saveup.controller = {
                     }
                 }).
                 then(function(){
+                    return utopiasoftware.saveup.transactionHistoryOperations.
+                    updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
+                }).
+                then(function(){
                     // show transaction confirmation modal
                     return $('#financial-operations-success-modal').get(0).show();
                 }).
@@ -5354,6 +5364,10 @@ utopiasoftware.saveup.controller = {
                 else{
                     throw responseData; // cash transfer could not be authorised
                 }
+            }).
+            then(function(){
+                return utopiasoftware.saveup.transactionHistoryOperations.
+                updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
             }).
             then(function(){
                 // show transaction confirmation modal

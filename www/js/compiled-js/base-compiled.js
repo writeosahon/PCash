@@ -996,8 +996,6 @@ var utopiasoftware = {
              */
             addTransactionHistory: function addTransactionHistory(transactionDataObject) {
 
-                var transactionHistoryArray = []; // holds the collection of transaction histroy on user's device
-
                 // return a Promise which resolves when transaction history data has been added successfully or rejects otherwise
                 return new Promise(function (resolve, reject) {
                     // get the transaction history data collection on the user's device
@@ -1021,6 +1019,61 @@ var utopiasoftware = {
                         }
 
                         transactionDataArray.unshift(transactionDataObject); // add the new transaction data object to the beginning of the array collection
+                        // store the updated transaction history collection securely on user's device
+                        return intel.security.secureData.createFromData({ 'data': JSON.stringify(transactionDataArray) });
+                    }).then(function (instanceId) {
+                        return intel.security.secureStorage.write({ 'id': 'postcash-transaction-history-collection',
+                            'instanceID': instanceId });
+                    }).then(function () {
+                        // new transaction object has been added
+                        // resolve promise
+                        resolve();
+                    }).catch(function (err) {
+                        // there was an error and account could NOT be added
+                        reject(err); // reject promise
+                    });
+                });
+            },
+
+            /**
+             * method is used update the status of a stored transaction history on
+             * the user's device
+             *
+             * @param transactionRef {String} the unique moneywave reference for the transaction
+             *
+             * @param newStatus {String} the new status for the transaction
+             */
+            updateTransactionHistory: function updateTransactionHistory(transactionRef, newStatus) {
+
+                // return a Promise which resolves when transaction history data status has been updated successfully or rejects otherwise
+                return new Promise(function (resolve, reject) {
+                    // get the transaction history data collection on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-transaction-history-collection' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function (errObject) {
+                        if (errObject.code == 1) {
+                            // the secure storage has not been created before
+                            return '[]'; // return the empty array as string
+                        } else {
+                            // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).then(function (transactionDataArray) {
+                        transactionDataArray = JSON.parse(transactionDataArray); // convert the string data to an object
+                        // find the specified transaction using the provided movewave reference
+                        var transactionDataIndex = transactionDataArray.findIndex(function (arrayElem) {
+                            if (arrayElem.flutterChargeReference == transactionRef) {
+                                return true;
+                            }
+                        });
+
+                        // if element was found, update the transaction status with the newStatus provided
+                        if (transactionDataIndex > -1) {
+                            // transaction data object was found
+                            // update the transaction status
+                            transactionDataArray[transactionDataIndex].flutterChargeResponseMessage = newStatus;
+                        }
+
                         // store the updated transaction history collection securely on user's device
                         return intel.security.secureData.createFromData({ 'data': JSON.stringify(transactionDataArray) });
                     }).then(function (instanceId) {
