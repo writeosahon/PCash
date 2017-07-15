@@ -84,6 +84,11 @@ utopiasoftware.saveup.controller = {
 
         }, false);
 
+        // add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
+        document.addEventListener("pause", function(){
+            //todo
+        }, false);
+
         // add listener for when a message is posted to the app by an iframe during cash transfers
         window.addEventListener("message", function(event){
             // check that event is from the expected origin & carrying the proper message

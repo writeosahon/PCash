@@ -24,7 +24,9 @@ $('#verify-account-bottom-sheet').data("saveupSheetState","open");},complete:fun
 $('#verify-account-bottom-sheet').data("saveupSheetState","closed");}});});/** ADD CUSTOM VALIDATORS FOR PARSLEY HERE **/Parsley.addAsyncValidator("financialcardcheck",utopiasoftware.saveup.controller.addCardPageViewModel.financialCardValidator,utopiasoftware.saveup.paystackObject.gateway+'decision/bin/{value}');Parsley.addAsyncValidator("accountnumbercheck",utopiasoftware.saveup.controller.addAccountPageViewModel.accountNumberValidator,utopiasoftware.saveup.moneyWaveObject.gateway+'v1/resolve/account');Parsley.addAsyncValidator("recipientaccountnumbercheck",utopiasoftware.saveup.controller.addRecipientPageViewModel.recipientAccountNumberValidator,utopiasoftware.saveup.moneyWaveObject.gateway+'v1/resolve/account');/** CUSTOM VALIDATORS FOR PARSLEY ENDS **/// add listener for when the Internet network connection is offline
 document.addEventListener("offline",function(){// display a toast message to let user no there is no Internet connection
 window.plugins.toast.showWithOptions({message:"No Internet Connection. App functionality may be limited",duration:4000,// 2000 ms
-position:"bottom",styling:{opacity:1,backgroundColor:'#000000',textColor:'#FFFFFF',textSize:14}});},false);// add listener for when a message is posted to the app by an iframe during cash transfers
+position:"bottom",styling:{opacity:1,backgroundColor:'#000000',textColor:'#FFFFFF',textSize:14}});},false);// add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
+document.addEventListener("pause",function(){//todo
+},false);// add listener for when a message is posted to the app by an iframe during cash transfers
 window.addEventListener("message",function(event){// check that event is from the expected origin & carrying the proper message
 if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="c done"){// call the method to handle the event i.e transfer-cash-card authorisation
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardOtpAuthorize();return;// exit method
