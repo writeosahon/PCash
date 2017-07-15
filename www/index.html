@@ -466,29 +466,20 @@
 </ons-modal>
 
 <!-- modal for displaying security pin authorisation -->
-<ons-modal id="security-pin-lock-modal" direction="up" style="background: rgba(0, 0, 0, 0)">
-    <div class="circle" style="text-align: center">
-
-        <img src="css/app-images/approved-icon-img.png">
-
-        <div class="mask-top-container">
-            <div class="mask-top"></div>
+<ons-modal id="security-pin-lock-modal" direction="up" style="background: rgba(49, 27, 146, 1)">
+    <div class="row">
+        <div class="col s9 input-field">
+            <input id="security-pin-lock-pin" type="number" required
+                   data-parsley-type="digits"
+                   data-parsley-minlength="4"
+                   data-parsley-maxlength="8"
+                   placeholder="For secure login"
+                   data-parsley-required-message="create your PIN"
+                   data-parsley-type-message="your PIN must contain only numbers"
+                   data-parsley-minlength-message="your PIN must be at least 4 numbers"
+                   data-parsley-maxlength-message="your PIN cannot be more than 8 numbers">
+            <label for="security-pin-lock-pin" class="active">PostCash Secure PIN</label>
         </div>
-        <div class="mask-bottom-container">
-            <div class="mask-bottom"></div>
-        </div>
-
-    </div>
-    <div class="modal-message" style="text-align: center; color: #311b92;
-    font-size: 1.1em; font-weight: bold">Cash Transfer Completed!</div>
-
-    <div style="text-align: center; margin-top: 1.2em">
-        <ons-button style="background-color: #311b92; border-radius: 1em"
-                    onclick="$('#financial-operations-success-modal .circle').removeClass('show');
-        $('#financial-operations-success-modal').get(0).hide().
-        then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});">
-            Done
-        </ons-button>
     </div>
 </ons-modal>
 
