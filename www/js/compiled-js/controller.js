@@ -28,6 +28,21 @@ utopiasoftware.saveup.controller = {
 
             });
 
+
+            // listen for "HOLD" events that are triggered in the app
+            document.addEventListener('hold', function(event) {
+
+                // check if the backspace button in the 'security-pin-lock-modal' is held
+                if ($(event.target).closest('#security-pin-lock-backspace', '#security-pin-lock-modal').
+                    is('#security-pin-lock-backspace')) { //backspace button has been held
+                    // remove the entire contents of the input field
+                    $('#security-pin-lock-modal #security-pin-lock-pin').val("");
+                    return; // exit
+                }
+
+
+            });
+
             if(utopiasoftware.saveup.model.isAppReady === false){ // if app has not completed loading
                 // displaying prepping message
                 $('#loader-modal-message').html("Preparing App...");
@@ -86,9 +101,26 @@ utopiasoftware.saveup.controller = {
 
         // add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
         document.addEventListener("pause", function(){
-            if(true){
-                $('#security-pin-lock-modal').get(0).show(); //todo
+
+            if($('#login-tabbar').get(0) && $('#login-tabbar').get(0).visible){ // if the login-tab is visible
+                // don't display security-pin-lock-modal
+                return; // exit the function immediately
             }
+
+            // check if the security lock modal can be display
+            if(! utopiasoftware.saveup.model.appUserDetails.settings ||
+                utopiasoftware.saveup.model.appUserDetails.settings.alwaysShowSecurityLockModal !== false){ // security modal can be displayed
+
+                // reset the message being displayed in the security-pin-lock-modal
+                $('#security-pin-lock-modal #security-pin-lock-message').html("");
+
+                if($('#pin-security-check').get(0) && $('#pin-security-check').get(0).visible){ // check if the pin-security-check dialog is visible
+                    $('#pin-security-check').get(0).hide(); // hide the pin-security-check dialog
+                }
+
+                $('#security-pin-lock-modal').get(0).show(); // show the security-pin-lock-modal
+            }
+
         }, false);
 
         // add listener for when a message is posted to the app by an iframe during cash transfers
@@ -384,12 +416,6 @@ utopiasoftware.saveup.controller = {
 
 
         /**
-         * property flags if the security pin lock can be displayed
-         * to the user. True means it can be displayed, false is otherwise
-         */
-        canShowSecurityLock: false,
-
-        /**
          * method is triggered when a number key on the app security pin lock is tapped
          *
          * @param numberInput {String} number input
@@ -402,13 +428,15 @@ utopiasoftware.saveup.controller = {
                     $('#security-pin-lock-modal #security-pin-lock-pin');
             }
 
+            // clear the message that may be displayed in the modal
+            $('#security-pin-lock-modal #security-pin-lock-message').html("");
             // update the security input field with the provided number input
             utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
             val(utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val() + numberInput);
             // update the input field css text input style, so user can see the inputed number
             utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
             css('-webkit-text-security', 'none');
-            Materialize.updateTextFields(); // update the text input display
+
             setTimeout(function(){ // wait for 1 second
                     // update the input field css text input style, so user cannot see the inputed number
                     utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
@@ -436,12 +464,43 @@ utopiasoftware.saveup.controller = {
          */
         okButtonClicked: function(){
 
-            // set the canShow flag to false because the app security pin modal is closed
-            utopiasoftware.saveup.controller.securityPinLockModalViewModel.canShowSecurityLock = false;
+            // check if the input field jquery object is null. if so, initialise it
+            if(!utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField){
+                // initialise the input property
+                utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField =
+                    $('#security-pin-lock-modal #security-pin-lock-pin');
+            }
+
+            if(utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val() ===
+                utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+
+                $('#security-pin-lock-modal').get(0).hide(); // hide the security pin modal
+            }
+            else{ // authentication failed
+                $('#security-pin-lock-modal #security-pin-lock-message').html("WRONG INPUT!");
+            }
+
             // reset the input value of the security pin modal
             utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val("");
-            Materialize.updateTextFields(); // update the text input display
-            $('#security-pin-lock-modal').get(0).hide(); // hide the security pin modal
+        },
+
+
+        /**
+         * method is triggered when the backspace button on the
+         * app security pin is clicked
+         */
+        backspaceButtonClicked: function(){
+
+            // check if the input field jquery object is null. if so, initialise it
+            if(!utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField){
+                // initialise the input property
+                utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField =
+                    $('#security-pin-lock-modal #security-pin-lock-pin');
+            }
+
+            var inputString = $('#security-pin-lock-modal #security-pin-lock-pin').val(); // get the value from the input
+            // remove the last character from the input field
+            $('#security-pin-lock-modal #security-pin-lock-pin').val(inputString.substring(0, inputString.length - 1));
         }
     },
 

@@ -467,14 +467,22 @@
 
 <!-- modal for displaying security pin authorisation -->
 <ons-modal id="security-pin-lock-modal" direction="up" style="background: rgba(49, 27, 146, 1)">
+    <div class="row">
+        <div class="col s12">
+            <div id="security-pin-lock-message" style="text-align: center"></div>
+        </div>
+    </div>
     <div class="row" style="border-bottom: 2px solid #cccccc">
         <div class="col s9 input-field">
             <input id="security-pin-lock-pin" type="number" readonly placeholder="PostCash Secure PIN">
         </div>
         <div class="col s3">
-            <ons-fab style="box-shadow: none; background-color: #311B92;">
+            <ons-gesture-detector>
+                <ons-fab id="security-pin-lock-backspace" style="box-shadow: none; background-color: #311B92;"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.backspaceButtonClicked();">
                     <ons-icon icon="md-tag-close" size="28px" style=" color: #ffffff; background-color: transparent;"></ons-icon>
                 </ons-fab>
+            </ons-gesture-detector>
         </div>
     </div>
 
