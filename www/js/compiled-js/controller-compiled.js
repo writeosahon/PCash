@@ -25,8 +25,8 @@ $('#verify-account-bottom-sheet').data("saveupSheetState","closed");}});});/** A
 document.addEventListener("offline",function(){// display a toast message to let user no there is no Internet connection
 window.plugins.toast.showWithOptions({message:"No Internet Connection. App functionality may be limited",duration:4000,// 2000 ms
 position:"bottom",styling:{opacity:1,backgroundColor:'#000000',textColor:'#FFFFFF',textSize:14}});},false);// add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
-document.addEventListener("pause",function(){//todo
-},false);// add listener for when a message is posted to the app by an iframe during cash transfers
+document.addEventListener("pause",function(){if(true){$('#security-pin-lock-modal').get(0).show();//todo
+}},false);// add listener for when a message is posted to the app by an iframe during cash transfers
 window.addEventListener("message",function(event){// check that event is from the expected origin & carrying the proper message
 if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="c done"){// call the method to handle the event i.e transfer-cash-card authorisation
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardOtpAuthorize();return;// exit method
@@ -107,6 +107,37 @@ ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-c
 // close the side menu
 $('ons-splitter').get(0).left.close().then(function(){$('ons-splitter').get(0).content.load("onboarding-template");// navigate to the onboarding presentation
 }).catch(function(){});return;}}},/**
+     * object is the view-model for the app security-pin-lock-modal
+     */securityPinLockModalViewModel:{/**
+         * property holds the input field jquery object used in the
+         * security pin lock modal
+         */$pinLockInputField:null,/**
+         * property flags if the security pin lock can be displayed
+         * to the user. True means it can be displayed, false is otherwise
+         */canShowSecurityLock:false,/**
+         * method is triggered when a number key on the app security pin lock is tapped
+         *
+         * @param numberInput {String} number input
+         */numberButtonClicked:function numberButtonClicked(numberInput){// check if the input field jquery object is null. if so, initialise it
+if(!utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField){// initialise the input property
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField=$('#security-pin-lock-modal #security-pin-lock-pin');}// update the security input field with the provided number input
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val(utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val()+numberInput);// update the input field css text input style, so user can see the inputed number
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.css('-webkit-text-security','none');Materialize.updateTextFields();// update the text input display
+setTimeout(function(){// wait for 1 second
+// update the input field css text input style, so user cannot see the inputed number
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.css('-webkit-text-security','disc');},1000);},/**
+         * method is triggered when the exit button on the app security pin is clicked
+         */exitButtonClicked:function exitButtonClicked(){ons.notification.confirm('Do you want to close the app?',{title:'Exit',buttonLabels:['No','Yes']})// Ask for confirmation
+.then(function(index){if(index===1){// OK button
+navigator.app.exitApp();// Close the app
+}});},/**
+         * method is triggered when the "ok" button on the
+         * app security pin is clicked
+         */okButtonClicked:function okButtonClicked(){// set the canShow flag to false because the app security pin modal is closed
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.canShowSecurityLock=false;// reset the input value of the security pin modal
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val("");Materialize.updateTextFields();// update the text input display
+$('#security-pin-lock-modal').get(0).hide();// hide the security pin modal
+}},/**
      * object is view-model for sign-in page
      */signInPageViewModel:{/**
          * used to hold the parsley form validation object for the sign-in page

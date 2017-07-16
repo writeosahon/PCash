@@ -86,7 +86,9 @@ utopiasoftware.saveup.controller = {
 
         // add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
         document.addEventListener("pause", function(){
-            //todo
+            if(true){
+                $('#security-pin-lock-modal').get(0).show(); //todo
+            }
         }, false);
 
         // add listener for when a message is posted to the app by an iframe during cash transfers
@@ -365,6 +367,81 @@ utopiasoftware.saveup.controller = {
 
                 return;
             }
+        }
+    },
+
+
+    /**
+     * object is the view-model for the app security-pin-lock-modal
+     */
+    securityPinLockModalViewModel: {
+
+        /**
+         * property holds the input field jquery object used in the
+         * security pin lock modal
+         */
+        $pinLockInputField: null,
+
+
+        /**
+         * property flags if the security pin lock can be displayed
+         * to the user. True means it can be displayed, false is otherwise
+         */
+        canShowSecurityLock: false,
+
+        /**
+         * method is triggered when a number key on the app security pin lock is tapped
+         *
+         * @param numberInput {String} number input
+         */
+        numberButtonClicked: function(numberInput){
+            // check if the input field jquery object is null. if so, initialise it
+            if(!utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField){
+                // initialise the input property
+                utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField =
+                    $('#security-pin-lock-modal #security-pin-lock-pin');
+            }
+
+            // update the security input field with the provided number input
+            utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
+            val(utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val() + numberInput);
+            // update the input field css text input style, so user can see the inputed number
+            utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
+            css('-webkit-text-security', 'none');
+            Materialize.updateTextFields(); // update the text input display
+            setTimeout(function(){ // wait for 1 second
+                    // update the input field css text input style, so user cannot see the inputed number
+                    utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
+                    css('-webkit-text-security', 'disc');
+            }, 1000);
+        },
+
+        /**
+         * method is triggered when the exit button on the app security pin is clicked
+         */
+        exitButtonClicked: function(){
+
+            ons.notification.confirm('Do you want to close the app?', {title: 'Exit',
+                    buttonLabels: ['No', 'Yes']}) // Ask for confirmation
+                .then(function(index) {
+                    if (index === 1) { // OK button
+                        navigator.app.exitApp(); // Close the app
+                    }
+                });
+        },
+
+        /**
+         * method is triggered when the "ok" button on the
+         * app security pin is clicked
+         */
+        okButtonClicked: function(){
+
+            // set the canShow flag to false because the app security pin modal is closed
+            utopiasoftware.saveup.controller.securityPinLockModalViewModel.canShowSecurityLock = false;
+            // reset the input value of the security pin modal
+            utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val("");
+            Materialize.updateTextFields(); // update the text input display
+            $('#security-pin-lock-modal').get(0).hide(); // hide the security pin modal
         }
     },
 

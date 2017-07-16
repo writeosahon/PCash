@@ -650,3 +650,15 @@ label[data-hint]:after {
     transform: rotate(-180deg);
 }
 /** STYLE FOR THE FINANCIAL OPERATIONS MODAL ENDS **/
+
+
+
+#security-pin-lock-modal #security-pin-lock-pin {
+    -webkit-text-security: disc;
+    text-align: center;
+    font-size: 2em;
+    border: none;
+}
+#security-pin-lock-modal #security-pin-lock-pin::-webkit-input-placeholder {
+    font-size: 0.85rem;
+}
