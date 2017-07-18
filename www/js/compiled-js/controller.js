@@ -100,7 +100,7 @@ utopiasoftware.saveup.controller = {
         }, false);
 
         // add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
-        document.addEventListener("pause", function(){
+        document.addEventListener("pause", function(){ // function handles the display of the security-pin-lock-modal
 
             if($('#login-tabbar').get(0) && $('#login-tabbar').get(0).visible){ // if the login-tab is visible
                 // don't display security-pin-lock-modal
@@ -115,9 +115,10 @@ utopiasoftware.saveup.controller = {
                 $('#security-pin-lock-modal #security-pin-lock-message').html("");
 
                 if($('#pin-security-check').get(0) && $('#pin-security-check').get(0).visible){ // check if the pin-security-check dialog is visible
-                    $('#pin-security-check').get(0).hide(); // hide the pin-security-check dialog
+                    $('#pin-security-check').remove(); // hide the pin-security-check dialog
                 }
 
+                cordova.plugins.Keyboard.close(); // hide the keyboard, if it is visible
                 $('#security-pin-lock-modal').get(0).show(); // show the security-pin-lock-modal
             }
 
@@ -416,6 +417,13 @@ utopiasoftware.saveup.controller = {
 
 
         /**
+         * holds the unique id assigned to every timer which is used to
+         * change the input field entry from 'visible' to 'hidden'
+         */
+        clearTimeoutId: -1,
+
+
+        /**
          * method is triggered when a number key on the app security pin lock is tapped
          *
          * @param numberInput {String} number input
@@ -437,6 +445,10 @@ utopiasoftware.saveup.controller = {
             utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
             css('-webkit-text-security', 'none');
 
+            // clear any previous timeout that may have been set
+            window.clearTimeout(utopiasoftware.saveup.controller.securityPinLockModalViewModel.clearTimeoutId);
+
+            utopiasoftware.saveup.controller.securityPinLockModalViewModel.clearTimeoutId =
             setTimeout(function(){ // wait for 1 second
                     // update the input field css text input style, so user cannot see the inputed number
                     utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.
@@ -501,6 +513,18 @@ utopiasoftware.saveup.controller = {
             var inputString = $('#security-pin-lock-modal #security-pin-lock-pin').val(); // get the value from the input
             // remove the last character from the input field
             $('#security-pin-lock-modal #security-pin-lock-pin').val(inputString.substring(0, inputString.length - 1));
+        },
+
+        /**
+         * method is used to prevent the device from displaying the content menu for
+         * devices
+         * @param event
+         * @returns {boolean}
+         */
+        preventContextMenuForInput: function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
         }
     },
 

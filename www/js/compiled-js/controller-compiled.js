@@ -30,15 +30,17 @@ $('#verify-account-bottom-sheet').data("saveupSheetState","closed");}});});/** A
 document.addEventListener("offline",function(){// display a toast message to let user no there is no Internet connection
 window.plugins.toast.showWithOptions({message:"No Internet Connection. App functionality may be limited",duration:4000,// 2000 ms
 position:"bottom",styling:{opacity:1,backgroundColor:'#000000',textColor:'#FFFFFF',textSize:14}});},false);// add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
-document.addEventListener("pause",function(){if($('#login-tabbar').get(0)&&$('#login-tabbar').get(0).visible){// if the login-tab is visible
+document.addEventListener("pause",function(){// function handles the display of the security-pin-lock-modal
+if($('#login-tabbar').get(0)&&$('#login-tabbar').get(0).visible){// if the login-tab is visible
 // don't display security-pin-lock-modal
 return;// exit the function immediately
 }// check if the security lock modal can be display
 if(!utopiasoftware.saveup.model.appUserDetails.settings||utopiasoftware.saveup.model.appUserDetails.settings.alwaysShowSecurityLockModal!==false){// security modal can be displayed
 // reset the message being displayed in the security-pin-lock-modal
 $('#security-pin-lock-modal #security-pin-lock-message').html("");if($('#pin-security-check').get(0)&&$('#pin-security-check').get(0).visible){// check if the pin-security-check dialog is visible
-$('#pin-security-check').get(0).hide();// hide the pin-security-check dialog
-}$('#security-pin-lock-modal').get(0).show();// show the security-pin-lock-modal
+$('#pin-security-check').remove();// hide the pin-security-check dialog
+}cordova.plugins.Keyboard.close();// hide the keyboard, if it is visible
+$('#security-pin-lock-modal').get(0).show();// show the security-pin-lock-modal
 }},false);// add listener for when a message is posted to the app by an iframe during cash transfers
 window.addEventListener("message",function(event){// check that event is from the expected origin & carrying the proper message
 if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="c done"){// call the method to handle the event i.e transfer-cash-card authorisation
@@ -125,6 +127,9 @@ $('ons-splitter').get(0).left.close().then(function(){$('ons-splitter').get(0).c
          * property holds the input field jquery object used in the
          * security pin lock modal
          */$pinLockInputField:null,/**
+         * holds the unique id assigned to every timer which is used to
+         * change the input field entry from 'visible' to 'hidden'
+         */clearTimeoutId:-1,/**
          * method is triggered when a number key on the app security pin lock is tapped
          *
          * @param numberInput {String} number input
@@ -133,7 +138,8 @@ if(!utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInput
 utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField=$('#security-pin-lock-modal #security-pin-lock-pin');}// clear the message that may be displayed in the modal
 $('#security-pin-lock-modal #security-pin-lock-message').html("");// update the security input field with the provided number input
 utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val(utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.val()+numberInput);// update the input field css text input style, so user can see the inputed number
-utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.css('-webkit-text-security','none');setTimeout(function(){// wait for 1 second
+utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.css('-webkit-text-security','none');// clear any previous timeout that may have been set
+window.clearTimeout(utopiasoftware.saveup.controller.securityPinLockModalViewModel.clearTimeoutId);utopiasoftware.saveup.controller.securityPinLockModalViewModel.clearTimeoutId=setTimeout(function(){// wait for 1 second
 // update the input field css text input style, so user cannot see the inputed number
 utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField.css('-webkit-text-security','disc');},1000);},/**
          * method is triggered when the exit button on the app security pin is clicked
@@ -156,7 +162,12 @@ utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputFiel
 if(!utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField){// initialise the input property
 utopiasoftware.saveup.controller.securityPinLockModalViewModel.$pinLockInputField=$('#security-pin-lock-modal #security-pin-lock-pin');}var inputString=$('#security-pin-lock-modal #security-pin-lock-pin').val();// get the value from the input
 // remove the last character from the input field
-$('#security-pin-lock-modal #security-pin-lock-pin').val(inputString.substring(0,inputString.length-1));}},/**
+$('#security-pin-lock-modal #security-pin-lock-pin').val(inputString.substring(0,inputString.length-1));},/**
+         * method is used to prevent the device from displaying the content menu for
+         * devices
+         * @param event
+         * @returns {boolean}
+         */preventContextMenuForInput:function preventContextMenuForInput(event){event.preventDefault();event.stopPropagation();return false;}},/**
      * object is view-model for sign-in page
      */signInPageViewModel:{/**
          * used to hold the parsley form validation object for the sign-in page

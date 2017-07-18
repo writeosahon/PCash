@@ -473,8 +473,11 @@
         </div>
     </div>
     <div class="row" style="border-bottom: 2px solid #cccccc">
-        <div class="col s9 input-field">
-            <input id="security-pin-lock-pin" type="number" readonly placeholder="PostCash Secure PIN">
+        <div class="col s9 input-field" style="position: relative;">
+            <!-- div below prevents users from tapping directly in the input field -->
+            <div style="position: absolute; top: 0; bottom: 0; width: 100%; height: 100%; z-index: 1"></div>
+            <input id="security-pin-lock-pin" type="number" readonly placeholder="PostCash Secure PIN"
+            oncontextmenu="utopiasoftware.saveup.controller.securityPinLockModalViewModel.preventContextMenuForInput(event);">
         </div>
         <div class="col s3">
             <ons-gesture-detector>
