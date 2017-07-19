@@ -20,8 +20,8 @@
 
                 <ons-list>
                     <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
-                        Your Bank Account Details
-                <span id="transfer-cash-card-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                        Sender Bank Account Details
+                <span id="transfer-cash-bank-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
                       onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-bank-page-help-popover', this)">
                     <ons-icon icon="fa-question"></ons-icon>
                 </span>
@@ -29,92 +29,21 @@
 
                     <div class="row">
                         <div class="col s2" style="text-align: center;">
-                            <ons-icon icon="md-saveup-icon-saveup-credit-card" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
+                            <ons-icon icon="md-account" size="28px" style="color: #311B92; padding-top: 1em;"></ons-icon>
                         </div>
-                        <div class="col s10 input-field">
-                            <input id="transfer-cash-card-number" class="autocomplete" type="text"
-                                   placeholder="Card Alias/Card Number" required
-                                   data-parsley-required-message="card alias or card number required"
-                            onchange="utopiasoftware.saveup.controller.transferCashCardPageViewModel.cardNumberChanged(this);">
-                            <label for="transfer-cash-card-number" class="active hint--top">Card Alias or Card Number</label>
-                        </div>
-                    </div>
-
-                    <div class="row" style="position: relative">
-                        <!-- container holds invisible preloader, shown when field information is being updated -->
-                        <div class="postcash-preloader-transfer-cash-card-form-container" style="position: absolute; top: 0; bottom: 0;
-                        height: 100%; width: 100%; z-index: 5; text-align: center !important;
-                        background-color: rgba(255, 255, 255, 0.7); display: none;">
-                            <div class="preloader-wrapper big active">
-                                <div class="spinner-layer spinner-blue-only">
-                                    <div class="circle-clipper left">
-                                        <div class="circle"></div>
-                                    </div>
-                                    <div class="gap-patch">
-                                        <div class="circle"></div>
-                                    </div>
-                                    <div class="circle-clipper right">
-                                        <div class="circle"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s2" style="text-align: center;">
-                            <ons-icon icon="md-card" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
-                        </div>
-                        <div class="col s5 input-field">
-                            <input id="transfer-cash-card-cvv" type="number" required
-                                   data-parsley-type="digits"
-                                   data-parsley-minlength="3"
-                                   data-parsley-maxlength="3"
-                                   data-parsley-required-message="Card CVV is required"
-                                   data-parsley-type-message="Card CVV must contain only numbers"
-                                   data-parsley-minlength-message="Card CVV must be 3 digits"
-                                   data-parsley-maxlength-message="Card CVV must be 3 digits">
-                            <label for="transfer-cash-card-cvv" class="hint--top">Card CVV</label>
-                        </div>
-                    </div>
-
-                    <!-- this row is invisible unless card is unknown, local mastercard or verve -->
-                    <div class="row postcash-transfer-cash-card-hidden-info" style="display: none">
-                        <div class="col s2" style="text-align: center;">
-                            <ons-icon icon="fa-cc-mastercard" size="28px" style="color: #311b92;"></ons-icon>
-                        </div>
-                        <div class="col s10" style="">
-                            <input id="transfer-cash-card-verify-card-type" type="checkbox" class="filled-in"
-                                   value="local MasterCard or Verve"
-                            onclick="utopiasoftware.saveup.controller.transferCashCardPageViewModel.verifyCardTypeCheckboxClicked(this);">
-                            <label for="transfer-cash-card-verify-card-type">local MasterCard or Verve</label>
-                        </div>
-                        <div class="col s12" style="text-align: center;
-                font-size: 0.75em; color: gray;">
-                            (please tick above box if your card is a local MasterCard or Verve Card)
-                        </div>
-                    </div>
-
-                    <!-- this row is invisible unless card is unknown, local mastercard or verve -->
-                    <div class="row postcash-transfer-cash-card-hidden-info" style="display: none">
-                        <div class="col s2" style="text-align: center;">
-                            <ons-icon icon="md-saveup-icon-saveup-square-keypad" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
-                        </div>
-                        <div class="col s7 input-field">
-                            <!-- input is disabled by default -->
-                            <input id="transfer-cash-card-pin" type="number" required disabled
-                                   data-parsley-type="digits"
-                                   data-parsley-minlength="4"
-                                   data-parsley-maxlength="4"
-                                   data-parsley-required-message="enter card PIN"
-                                   data-parsley-type-message="card PIN must contain only numbers"
-                                   data-parsley-minlength-message="card PIN must be at least 4 numbers"
-                                   data-parsley-maxlength-message="card PIN cannot be more than 4 numbers">
-                            <label for="transfer-cash-card-pin" class="hint--top">Card ATM PIN</label>
+                        <div class="col s9 input-field">
+                            <input id="transfer-cash-bank-sender-account-name" class="autocomplete" type="text"
+                                   required
+                                   data-parsley-required-message="enter sender's account name or account number"
+                                   onchange="utopiasoftware.saveup.controller.transferCashCardPageViewModel.recipientAccountNumberChanged(this);">
+                            <label for="transfer-cash-bank-sender-account-name" class="hint--top">Sender's Account Name or Account Number</label>
                         </div>
                     </div>
 
 
                     <div class="row" style="position: relative;">
                         <!-- container holds invisible preloader, shown when field information is being updated -->
-                        <div class="postcash-preloader-transfer-cash-card-form-container" style="position: absolute; top: 0; bottom: 0;
+                        <div class="postcash-preloader-transfer-cash-bank-form-container" style="position: absolute; top: 0; bottom: 0;
                         height: 100%; width: 100%; z-index: 5; text-align: center !important;
                         background-color: rgba(255, 255, 255, 0.7); display: none;">
                             <div class="preloader-wrapper big active">
@@ -132,54 +61,27 @@
                             </div>
                         </div>
                         <div class="col s2" style="text-align: center;">
-                            <ons-icon icon="md-calendar" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
+                            <ons-icon icon="md-saveup-icon-saveup-saving-group" size="28px" style="color: #311B92; padding-top: 1em;"></ons-icon>
                         </div>
-                        <div class="col s4 input-field" style="position: relative">
-                            <select id="transfer-cash-card-expiry-month"
-                                    onchange="$('#transfer-cash-card-page #hidden-card-expiry-month-input').val($(this).val()); $('#transfer-cash-card-page #hidden-card-expiry-month-input').blur();">
-                                <option value="" disabled selected>Month</option>
-                                <option value="01">01</option>
-                                <option value="02">02</option>
-                                <option value="03">03</option>
-                                <option value="04">04</option>
-                                <option value="05">05</option>
-                                <option value="06">06</option>
-                                <option value="07">07</option>
-                                <option value="08">08</option>
-                                <option value="09">09</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
+                        <div class="col s9 input-field" style="position: relative">
+                            <select id="transfer-cash-bank-sender-choose-bank"
+                                    onchange="$('#transfer-cash-bank-page #hidden-choose-sender-bank-input').val($(this).val());
+                                    $('#transfer-cash-bank-page #hidden-choose-sender-bank-input').blur();">
+                                <option value="" disabled selected>Sender Bank</option>
                             </select>
-                            <label for="transfer-cash-card-expiry-month">Card Expires</label>
-                            <input id="hidden-card-expiry-month-input" type="text" required
-                                   data-parsley-trigger-after-failure="focusout"
-                                   data-parsley-required-message="no month"
-                                   class="hint--bottom-left utopiasoftware-no-style"
-                                   style="position: absolute; top: 10%; left: 20%; visibility: collapse; z-index: -10">
+                            <label for="transfer-cash-bank-sender-choose-bank"></label>
                         </div>
-                        <div class="col s1 input-field" style="padding-top: 1.2em; text-align: center">
-                            /
-                        </div>
-
-                        <div class="col s5 input-field" style="position: relative">
-                            <select id="transfer-cash-card-expiry-year"
-                                    onchange="$('#transfer-cash-card-page #hidden-card-expiry-year-input').val($(this).val()); $('#transfer-cash-card-page #hidden-card-expiry-year-input').blur();">
-                                <option value="" disabled selected>Year</option>
-                            </select>
-                            <label for="transfer-cash-card-expiry-year">Card Expires</label>
-                            <input id="hidden-card-expiry-year-input" type="text" required
-                                   data-parsley-trigger-after-failure="focusout"
-                                   data-parsley-required-message="no year"
-                                   class="hint--bottom-left utopiasoftware-no-style"
-                                   style="position: absolute; top: 10%; left: 20%; visibility: collapse; z-index: -10">
-                        </div>
+                        <input id="hidden-choose-sender-bank-input" type="text" required
+                               data-parsley-trigger-after-failure="focusout"
+                               data-parsley-required-message="pick a bank"
+                               class="hint--bottom-left utopiasoftware-no-style"
+                               style="position: absolute; top: 10%; left: 20%; visibility: collapse; z-index: -10">
                     </div>
 
                     <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
                         Transfer Amount
-                        <span id="transfer-cash-card-help-3" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
-                              onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-card-page-help-popover-3', this)">
+                        <span id="transfer-cash-bank-help-2" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                              onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-bank-page-help-popover-2', this)">
                     <ons-icon icon="fa-question"></ons-icon>
                 </span>
                     </ons-list-header>
@@ -189,7 +91,7 @@
                             <ons-icon icon="md-saveup-icon-saveup-cash" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                         </div>
                         <div class="col s9 input-field">
-                            <input id="transfer-cash-card-amount" required
+                            <input id="transfer-cash-bank-amount" required
                                    data-parsley-type="number" type="tel"
                                    data-parsley-min="500"
                                    data-parsley-max="50000"
@@ -198,7 +100,7 @@
                                    data-parsley-min-message="minimum amount per transfer is 500"
                                    data-parsley-max-message="maximum amount per transfer is 50,000"
                             onchange="$(this).val(kendo.toString(kendo.parseFloat($(this).val()), 'n2'));">
-                            <label for="transfer-cash-card-amount" class="hint--top">Amount (NGN)</label>
+                            <label for="transfer-cash-bank-amount" class="hint--top">Amount (NGN)</label>
                         </div>
                     </div>
 
@@ -207,15 +109,15 @@
                             <ons-icon icon="md-comment-text-alt" size="28px" style="color: #311b92; padding-top: 1em;"></ons-icon>
                         </div>
                         <div class="col s10 input-field">
-                            <input id="transfer-cash-card-narration" type="text" placeholder="(OPTIONAL)">
-                            <label for="transfer-cash-card-narration" class="active hint--top">Description/Remark</label>
+                            <input id="transfer-cash-bank-narration" type="text" placeholder="(OPTIONAL)">
+                            <label for="transfer-cash-bank-narration" class="active hint--top">Description/Remark</label>
                         </div>
                     </div>
 
                     <ons-list-header style="font-size: 1.2em; margin:0; color: #311b92">
                         Recipient Details
-                        <span id="transfer-cash-card-help-4" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
-                              onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-card-page-help-popover-2', this)">
+                        <span id="transfer-cash-bank-help-3" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                              onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transfer-cash-bank-page-help-popover-3', this)">
                     <ons-icon icon="fa-question"></ons-icon>
                 </span>
                     </ons-list-header>
@@ -225,11 +127,11 @@
                             <ons-icon icon="md-account-box-o" size="28px" style="color: #311B92; padding-top: 1em;"></ons-icon>
                         </div>
                         <div class="col s9 input-field">
-                            <input id="transfer-cash-card-recipient-account-name" class="autocomplete" type="text"
+                            <input id="transfer-cash-bank-recipient-account-name" class="autocomplete" type="text"
                                    required
                                    data-parsley-required-message="enter a recipient's account name or account number"
                             onchange="utopiasoftware.saveup.controller.transferCashCardPageViewModel.recipientAccountNumberChanged(this);">
-                            <label for="transfer-cash-card-recipient-account-name" class="hint--top">Recipient Account Name or Account Number</label>
+                            <label for="transfer-cash-bank-recipient-account-name" class="hint--top">Recipient Account Name or Account Number</label>
                         </div>
                     </div>
 
@@ -256,13 +158,14 @@
                             <ons-icon icon="md-saveup-icon-saveup-saving-group" size="28px" style="color: #311B92; padding-top: 1em;"></ons-icon>
                         </div>
                         <div class="col s9 input-field" style="position: relative">
-                            <select id="transfer-cash-card-choose-bank"
-                                    onchange="$('#transfer-cash-card-page #hidden-choose-bank-input').val($(this).val()); $('#transfer-cash-card-page #hidden-choose-bank-input').blur();">
+                            <select id="transfer-cash-bank-recipient-choose-bank"
+                                    onchange="$('#transfer-cash-bank-page #hidden-choose-recipient-bank-input').val($(this).val());
+                                    $('#transfer-cash-bank-page #hidden-choose-recipient-bank-input').blur();">
                                 <option value="" disabled selected>Recipient Bank</option>
                             </select>
-                            <label for="transfer-cash-card-choose-bank"></label>
+                            <label for="transfer-cash-bank-recipient-choose-bank"></label>
                         </div>
-                        <input id="hidden-choose-bank-input" type="text" required
+                        <input id="hidden-choose-recipient-bank-input" type="text" required
                                data-parsley-trigger-after-failure="focusout"
                                data-parsley-required-message="pick a bank"
                                class="hint--bottom-left utopiasoftware-no-style"
