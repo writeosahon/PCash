@@ -652,7 +652,7 @@ label[data-hint]:after {
 /** STYLE FOR THE FINANCIAL OPERATIONS MODAL ENDS **/
 
 
-
+/** STYLE FOR THE SECURE PIN LOCK MODAL BEGINS **/
 #security-pin-lock-modal #security-pin-lock-pin {
     -webkit-text-security: disc;
     text-align: center;
@@ -662,3 +662,16 @@ label[data-hint]:after {
 #security-pin-lock-modal #security-pin-lock-pin::-webkit-input-placeholder {
     font-size: 0.85rem;
 }
+/** STYLE FOR THE SECURE PIN LOCK MODAL ENDS **/
+
+
+/** STYLE FOR TRANSFER-CASH-BANK HELP POPOVER BEGINS **/
+#transfer-cash-bank-page-help-popover,
+#transfer-cash-bank-page-help-popover .popover__content {
+    background-color: #b388ff;
+}
+#transfer-cash-bank-page-help-popover .popover__arrow,
+#transfer-cash-bank-page-help-popover .popover--right__arrow {
+    background-image: linear-gradient(45deg, #b388ff, #b388ff 50%, #b388ff 50%);
+}
+/** STYLE FOR TRANSFER-CASH-BANK HELP POPOVER ENDS **/

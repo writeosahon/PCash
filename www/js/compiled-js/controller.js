@@ -64,6 +64,10 @@ utopiasoftware.saveup.controller = {
                 }
             });
 
+            // add back button listener for the SECURE PIN LOCK MODAL
+            $('#security-pin-lock-modal').get(0).onDeviceBackButton =
+                utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked;
+
         });
 
         /** ADD CUSTOM VALIDATORS FOR PARSLEY HERE **/
