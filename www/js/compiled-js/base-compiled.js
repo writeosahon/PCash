@@ -157,6 +157,64 @@ var utopiasoftware = {
         },
 
         /**
+         * method is used to sort the collection of Nigerian Banks ALLOWED TO SEND MONEY THROUGH
+         * BANK ACCOUNTS via MoneyWave.
+         * Banks objects are sorted in ascending order of bank name.
+         */
+        filteredSenderBanksData: function filteredSenderBanksData() {
+            // return the Promise object
+            return new Promise(function (resolve, reject) {
+                // retrieve the list of banks
+                Promise.resolve($.ajax({
+                    url: "sender-banks.json",
+                    type: "get",
+                    dataType: "json",
+                    timeout: 240000 // wait for 4 minutes before timeout of request
+
+                })).then(function (banksData) {
+                    // get the banks object
+                    var banksArray = []; // holds the banks array
+                    // convert each property and value of the banks object to an object
+                    // and store each object in a 'banks array'
+                    for (var prop in banksData) {
+                        // create the bank object
+                        var bankOject = {};
+                        bankOject[prop] = banksData[prop];
+                        // add bank object to banks array
+                        banksArray.push(bankOject);
+                    }
+
+                    return banksArray; // return the banks array to the next stage for proper array sorting
+                }).then(function (banksArrayData) {
+                    // get the banks array data
+                    // function is used to sort the banks array data in ascending order by name
+                    // sort and return the banks array data
+                    return banksArrayData.sort(function (item1, item2) {
+                        var item1Val = ""; // holds the value to be compared in item1
+                        var item2Val = ""; //holds the value to be compared in item2
+                        for (var val1 in item1) {
+                            item1Val = item1[val1]; // assign the value gotten from item1
+                        }
+                        for (var val2 in item2) {
+                            item2Val = item2[val2]; // assign the value gotten from item2
+                        }
+                        // begin comparison test for sorting
+                        if (item1Val.toLocaleUpperCase() < item2Val.toLocaleUpperCase()) {
+                            return -1;
+                        }
+                        if (item1Val.toLocaleUpperCase() > item2Val.toLocaleUpperCase()) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                }).then(function (sortedBankArrayData) {
+                    // receive the sorted bank array
+                    resolve(sortedBankArrayData); // resolve the promise with the sorted bank array
+                }).catch();
+            });
+        },
+
+        /**
          * this object encapsulates the payment gateway credentials
          */
         moneyWaveObject: {
