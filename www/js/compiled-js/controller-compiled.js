@@ -57,7 +57,7 @@ return null;}return Promise.resolve(intel.security.secureStorage.read({"id":"pos
 return null;}return Promise.resolve(intel.security.secureData.getData(instanceId));}).then(function(secureData){if(secureData==null){// user is not logged in
 return null;}utopiasoftware.saveup.model.appUserDetails=JSON.parse(secureData);// transfer the collected user details to the app
 // update the first name being displayed in the side menu
-$('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);return null;}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
+$('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);return null;}).then(function(){return utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey();}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
 navigator.splashscreen.hide();}).catch(function(){// provide an empty device uuid
 utopiasoftware.saveup.model.deviceUUID="";// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)

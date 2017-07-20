@@ -182,6 +182,9 @@ utopiasoftware.saveup.controller = {
             return null;
         }).
         then(function(){
+            return utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey();
+        }).
+        then(function(){
             // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
             utopiasoftware.saveup.model.isAppReady = true;
             // hide the splash screen

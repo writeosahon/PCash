@@ -1147,6 +1147,52 @@ var utopiasoftware = {
                     });
                 });
             }
+        },
+
+        kinveyBaasOperations: {
+
+            /**
+             * method checks if the kinvey Baas library has been initialised
+             *
+             * @return {Promise} a Promise that resolves if the Kinvey Baas library has been initialised
+             * and  rejects otherwise
+             */
+            checkKinveyInitialised: function checkKinveyInitialised() {
+                if (!Kinvey.User || !Kinvey.User.getActiveUser()) {
+                    // user has not been created, so kinvey has not been initialised
+                    return Promise.reject({}); // return a rejected promise
+                } else {
+                    // user has been created, so kinvey has been initialised
+                    return Promise.resolve({}); // return a resolved promise
+                }
+            },
+
+            /**
+             * function is used to initialise the kinvey Baas library
+             *
+             * @returns {Promise} a Promise that resolves if library is initialised or
+             * rejects otherwise
+             */
+            initialiseKinvey: function initialiseKinvey() {
+
+                // returns a Promise that resolves if library is initialised or rejects otherwise
+                return Kinvey.initialize({
+                    appKey: 'kid_ByQb8Q0S-',
+                    appSecret: '01d0e48b25124e71b1d21a57962b0d9f',
+                    appVersion: '1.0.0'
+                }).then(function () {
+                    // create an annonymous user for the app to use
+                    return Kinvey.User.signup(); // return an annonymous user
+                }).then(function () {
+                    return Kinvey.CustomEndpoint.execute('bank-transfer', {
+                        name: 'Fred Jones',
+                        eyes: 'Blue'
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+
         }
 
     }
