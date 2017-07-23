@@ -6630,7 +6630,7 @@ utopiasoftware.saveup.controller = {
 
                 $('#transfer-cash-bank-sender-choose-bank', utopiasoftware.saveup.controller.
                     transferCashBankPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
-                $('#hidden-choose-recipient-bank-input', utopiasoftware.saveup.controller.
+                $('#hidden-choose-sender-bank-input', utopiasoftware.saveup.controller.
                     transferCashBankPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
 
                 // remove any tooltip being displayed on the transfer cash form
