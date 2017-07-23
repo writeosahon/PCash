@@ -182,9 +182,6 @@ utopiasoftware.saveup.controller = {
             return null;
         }).
         then(function(){
-            return utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey();
-        }).
-        then(function(){
             // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
             utopiasoftware.saveup.model.isAppReady = true;
             // hide the splash screen
@@ -4834,16 +4831,6 @@ utopiasoftware.saveup.controller = {
             // reset the previous & current scroll positions of the page contents
             utopiasoftware.saveup.controller.transferCashCardPageViewModel.previousScrollPosition = 0;
             utopiasoftware.saveup.controller.transferCashCardPageViewModel.currentScrollPosition = 0;
-/*
-            // reset the new card brand, card general locale & card image
-            utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = "Unknown";
-            utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = "Unknown";
-            utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = "";
-
-            // generate the random number used to display the financial card image
-            var randomGen = new Random(Random.engines.nativeMath); // random number generator
-            // generate the random number
-            utopiasoftware.saveup.controller.addCardPageViewModel.cardImageRandomNum = randomGen.integer(1, 3); */
 
             // call the function used to initialise the app page if the app is fully loaded
             loadPageOnAppReady();
@@ -4856,7 +4843,6 @@ utopiasoftware.saveup.controller = {
                     return;
                 }
 
-
                 // listen for the back button event
                 $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
 
@@ -4866,7 +4852,16 @@ utopiasoftware.saveup.controller = {
                         return; // exit the method
                     }
 
-                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                    // check which tab is active and navigate appropriately
+                    if($('.transfer-cash-tabbar').get(0).getActiveTabIndex() == 0){ // the first tab is active
+                        // navigate to the main menu
+                        $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                    }
+                    else{ // the second tab is active
+                        // move the tab view to the Bank tab
+                        $('.transfer-cash-tabbar').get(0).setActiveTab(0, {animation: "slide"});
+                    }
+
                 };
 
                 // listen for the scroll event of the page carousel content
@@ -5791,6 +5786,936 @@ utopiasoftware.saveup.controller = {
                 // hide the preloaders that block input
                 $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).css("display", "none");
+            });
+        }
+
+    },
+
+    /**
+     * object is view-model for transfer-cash-bank page
+     */
+    transferCashBankPageViewModel: {
+
+        /**
+         * used to hold the parsley form validation object for the page
+         */
+        formValidator: null,
+
+        /**
+         * used to hold the parsley field validation object for the 'transfer amount' input
+         */
+        transferAmountFieldValidator: null,
+
+        /**
+         * property used to keep track of the immediate last scroll position of the
+         * page content
+         */
+        previousScrollPosition: 0,
+
+        /**
+         * property used to keep track of the current scroll position of the
+         * page content
+         */
+        currentScrollPosition: 0,
+
+
+        /**
+         * event is triggered when page is initialised
+         */
+        pageInit: function(event){
+
+            var $thisPage = $(event.target); // get the current page shown
+            // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+            $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
+
+            // reset the previous & current scroll positions of the page contents
+            utopiasoftware.saveup.controller.transferCashBankPageViewModel.previousScrollPosition = 0;
+            utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition = 0;
+
+            // call the function used to initialise the app page if the app is fully loaded
+            loadPageOnAppReady();
+
+            //function is used to initialise the page if the app is fully ready for execution
+            function loadPageOnAppReady(){
+                // check to see if onsen is ready and if all app loading has been completed
+                if(!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false){
+                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
+                    return;
+                }
+
+
+                // listen for the back button event
+                // listen for the back button event
+                $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
+
+                    // check if the side menu is open
+                    if($('ons-splitter').get(0).left.isOpen){ // side menu open, so close it
+                        $('ons-splitter').get(0).left.close();
+                        return; // exit the method
+                    }
+
+                    // check which tab is active and navigate appropriately
+                    if($('.transfer-cash-tabbar').get(0).getActiveTabIndex() == 0){ // the first tab is active
+                        // navigate to the main menu
+                        $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                    }
+                    else{ // the second tab is active
+                        // move the tab view to the Bank tab
+                        $('.transfer-cash-tabbar').get(0).setActiveTab(0, {animation: "slide"});
+                    }
+
+                };
+
+                // listen for the scroll event of the page carousel content
+                $('ons-carousel', $thisPage).on("scroll",
+                    utopiasoftware.saveup.controller.transferCashBankPageViewModel.pageContentScrolled);
+
+                // initialise the form validation objects.
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferAmountFieldValidator =
+                    $('#transfer-cash-bank-amount', $thisPage).parsley({ // used solely for the transfer-cash-amount input
+                        value: function(parsley) {
+                            // convert the amount back to a plain text without the thousand separator
+                            let parsedNumber = kendo.parseFloat($('#transfer-cash-bank-amount', $thisPage).val());
+                            return (parsedNumber ? parsedNumber : $('#transfer-cash-bank-amount', $thisPage).val());
+                        }
+                    });
+
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator =
+                    $('#transfer-cash-bank-form', $thisPage).parsley(); // used for the form in general
+
+
+                // attach listener for the 'transfer cash' card button click
+                $('#transfer-cash-bank-button', $thisPage).get(0).onclick = function(){
+                    // run the validation method for the transfer-cash-bank form
+                    utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.whenValidate();
+                };
+
+                // listen for form field validation failure event
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.on('field:error', function(fieldInstance) {
+                    // get the element that triggered the field validation error and use it to display tooltip
+                    // display tooltip
+                    $(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                    $(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint", fieldInstance.getErrorsMessages()[0]);
+                });
+
+                // listen for form field validation success event
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.on('field:success', function(fieldInstance) {
+                    // remove tooltip from element
+                    $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                    $(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");
+                });
+
+
+                // listen for transfer-cash-Bank form validation success
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.on('form:success',
+                    utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankFormValidated);
+
+                // initialise the sender account autocomplete widget
+                utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().
+                then(function(bankAcctArrayData){
+                    var autoCompleteData = {}; // holds the data used to initialise the autocomplete widget
+                    bankAcctArrayData.forEach(function(arrayElem){ // function to convert each array element to a format for autocomplete
+                        autoCompleteData[arrayElem.bankAccountName + " - " +  arrayElem.bankAccountNumber] =
+                            arrayElem.bankAccountAvatar;
+
+                    });
+                    // intialise widget
+                    $('#transfer-cash-bank-sender-account-name.autocomplete', $thisPage).autocomplete({
+                        data: autoCompleteData,
+                        onAutocomplete: function(val) {
+                            // callback function when value is autocompleted
+                        },
+                        minLength: 1 // The minimum length of the input for the autocomplete to start. Default: 1.
+                    });
+
+                    // call the method to retrieve saved bank account recipient's used to populate recipient autocomplete widget
+                    return utopiasoftware.saveup.savedRecipientsBankAccountOperations.loadSavedRecipientsAccountsData();
+
+                }, function(){return [];}).
+                then(function(savedRecipientsArray){
+                    var autoCompleteData = {}; // holds the data used to initialise the autocomplete widget
+                    savedRecipientsArray.forEach(function(arrayElem){ // function to convert each array element to a format for autocomplete
+                        autoCompleteData[arrayElem.bankAccountName + " - " +  arrayElem.bankAccountNumber] =
+                            arrayElem.bankAccountAvatar;
+
+                    });
+                    // initialise widget
+                    $('#transfer-cash-bank-recipient-account-name.autocomplete', $thisPage).autocomplete({
+                        data: autoCompleteData,
+                        onAutocomplete: function(val) {
+                            // Callback function when value is autcompleted.
+                        },
+                        minLength: 1 // The minimum length of the input for the autocomplete to start. Default: 1.
+                    });
+                    return Promise.all([utopiasoftware.saveup.filteredSenderBanksData(),
+                        utopiasoftware.saveup.sortBanksData()]); // retrieve data for banks
+                }, function(){return [[],[]];}).
+                then(function(bankArrayData){
+                    var optionTags = ""; // string to hold all created option tags
+
+                    // get each object in bank array and use it to create the 'bank' select element
+                    for(var index = 0; index < bankArrayData[0].length; index++){
+                        var bankObject = bankArrayData[0][index]; // get the bank object
+                        // update the banks select element option tags
+                        for(var prop in bankObject){
+                            optionTags += '<option value="' + prop + '">' + bankObject[prop] + '</option>';
+                        }
+                    }
+
+                    $('#transfer-cash-bank-sender-choose-bank', $thisPage).append(optionTags); // append all the created option tags
+                    // initialise the 'sender bank' select element
+                    $('#transfer-cash-bank-sender-choose-bank', $thisPage).material_select();
+                    return bankArrayData; // return at this point, so the page can continue initialisation
+                }, function(){}).
+                then(function(bankArrayData){
+                    var optionTags = ""; // string to hold all created option tags
+
+                    // get each object in bank array and use it to create the 'bank' select element
+                    for(var index = 0; index < bankArrayData[1].length; index++){
+                        var bankObject = bankArrayData[1][index]; // get the bank object
+                        // update the banks select element option tags
+                        for(var prop in bankObject){
+                            optionTags += '<option value="' + prop + '">' + bankObject[prop] + '</option>';
+                        }
+                    }
+
+                    $('#transfer-cash-bank-recipient-choose-bank', $thisPage).append(optionTags); // append all the created option tags
+                    // initialise the 'recipient bank' select element
+                    $('#transfer-cash-bank-recipient-choose-bank', $thisPage).material_select();
+                    return bankArrayData; // return at this point, so the page can continue initialisation
+                }, function(){}).
+                then(function(){
+                    // remove the progress indeterminate loader
+                    $('.progress', $thisPage).remove();
+                    // make the transfer-cash-bank form visible
+                    $('#transfer-cash-bank-form', $thisPage).css("display", "block");
+                    // enable the 'Cancel' & 'Transfer' buttons for the transfer-cash-bank form
+                    $('#transfer-cash-bank-cancel-button-1, #transfer-cash-bank-button', $thisPage).removeAttr("disabled");
+                    // hide the loader
+                    $('#loader-modal').get(0).hide();
+                }, function(){});
+
+
+                /*
+                 // check if the page was sent a financial card id.
+                 // if so preload the financial card data into the form
+                 if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){
+                 // get the details of the card to be edited
+                 utopiasoftware.saveup.financialCardOperations.
+                 getCard($('#app-main-navigator').get(0).topPage.data.edit).then(function(card){
+                 $('#add-card-page #add-card-unique-id').val(card.cardUniqueId);
+                 $('#add-card-page #add-card-card-holder').val(card.cardHolderName);
+                 $('#add-card-page #add-card-alias').val(card.cardNickName);
+                 $('#add-card-page #add-card-card-number').val(card.cardNumber);
+                 $('#add-card-page #add-card-cvv').val(card.cvv);
+                 $('#add-card-page #add-card-expiry-month').val(card.cardExpiryMonth);
+                 $('#add-card-page #hidden-card-expiry-month-input').val(card.cardExpiryMonth);
+                 $('#add-card-page #add-card-expiry-year').val(card.cardExpiryYear);
+                 $('#add-card-page #hidden-card-expiry-year-input').val(card.cardExpiryYear);
+                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = card.cardBrand;
+                 $('#add-card-page #add-card-verify-card').prop("checked", card.cardBrand !== "Unknown");
+                 // reset the card number validation check and all its related actions
+                 utopiasoftware.saveup.controller.addCardPageViewModel.
+                 isCardNumberValidated($('#add-card-page #add-card-verify-card'));
+                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = card.cardLocale;
+                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = card.cardImage;
+
+                 // update the card image file
+                 $('#add-card-page #add-card-image').attr("src", utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage);
+                 // display the card image row
+                 $('#add-card-image-container', $thisPage).css("display", "block");
+
+                 // re-update the form input fields
+                 Materialize.updateTextFields();
+                 //re-initialise the form select elements
+                 $('select', $thisPage).material_select();
+
+                 // remove the progress indeterminate loader
+                 $('.progress', $thisPage).remove();
+                 // make the add card form visible
+                 $('#add-card-form', $thisPage).css("display", "block");
+                 // enable the 'Cancel' & 'Save' buttons
+                 $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
+                 // hide the loader
+                 $('#loader-modal').get(0).hide();
+                 });
+                 }
+                 else {
+                 // remove the progress indeterminate loader
+                 $('.progress', $thisPage).remove();
+                 // make the add card form visible
+                 $('#add-card-form', $thisPage).css("display", "block");
+                 // enable the 'Cancel' & 'Save' buttons
+                 $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
+                 // hide the loader
+                 $('#loader-modal').get(0).hide();
+                 } */
+
+            }
+
+        },
+
+        /**
+         * method is triggered when page is shown
+         */
+        pageShow: (event) => {
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
+        },
+
+        /**
+         * method is triggered when the page is hidden
+         * @param event
+         */
+        pageHide: (event) => {
+            var $thisPage = $(event.target); // get the current page shown
+            try {
+                // remove any tooltip being displayed on all forms on the page
+                $('[data-hint]', $thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', $thisPage).removeAttr("data-hint");
+                // reset the transfer-cash-bank form validator object on the page
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferAmountFieldValidator.reset();
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.reset();
+            }
+            catch(err){}
+        },
+
+        /**
+         * method is triggered when the page is destroyed
+         * @param event
+         */
+        pageDestroy: (event) => {
+            var $thisPage = $(event.target); // get the current page shown
+            try{
+                // remove any tooltip being displayed on all forms on the page
+                $('[data-hint]', $thisPage).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', $thisPage).removeAttr("data-hint");
+                // destroy the form validator objects on the page
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferAmountFieldValidator.reset();
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.destroy();
+                // destroy the form inputs which need to be destroyed
+                $('select', $thisPage).material_select('destroy');
+                $('input.autocomplete', $thisPage).off();
+                $('input.autocomplete', $thisPage).removeData();
+            }
+            catch(err){}
+        },
+
+        /**
+         * method is triggered when transfer-cash-bank form is successfully validated
+         */
+        transferCashBankFormValidated: function(){
+
+            // check if Internet Connection is available before proceeding
+            if(navigator.connection.type === Connection.NONE){ // no Internet Connection
+                // inform the user that they cannot proceed without Internet
+                window.plugins.toast.showWithOptions({
+                    message: "You cannot transfer cash without an active Internet Connection",
+                    duration: 4500,
+                    position: "top",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#ff0000', //red
+                        textColor: '#FFFFFF',
+                        textSize: 14
+                    }
+                }, function(toastEvent){
+                    if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
+                        window.plugins.toast.hide();
+                    }
+                });
+
+                return; // exit method immediately
+            }
+
+            // confirm transfer-cash-card operation
+            ons.notification.confirm({title: '<ons-icon icon="md-alert-triangle" size="36px" ' +
+            'style="color: orange;"></ons-icon> Confirm Transfer',
+                messageHTML: '<span>Cash transfers cannot be undone or reversed when completed. <br>' +
+                'To securely complete cash transfers your banking authorization is required.<br>' +
+                'Do you want to continue?</span>',
+                cancelable: false,
+                buttonLabels: ["No", "Yes"]
+            }).
+            then(function(buttonIndex){
+                if(buttonIndex === 1){ // user wants to continue transfer
+                    // display message to user
+                    $('#loader-modal-message').html("Initiating Transfer...");
+                    $('#loader-modal').get(0).show(); // show loader
+                    // retrieve the necessary authorisation token
+                    return utopiasoftware.saveup.moneyWaveObject.useToken;
+                }
+                else{ // user terminated transfer
+                    throw null;
+                }
+            }).
+            then(function(token){
+
+                if(token === null){ // user already terminated transfer
+                    throw null;
+                }
+                else{ // use retrieved token to initiate transfer
+
+                    //create the cash transfer data
+                    var cashTransferData = {
+                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
+                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
+                        phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
+                        email: (utopiasoftware.saveup.model.appUserDetails.firstName +
+                        utopiasoftware.saveup.model.appUserDetails.lastName) + Date.now() + "@mymail.com",
+                        apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
+                        medium: "mobile",
+                        fee: 0,
+                        amount: kendo.parseFloat($('#transfer-cash-bank-amount', '#transfer-cash-bank-page').val())
+
+                    };
+                    // check if user want to transfer using any of the approve banks (apart from access bank)
+                    if($('#transfer-cash-bank-sender-choose-bank', '#transfer-cash-bank-form').val() != "044"){
+                        // user wants to transfer uding other banks NOT access bank
+                        cashTransferData.charge_with = "ext_account";
+                        cashTransferData.charge_auth = "INTERNETBANKING";
+                        cashTransferData.sender_bank  =
+                            $('#transfer-cash-bank-sender-choose-bank', '#transfer-cash-bank-form').val();
+                        cashTransferData.redirecturl = "https://postcash.000webhostapp.com/transfer-cash-bank.html";
+                    }
+
+                    // initiate the cash transfer request
+                    return new Promise(function(resolve, reject){
+                        var cashTransferRequest = $.ajax(
+                            {
+                                url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/transfer",
+                                type: "post",
+                                contentType: "application/json",
+                                beforeSend: function(jqxhr) {
+                                    jqxhr.setRequestHeader("Authorization", token);
+                                },
+                                dataType: "json",
+                                timeout: 240000, // wait for 4 minutes before timeout of request
+                                processData: false,
+                                data: JSON.stringify(cashTransferData)
+                            }
+                        );
+
+                        // server responded to cash transfer request
+                        cashTransferRequest.done(function(responseData){
+                            if(responseData.status === "success"){ // the server responded with a successful transfer initiation
+                                resolve(responseData); // resolve the cash transfer promise
+                            }
+                            else { // the server responded unsuccessfully
+                                reject(responseData); // reject the cash transfer promise
+                            }
+                        });
+
+                        // server responded with a failure to the cash transfer request
+                        cashTransferRequest.fail(function(jqxhr){
+                            if(jqxhr.status == 500){
+                                reject(JSON.parse(jqxhr.responseText.trim()));
+                            }
+                            else{
+                                reject(jqxhr.responseText.trim());
+                            }
+                        });
+                    });
+                }
+            }).
+            then(function(responseData){ // securely store the transaction history from the responseData on the user's device
+                return Promise.all([utopiasoftware.saveup.transactionHistoryOperations.
+                addTransactionHistory(responseData.data.transfer), Promise.resolve(responseData)]);
+            }).
+            then(function(responseDataArray){
+                if(responseDataArray == null || responseDataArray[1] == null){ // user already terminated transfer
+                    throw null;
+                }
+
+                var responseData = responseDataArray[1]; // retrieve the response from the server
+
+                // update the display info for the bank transaction
+
+                $('#transfer-cash-bank-authorize-amount', '#transfer-cash-bank-page').
+                html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend), "n2"));
+                $('#transfer-cash-bank-authorize-fee', '#transfer-cash-bank-page').
+                html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee), "n2"));
+                $('#transfer-cash-bank-authorize-total', '#transfer-cash-bank-page').
+                html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge), "n2"));
+                $('#transfer-cash-bank-authorize-message', '#transfer-cash-bank-page').
+                html(responseData.data.transfer.flutterChargeResponseMessage);
+
+                // store the transaction id & transaction reference in the session storage
+                window.sessionStorage.setItem("transaction_id", responseData.data.transfer.id);
+                window.sessionStorage.setItem("transaction_ref", responseData.data.transfer.flutterChargeReference);
+
+                // hide the transfer bottom-toolbar
+                $('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display", "none");
+
+                // check whether to display the authorisation form OR authorisation iframe
+                if($('#transfer-cash-bank-sender-choose-bank', '#transfer-cash-bank-form').val() != "044"){ // NOT access bank
+
+                    // update the src attribute for the authorization iframe
+                    $('#transfer-cash-bank-authorise-iframe', '#transfer-cash-bank-page').attr("src",
+                        responseData.data.authurl);
+
+                    //  display the authorization iframe
+                    $('#transfer-cash-bank-authorise-iframe', '#transfer-cash-bank-page').css("display", "block");
+                    // hide the authorization form
+                    $('#transfer-cash-bank-authorise-form', '#transfer-cash-bank-page').css("display", "none");
+                    // disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
+                    $('#transfer-cash-bank-authorise-button').attr("disabled", true);
+                    $('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display", "block");
+                    $('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display", "none");
+                }
+                else{ // display the authorization form
+                    /*
+                    $('#transfer-cash-card-authorise-form', '#transfer-cash-card-page').css("display", "block");
+                    //  hide the authorization iframe
+                    $('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "none");
+                    // enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
+                    $('#transfer-cash-card-authorise-button').removeAttr("disabled");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "block");
+                    */
+                }
+
+                // update the transaction indicators
+                $('.postcash-pay-progress .col:eq(0) span:eq(0)').
+                removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                $('.postcash-pay-progress .col:eq(0) span:eq(1)').
+                removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                $('.postcash-pay-progress .col:eq(1) span:eq(0)').
+                removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');
+                $('.postcash-pay-progress .col:eq(1) span:eq(1)').
+                removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
+
+                // transition to 'authorize' block
+                return $('.transfer-cash-bank-carousel').get(0).next({animation: 'none'});
+            }).
+            then(function(object){
+                if(object == null){ // user already terminated transfer
+                    throw null;
+                }
+
+                $('#loader-modal').get(0).hide(); // hide loader
+            }).
+            catch(function(error){
+
+                $('#loader-modal').get(0).hide(); // hide loader
+                if(error == null){ // the user decided NOT to proceed with the transfer
+                    return; // do nothing
+                }
+
+                ons.notification.alert({title: "Cash Transfer Failed",
+                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                    'style="color: red;"></ons-icon> <span>' + (error.data || "") + ' Sorry, your cash transfer failed. ' +
+                    '<br>You can try again' + '</span>',
+                    cancelable: true
+                });
+
+            });
+
+        },
+
+
+        /**
+         * method is used to check authorization of a card cash transfer
+         * (AUTHORIZATION VIA OTP)
+         */
+        transferCashCardOtpAuthorize: function(){
+
+            // check if user has completed transfer authorisation
+            if(true){ // user completed transfer authorisation
+                // display message to user
+                $('#loader-modal-message').html("Checking Authorization...");
+                $('#loader-modal').get(0).show(); // show loader
+                // get the authorisation token
+                utopiasoftware.saveup.moneyWaveObject.useToken.
+                then(function(token){
+
+                    // initiate the cash transfer authorisation check
+                    return new Promise(function(resolve, reject){
+                        var cashTransferAuthorisation = $.ajax(
+                            {
+                                url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/transfer/" +
+                                window.sessionStorage.getItem("transaction_id"),
+                                type: "post",
+                                contentType: "application/json",
+                                beforeSend: function(jqxhr) {
+                                    jqxhr.setRequestHeader("Authorization", token);
+                                },
+                                dataType: "json",
+                                timeout: 240000, // wait for 4 minutes before timeout of request
+                                processData: false,
+                                data: JSON.stringify({})
+                            }
+                        );
+
+                        // server responded to cash transfer authorisation check
+                        cashTransferAuthorisation.done(function(responseData){
+                            if(responseData.status === "success"){ // the server responded with a successful transfer authorisation
+                                resolve(responseData); // resolve the cash transfer authorisation promise
+                            }
+                            else { // the server responded unsuccessfully
+                                reject(responseData); // reject the cash transfer authorisation promise
+                            }
+                        });
+
+                        // server responded with a failure to the cash authorisation check
+                        cashTransferAuthorisation.fail(function(jqxhr){
+                            reject(JSON.parse(jqxhr.responseText.trim()));
+                        });
+                    });
+                }).
+                then(function(responseData){
+                    if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase() == "APPROVED"){ // cash transfer was success
+                        // update the transaction indicators
+                        $('.postcash-pay-progress .col:eq(0) span:eq(0)').
+                        removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                        $('.postcash-pay-progress .col:eq(0) span:eq(1)').
+                        removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                        $('.postcash-pay-progress .col:eq(1) span:eq(0)').
+                        removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                        $('.postcash-pay-progress .col:eq(1) span:eq(1)').
+                        removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                        $('.postcash-pay-progress .col:eq(2) span:eq(0)').
+                        removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');
+                        $('.postcash-pay-progress .col:eq(2) span:eq(1)').
+                        removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
+
+                        // hide ALL the bottom-toolbar blocks
+                        $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
+                        $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
+                        $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
+
+                        $('#loader-modal').get(0).hide(); // hide loader
+                        return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                    }
+                    else{
+                        throw responseData; // cash transfer could not be authorised
+                    }
+                }).
+                then(function(){
+                    return utopiasoftware.saveup.transactionHistoryOperations.
+                    updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
+                }).
+                then(function(){
+                    // show transaction confirmation modal
+                    return $('#financial-operations-success-modal').get(0).show();
+                }).
+                then(function(){
+                    // show the financial operations success modal after 1 second
+                    window.setTimeout(function(){
+                        $('#financial-operations-success-modal .circle').addClass("show");
+                    }, 1000);
+                }).
+                catch(function(error){
+
+                    $('#loader-modal').get(0).hide(); // hide loader
+
+                    ons.notification.alert({title: "Cash Transfer Failed",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
+                        '<br>You can check this transaction status again at... OR resend the cash transfer' + '</span>',
+                        cancelable: true
+                    }).
+                    then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});
+
+                });
+            }
+
+        },
+
+
+        /**
+         * method is used to check authorization of a card cash transfer
+         * (AUTHORIZATION VIA PIN)
+         */
+        transferCashCardPinAuthorize: function(){
+
+            // check if Internet Connection is available before proceeding
+            if(navigator.connection.type === Connection.NONE){ // no Internet Connection
+                // inform the user that they cannot proceed without Internet
+                window.plugins.toast.showWithOptions({
+                    message: "You cannot transfer cash without an active Internet Connection",
+                    duration: 4500,
+                    position: "top",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#ff0000', //red
+                        textColor: '#FFFFFF',
+                        textSize: 14
+                    }
+                }, function(toastEvent){
+                    if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
+                        window.plugins.toast.hide();
+                    }
+                });
+
+                return; // exit method immediately
+            }
+
+            // display message to user
+            $('#loader-modal-message').html("Checking Authorization...");
+            $('#loader-modal').get(0).show(); // show loader
+            // get the authorisation token
+            utopiasoftware.saveup.moneyWaveObject.useToken.
+            then(function(token){
+
+                // initiate the cash transfer request
+                return new Promise(function(resolve, reject){
+                    var cashTransferAuthoriseRequest = $.ajax(
+                        {
+                            url: utopiasoftware.saveup.moneyWaveObject.gateway + "v1/transfer/charge/auth/card",
+                            type: "post",
+                            contentType: "application/json",
+                            beforeSend: function(jqxhr) {
+                                jqxhr.setRequestHeader("Authorization", token);
+                            },
+                            dataType: "json",
+                            timeout: 240000, // wait for 4 minutes before timeout of request
+                            processData: false,
+                            data: JSON.stringify({transactionRef: window.sessionStorage.getItem("transaction_ref"),
+                                otp: $('#transfer-cash-card-otp', '#transfer-cash-card-page').val()})
+                        }
+                    );
+
+                    // server responded to cash transfer request
+                    cashTransferAuthoriseRequest.done(function(responseData){
+                        if(responseData.status === "success"){ // the server responded with a successful transfer initiation
+                            resolve(responseData); // resolve the cash transfer promise
+                        }
+                        else { // the server responded unsuccessfully
+                            reject(responseData); // reject the cash transfer promise
+                        }
+                    });
+
+                    // server responded with a failure to the cash transfer request
+                    cashTransferAuthoriseRequest.fail(function(jqxhr){
+                        if(jqxhr.status == 500){
+                            reject(JSON.parse(jqxhr.responseText.trim()));
+                        }
+                        else{
+                            reject(jqxhr.responseText.trim());
+                        }
+                    });
+                });
+            }).
+            then(function(responseData){
+                if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED") > -1){ // cash transfer was success
+                    // update the transaction indicators
+                    $('.postcash-pay-progress .col:eq(0) span:eq(0)').
+                    removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                    $('.postcash-pay-progress .col:eq(0) span:eq(1)').
+                    removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                    $('.postcash-pay-progress .col:eq(1) span:eq(0)').
+                    removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
+                    $('.postcash-pay-progress .col:eq(1) span:eq(1)').
+                    removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');
+
+                    $('.postcash-pay-progress .col:eq(2) span:eq(0)').
+                    removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');
+                    $('.postcash-pay-progress .col:eq(2) span:eq(1)').
+                    removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
+
+                    // hide ALL the bottom-toolbar blocks
+                    $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
+                    $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
+
+                    $('#loader-modal').get(0).hide(); // hide loader
+                    return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                }
+                else{
+                    throw responseData; // cash transfer could not be authorised
+                }
+            }).
+            then(function(){
+                return utopiasoftware.saveup.transactionHistoryOperations.
+                updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
+            }).
+            then(function(){
+                // show transaction confirmation modal
+                return $('#financial-operations-success-modal').get(0).show();
+            }).
+            then(function(){
+                // show the financial operations success modal after 1 second
+                window.setTimeout(function(){
+                    $('#financial-operations-success-modal .circle').addClass("show");
+                }, 1000);
+            }).
+            catch(function(error){
+
+                $('#loader-modal').get(0).hide(); // hide loader
+
+                ons.notification.alert({title: "Cash Transfer Failed",
+                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                    'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
+                    '<br>You can check this transaction status again at... OR resend the cash transfer' + '</span>',
+                    cancelable: true
+                }).
+                then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});
+
+            });
+        },
+
+
+        /**
+         * method is used to listen for scroll event of the page content
+         *
+         * @param event
+         */
+        pageContentScrolled: function(event){
+
+            // set the current scrolltop position
+            utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition = $(this).scrollTop();
+
+            if(utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition >
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.previousScrollPosition){ // user scrolled up
+                // set the current position as previous position
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.previousScrollPosition =
+                    utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition;
+
+                // check if the user has scrolled at least 10px up
+                if(utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition >= 10){
+                    // the user scrolled at least 10px up
+                    // check if the tab-bar is visible
+                    if($('.transfer-cash-tabbar').last().get(0).visible == true){ // tab-bar is visible
+
+                        $('.transfer-cash-tabbar').last().get(0).setTabbarVisibility(false); // hide the tab-bar
+                    }
+                }
+
+                return;
+            }
+
+            if(utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition <
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.previousScrollPosition){ // user scrolled down
+                // set the current position as previous position
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.previousScrollPosition =
+                    utopiasoftware.saveup.controller.transferCashBankPageViewModel.currentScrollPosition;
+
+                // check if the tabbar is hidden
+                if($('.transfer-cash-tabbar').last().get(0).visible == false){ // tab-bar is hidden
+
+                    $('.transfer-cash-tabbar').last().get(0).setTabbarVisibility(true); // show the tab-bar
+                }
+
+                return;
+            }
+        },
+
+        /**
+         * method is triggered when the sender account number autocomplete input is changed
+         *
+         * @param inputElem
+         */
+        senderAccountNumberChanged: function(inputElem){
+            // display the preloaders that block input so certain account information can be autofilled
+            $('.postcash-preloader-transfer-cash-bank-form-container', utopiasoftware.saveup.controller.
+                transferCashBankPageViewModel.formValidator.$element).css("display", "block");
+            // split the input value so can can extract just the recipient account number
+            var valueSplitArray = $(inputElem).val().split(" - ");
+            //get the account number from the array
+            var accountNumber = valueSplitArray.pop();
+            // get the user account object from secure storage using the retrieved account number
+            utopiasoftware.saveup.bankAccountOperations.getMyAccountByNumber(accountNumber).
+            then(function(acctObject){
+                // autofill the contents of the cash transfer form (sender section) with the contents of sender account object
+                if(! acctObject){ // account object is null
+                    throw "error";
+                }
+
+                $('#transfer-cash-bank-sender-choose-bank', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
+                $('#hidden-choose-recipient-bank-input', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
+
+                // remove any tooltip being displayed on the transfer cash form
+                $('[data-hint]', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).removeAttr("data-hint");
+
+
+                // update the display of the updated fields
+                //Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).material_select();
+
+                // hide the preloaders that block input, autofill has been completed
+                $('.postcash-preloader-transfer-cash-bank-form-container', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).css("display", "none");
+
+            }).
+            catch(function(){ // an error occurred OR user entered a recipient account that has not been previously saved
+
+                // update the display of the updated fields
+                //Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).material_select();
+
+                // hide the preloaders that block input
+                $('.postcash-preloader-transfer-cash-bank-form-container', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).css("display", "none");
+            });
+        },
+
+        /**
+         * method is triggered when the recipient account number autocomplete input is changed
+         *
+         * @param inputElem
+         */
+        recipientAccountNumberChanged: function(inputElem){
+            // display the preloaders that block input so certain account information can be autofilled
+            $('.postcash-preloader-transfer-cash-bank-form-container', utopiasoftware.saveup.controller.
+                transferCashBankPageViewModel.formValidator.$element).css("display", "block");
+            // split the input value so can can extract just the recipient account number
+            var valueSplitArray = $(inputElem).val().split(" - ");
+            //get the account number from the array
+            var accountNumber = valueSplitArray.pop();
+            // get the recipient account object from secure storage using the retrieved account number
+            utopiasoftware.saveup.savedRecipientsBankAccountOperations.getSavedRecipientAccountByNumber(accountNumber).
+            then(function(acctObject){
+                // autofill the contents of the cash transfer form (recipient section) with the contents of recipient account object
+                if(! acctObject){ // account object is null
+                    throw "error";
+                }
+
+                $('#transfer-cash-bank-recipient-choose-bank', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
+                $('#hidden-choose-recipient-bank-input', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).val(acctObject.flutterwave_bankCode);
+
+                // remove any tooltip being displayed on the transfer cash form
+                $('[data-hint]', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");
+                $('[data-hint]', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).removeAttr("data-hint");
+
+
+                // update the display of the updated fields
+                //Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).material_select();
+
+                // hide the preloaders that block input, autofill has been completed
+                $('.postcash-preloader-transfer-cash-bank-form-container', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).css("display", "none");
+
+            }).
+            catch(function(){ // an error occurred OR user entered a recipient account that has not been previously saved
+
+                // update the display of the updated fields
+                //Materialize.updateTextFields();
+                $('select', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).material_select();
+
+                // hide the preloaders that block input
+                $('.postcash-preloader-transfer-cash-bank-form-container', utopiasoftware.saveup.controller.
+                    transferCashBankPageViewModel.formValidator.$element).css("display", "none");
             });
         }
 

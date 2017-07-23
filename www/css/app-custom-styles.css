@@ -691,3 +691,33 @@ label[data-hint]:after {
     background-image: linear-gradient(45deg, #b388ff, #b388ff 50%, #b388ff 50%);
 }
 /** STYLE FOR TRANSFER-CASH-BANK HELP POPOVER ENDS **/
+
+
+/** STYLE FOR BANK SELECT ELEMENT IN TRANSFER-CASH-BANK PAGE BEGINS **/
+#transfer-cash-bank-page .page--material__content .dropdown-content{
+    max-height: 200px !important;
+    overflow-y: scroll;
+    background-color: rgb(237,231,246);
+    z-index: 6;
+}
+#transfer-cash-bank-page .page--material__content .dropdown-content li:hover,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.active,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.selected {
+    background-color: #b388ff;
+}
+#transfer-cash-bank-page .page--material__content .dropdown-content li.active.selected {
+    background-color: #b388ff;
+}
+#transfer-cash-bank-page .page--material__content .dropdown-content li:hover > span,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.active > span,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.selected > span,
+#transfer-cash-bank-page .page--material__content .dropdown-content li:hover > a,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.active > a,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.selected > a {
+    color: #ffffff;
+}
+#transfer-cash-bank-page .page--material__content .dropdown-content li.active.selected > span,
+#transfer-cash-bank-page .page--material__content .dropdown-content li.active.selected > a {
+    color: #ffffff;
+}
+/** STYLE FOR BANK SELECT ELEMENT IN TRANSFER-CASH-BANK PAGE ENDS **/

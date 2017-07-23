@@ -588,6 +588,44 @@ var utopiasoftware = {
             },
 
             /**
+             * method is used to retrieve data details of a specific user's bank account BASED ON THE ACCOUNT NUMBER
+             * @param bankAcctNumber {String} the bank account number of the specific account to be retrieved
+               * @returns {Promise} returns a promise that resolves to the
+             * data details of the specific user bank account, null if no data or rejects with an error
+             */
+            getMyAccountByNumber: function getMyAccountByNumber(bankAcctNumber) {
+
+                // return a Promise object for the method
+                return new Promise(function (resolve, reject) {
+                    // get all the user's accounts on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-user-bank-accounts' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).then(function (secureBankAcctDataArray) {
+                        secureBankAcctDataArray = JSON.parse(secureBankAcctDataArray); // convert the string data to an array object
+                        return secureBankAcctDataArray.find(function (arrayElem) {
+                            // find the right user's account based on the account number
+                            if (arrayElem.bankAccountNumber === bankAcctNumber) {
+                                // this is the bank acct that is required
+                                return true;
+                            }
+                        });
+                    }).then(function (bankAcctObject) {
+                        // get the bank account object
+                        if (!bankAcctObject) {
+                            // no bank account was discovered
+                            resolve(null); // resolve the promise with null
+                        } else {
+                            // a bank account was found
+                            resolve(bankAcctObject); // resolve the promise with the bank account object
+                        }
+                    }).catch(function (err) {
+                        // an error occurred OR no bank account was found
+                        reject(err); // reject the promise with an error
+                    });
+                });
+            },
+
+            /**
              * method is used to delete data details of a user's bank account
              * @param bankAcctId {String} the unique id of the specific bank account to be deleted
                * @returns {Promise} returns a promise that resolves when the bank account is deleted or rejects with an error
@@ -1176,20 +1214,22 @@ var utopiasoftware = {
             initialiseKinvey: function initialiseKinvey() {
 
                 // returns a Promise that resolves if library is initialised or rejects otherwise
-                return Kinvey.initialize({
-                    appKey: 'kid_ByQb8Q0S-',
-                    appSecret: '01d0e48b25124e71b1d21a57962b0d9f',
-                    appVersion: '1.0.0'
-                }).then(function () {
-                    // create an annonymous user for the app to use
-                    return Kinvey.User.signup(); // return an annonymous user
-                }).then(function () {
-                    return Kinvey.CustomEndpoint.execute('bank-transfer', {
-                        name: 'Fred Jones',
-                        eyes: 'Blue'
+                return new Promise(function (resolve, reject) {
+                    Kinvey.initialize({
+                        appKey: 'kid_ByQb8Q0S-',
+                        appSecret: '01d0e48b25124e71b1d21a57962b0d9f',
+                        appVersion: '1.0.0'
+                    }).then(function () {
+                        // login as the default user for the app to use
+                        return Kinvey.User.login({
+                            username: '_postcash',
+                            password: 'password'
+                        }); // return the default user
+                    }).then(function () {
+                        resolve(); // resolve the promise
+                    }).catch(function (err) {
+                        reject(err); // reject the promise
                     });
-                }).catch(function (err) {
-                    console.log(err);
                 });
             }
 
