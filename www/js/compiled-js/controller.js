@@ -1598,7 +1598,7 @@ utopiasoftware.saveup.controller = {
          */
         verifyAcctBottomSheetListItemClicked: function(label){
 
-            if(label == "add to my recipients"){ // 'Transfer Cash to account' button was clicked
+            if(label == "transfer cash"){ // 'Transfer Cash to account' button was clicked
 
                 return;
             }
