@@ -1184,9 +1184,70 @@ var utopiasoftware = {
                         reject(err); // reject promise
                     });
                 });
+            },
+
+            /**
+             * method is used update the data contained within the stored transaction history on
+             * the user's device. The new data updates or creates new properties within the
+             * transaction history object
+             *
+             * @param transactionRef {String} the unique moneywave reference for the transaction
+             *
+             * @param newData {Object} the new data object to be added/updated to the transaction
+             */
+            updateTransactionHistoryData: function updateTransactionHistoryData(transactionRef, newData) {
+
+                // return a Promise which resolves when transaction history data status has been updated successfully or rejects otherwise
+                return new Promise(function (resolve, reject) {
+                    // get the transaction history data collection on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-transaction-history-collection' })).then(function (instanceId) {
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function (errObject) {
+                        if (errObject.code == 1) {
+                            // the secure storage has not been created before
+                            return '[]'; // return the empty array as string
+                        } else {
+                            // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).then(function (transactionDataArray) {
+                        transactionDataArray = JSON.parse(transactionDataArray); // convert the string data to an object
+                        // find the specified transaction using the provided movewave reference
+                        var transactionDataIndex = transactionDataArray.findIndex(function (arrayElem) {
+                            if (arrayElem.flutterChargeReference == transactionRef) {
+                                return true;
+                            }
+                        });
+
+                        // if element was found, update the transaction status with the newStatus provided
+                        if (transactionDataIndex > -1) {
+                            // transaction data object was found
+                            // update the transaction data object with the new data object
+                            Object.assign(transactionDataArray[transactionDataIndex], newData);
+                        }
+
+                        // store the updated transaction history collection securely on user's device
+                        return intel.security.secureData.createFromData({ 'data': JSON.stringify(transactionDataArray) });
+                    }).then(function (instanceId) {
+                        return intel.security.secureStorage.write({ 'id': 'postcash-transaction-history-collection',
+                            'instanceID': instanceId });
+                    }).then(function () {
+                        // new transaction object has been added
+                        // resolve promise
+                        resolve();
+                    }).catch(function (err) {
+                        // there was an error and account could NOT be added
+                        reject(err); // reject promise
+                    });
+                });
             }
+
         },
 
+        /**
+         * object encapsulates some operations/manipulations  that can be performed on
+         * the KINVEY BaaS platform
+         */
         kinveyBaasOperations: {
 
             /**

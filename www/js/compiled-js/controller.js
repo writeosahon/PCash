@@ -5424,7 +5424,7 @@ utopiasoftware.saveup.controller = {
                     ons.notification.alert({title: "Cash Transfer Failed",
                         messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                         'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
-                        '<br>You can check this transaction status again at... OR resend the cash transfer' + '</span>',
+                        '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
                         cancelable: true
                     }).
                     then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});
@@ -5560,7 +5560,7 @@ utopiasoftware.saveup.controller = {
                 ons.notification.alert({title: "Cash Transfer Failed",
                     messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                     'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
-                    '<br>You can check this transaction status again at... OR resend the cash transfer' + '</span>',
+                    '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
                     cancelable: true
                 }).
                 then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});
@@ -6436,20 +6436,23 @@ utopiasoftware.saveup.controller = {
                         removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');
 
                         // hide ALL the bottom-toolbar blocks
-                        $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display", "none");
-                        $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
-                        $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
+                        $('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display", "none");
+                        $('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display", "none");
+                        $('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display", "none");
 
                         $('#loader-modal').get(0).hide(); // hide loader
-                        return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                        return Promise.
+                        all([businessLogicResponse, $('.transfer-cash-bank-carousel').get(0).next({animation: 'none'})]);
                     }
                     else{
                         throw businessLogicResponse; // cash transfer could not be authorised
                     }
                 }).
-                then(function(){
+                then(function(dataArray){ // holds the business logic response
+
+                    // update the transaction history for the cash transfer (bank) transaction to mark success
                     return utopiasoftware.saveup.transactionHistoryOperations.
-                    updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
+                    updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"), dataArray[0]);
                 }).
                 then(function(){
                     // show transaction confirmation modal
@@ -6462,16 +6465,25 @@ utopiasoftware.saveup.controller = {
                     }, 1000);
                 }).
                 catch(function(error){
-
-                    $('#loader-modal').get(0).hide(); // hide loader
-
-                    ons.notification.alert({title: "Cash Transfer Failed",
-                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
-                        '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
-                        cancelable: true
+                    // update the transaction history for the cash transfer (bank) transaction to mark failure
+                    utopiasoftware.saveup.transactionHistoryOperations.
+                    updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"), error).
+                    then(function(){
+                        return $('#loader-modal').get(0).hide(); // hide loader
                     }).
-                    then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});
+                    then(function(){
+                       return ons.notification.alert({title: "Cash Transfer Failed",
+                           messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                           'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
+                           '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
+                           cancelable: true
+                       });
+                    }).
+                    then(function(){
+                        $('#app-main-navigator').get(0).resetToPage('main-menu-page.html');
+                    }).catch(function(){
+                        $('#loader-modal').get(0).hide();
+                    });
 
                 });
             }
