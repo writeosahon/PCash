@@ -5229,6 +5229,7 @@ utopiasoftware.saveup.controller = {
                 }
             }).
             then(function(responseData){ // securely store the transaction history from the responseData on the user's device
+                responseData.data.transfer.postcash_transaction_type = "Cash Transfer (Card)"; // set the postcash transaction type
                 return Promise.all([utopiasoftware.saveup.transactionHistoryOperations.
                 addTransactionHistory(responseData.data.transfer), Promise.resolve(responseData)]);
             }).
@@ -6173,7 +6174,7 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.model.appUserDetails.lastName) + Date.now() + "@mymail.com",
                         apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
                         medium: "mobile",
-                        fee: 0,
+                        fee: utopiasoftware.saveup.model.fee + 45.00,
                         amount: kendo.parseFloat($('#transfer-cash-bank-amount', '#transfer-cash-bank-page').val())
 
                     };
@@ -6227,6 +6228,7 @@ utopiasoftware.saveup.controller = {
                 }
             }).
             then(function(responseData){ // securely store the transaction history from the responseData on the user's device
+                responseData.data.transfer.postcash_transaction_type = "Cash Transfer (Bank)"; // set the postcash transaction type
                 return Promise.all([utopiasoftware.saveup.transactionHistoryOperations.
                 addTransactionHistory(responseData.data.transfer), Promise.resolve(responseData)]);
             }).
@@ -6341,7 +6343,7 @@ utopiasoftware.saveup.controller = {
                 utopiasoftware.saveup.moneyWaveObject.useToken.
                 then(function(token){
                     secureToken = token; // assign the retrieved authorization token
-
+//todo
                     // initiate the cash transfer authorisation check
                     return new Promise(function(resolve, reject){
                         var cashTransferAuthorisation = $.ajax(
@@ -6362,7 +6364,10 @@ utopiasoftware.saveup.controller = {
 
                         // server responded to cash transfer authorisation check
                         cashTransferAuthorisation.done(function(responseData){
-                            if(responseData.status === "success"){ // the server responded with a successful transfer authorisation
+                            if(responseData.status === "success" &&
+                            responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED") > -1
+                            && responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1){ // the server responded with a successful transfer authorisation
+
                                 resolve(responseData); // resolve the cash transfer authorisation promise
                             }
                             else { // the server responded unsuccessfully
@@ -6376,8 +6381,44 @@ utopiasoftware.saveup.controller = {
                         });
                     });
                 }).
-                then(function(responseData){
-                    if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase() == "APPROVED"){ // cash transfer was success
+                then(function(responseData){ // send the server data to the postcash business logic container
+                    // create the data to be sent to the postcash business logic container
+                    var transferData = {
+                        transferData: responseData.data,
+                        authorizationToken: secureToken,
+                        postcash_fee: utopiasoftware.saveup.model.fee,
+                        postcash_transferDetails: {
+                            narration: $('#transfer-cash-bank-narration', '#transfer-cash-bank-page').val(),
+                            sender_bank: $('#transfer-cash-bank-sender-choose-bank', '#transfer-cash-bank-page').val(),
+                            sender_account_number:
+                             $('#transfer-cash-bank-sender-account-name', '#transfer-cash-bank-page').val().split(" - ").pop(),
+                            recipient_bank: $('#transfer-cash-bank-recipient-choose-bank', '#transfer-cash-bank-page').val(),
+                            recipient_account_number:
+                             $('#transfer-cash-bank-recipient-account-name', '#transfer-cash-bank-page').val().split(" - ").pop()
+                        }
+                    };
+
+                    // call the method to check if the kinvey library has been initialised
+                    return new Promise(function(resolve, reject){
+                        utopiasoftware.saveup.kinveyBaasOperations.checkKinveyInitialised().
+                        then(function(){ // the kinvey Baas library has already been initialised
+                            resolve([transferData, {}]); // resolve Promise with the data required to take the next step in the cash transfer process
+                        }, function(){ // kinvey has NOT been initialised, so initialise it
+                            resolve(Promise.all([transferData, utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()]));
+                        })
+                    });
+                }).
+                then(function(contentArray){ // call the method to send the complete the transfer via postcash business logic container
+                    return utopiasoftware.saveup.kinveyBaasOperations.transferCashByBank(contentArray[0]);
+                }).
+                then(function(businessLogicResponse){ // process the response from the business logic container
+                    // check that the transfer was completed successfully
+                    if(businessLogicResponse.walletToWallet.status == "success" &&
+                    businessLogicResponse.walletToWallet.data.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1 &&
+                        businessLogicResponse.walletToAccount.status == "success" &&
+                        businessLogicResponse.walletToAccount.data.data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1
+                    ){
+                        // cash transfer was successful
                         // update the transaction indicators
                         $('.postcash-pay-progress .col:eq(0) span:eq(0)').
                         removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');
@@ -6403,7 +6444,7 @@ utopiasoftware.saveup.controller = {
                         return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
                     }
                     else{
-                        throw responseData; // cash transfer could not be authorised
+                        throw businessLogicResponse; // cash transfer could not be authorised
                     }
                 }).
                 then(function(){
@@ -6427,7 +6468,7 @@ utopiasoftware.saveup.controller = {
                     ons.notification.alert({title: "Cash Transfer Failed",
                         messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                         'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
-                        '<br>You can check this transaction status again at... OR resend the cash transfer' + '</span>',
+                        '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
                         cancelable: true
                     }).
                     then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});

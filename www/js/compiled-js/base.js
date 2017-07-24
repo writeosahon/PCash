@@ -1259,13 +1259,29 @@ var utopiasoftware = {
                         }); // return the default user
                     }).
                     then(function(){
-                        resolve(); // resolve the promise
+                        resolve({}); // resolve the promise
                     }).
                     catch(function(err){
                         reject(err); // reject the promise
                     });
                 });
 
+            },
+
+
+            /**
+             * method is used to send a cash transfer (via bank) request to a recipient.
+             * the request is routed through the buinesss logic (serverless) container
+             *
+             * @param transferData {Object} the parameters to be sent to the business logic container
+             *
+             * @returns {Promise} a promise that resolves when the the execution of the business logic
+             * is completed successfully; OR rejects whn the execution of the business logic fails
+             */
+            transferCashByBank: function(transferData){
+
+                // call the Kinvey business logic to execute the bank transfer
+                return Kinvey.CustomEndpoint.execute('bank-transfer', transferData);
             }
 
 
