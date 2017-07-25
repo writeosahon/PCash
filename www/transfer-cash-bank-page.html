@@ -234,7 +234,7 @@
 
             <iframe id="transfer-cash-bank-authorise-iframe"
                     src="" style="width: 90%; height: 50%; margin-left: 5%; margin-right: 5%; display: none;
-            position: fixed; bottom: 0"></iframe>
+            position: fixed; bottom: 0"></iframe> <!-- iframe no longer NEEDS to be used, so leave it hidden -->
         </ons-carousel-item>
         <ons-carousel-item>
             <!-- empty div -->
@@ -260,6 +260,9 @@
                 <ons-button id="transfer-cash-bank-cancel-button-2" style="background-color: red;"
                             onclick="$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');">
                     <ons-icon icon="md-close-circle"></ons-icon> Cancel</ons-button>
+                <ons-button id="transfer-cash-bank-proceed-button"  style="background-color: #B388FF;"
+                            onclick="utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankAuthorizeProceed()">
+                    <ons-icon icon="md-check-circle"></ons-icon> Authorize</ons-button>
             </ons-col>
         </ons-row>
 

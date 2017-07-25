@@ -1257,13 +1257,15 @@ var utopiasoftware = {
              * and  rejects otherwise
              */
             checkKinveyInitialised: function checkKinveyInitialised() {
-                if (!Kinvey.User || !Kinvey.User.getActiveUser()) {
-                    // user has not been created, so kinvey has not been initialised
-                    return Promise.reject({}); // return a rejected promise
-                } else {
-                    // user has been created, so kinvey has been initialised
-                    return Promise.resolve({}); // return a resolved promise
-                }
+                return new Promise(function (resolve, reject) {
+                    if (!Kinvey.User || !Kinvey.User.getActiveUser()) {
+                        // user has not been created, so kinvey has not been initialised
+                        reject({}); // reject the promise
+                    } else {
+                        // user has been created, so kinvey has been initialised
+                        resolve({}); // resolve the promise
+                    }
+                });
             },
 
             /**

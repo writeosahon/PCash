@@ -153,6 +153,9 @@ utopiasoftware.saveup.controller = {
         // set status bar color
         StatusBar.backgroundColorByHexString("#000000");
 
+        // prepare the inapp browser plugin
+        window.open = cordova.InAppBrowser.open;
+
         // use Promises to load the other cordova plugins
         new Promise(function(resolve, reject){
             // Get device UUID
@@ -3443,6 +3446,8 @@ utopiasoftware.saveup.controller = {
                             // display the account name to the user (based on remote validation result)
                             $('#add-account-page #add-account-account-name').val(utopiasoftware.saveup.controller.
                                 addAccountPageViewModel.bankAccountName);
+                            // update the display of text fields
+                            Materialize.updateTextFields();
                         }
                         else{ // user did not ask for remote account number validation
                         }
@@ -4435,6 +4440,8 @@ utopiasoftware.saveup.controller = {
                             // display the account name to the user (based on remote validation result)
                             $('#add-recipient-page #add-recipient-account-name').val(utopiasoftware.saveup.controller.
                                 addRecipientPageViewModel.bankAccountName);
+                            // update input field display
+                            Materialize.updateTextFields();
                         }
                         else{ // user did not ask for remote account number validation
                         }
@@ -6174,6 +6181,7 @@ utopiasoftware.saveup.controller = {
                         utopiasoftware.saveup.model.appUserDetails.lastName) + Date.now() + "@mymail.com",
                         apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
                         medium: "mobile",
+                        recipient: "wallet",
                         fee: utopiasoftware.saveup.model.fee + 45.00,
                         amount: kendo.parseFloat($('#transfer-cash-bank-amount', '#transfer-cash-bank-page').val())
 
@@ -6253,22 +6261,17 @@ utopiasoftware.saveup.controller = {
                 // store the transaction id & transaction reference in the session storage
                 window.sessionStorage.setItem("transaction_id", responseData.data.transfer.id);
                 window.sessionStorage.setItem("transaction_ref", responseData.data.transfer.flutterChargeReference);
+                window.sessionStorage.setItem("transaction_authurl", responseData.data.authurl || "");
 
                 // hide the transfer bottom-toolbar
                 $('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display", "none");
 
-                // check whether to display the authorisation form OR authorisation iframe
+                // check whether to display the authorisation form OR inapp browser window
                 if($('#transfer-cash-bank-sender-choose-bank', '#transfer-cash-bank-form').val() != "044"){ // NOT access bank
 
-                    // update the src attribute for the authorization iframe
-                    $('#transfer-cash-bank-authorise-iframe', '#transfer-cash-bank-page').attr("src",
-                        responseData.data.authurl);
-
-                    //  display the authorization iframe
-                    $('#transfer-cash-bank-authorise-iframe', '#transfer-cash-bank-page').css("display", "block");
                     // hide the authorization form
                     $('#transfer-cash-bank-authorise-form', '#transfer-cash-bank-page').css("display", "none");
-                    // disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
+                    // disable the 'Authorize' button, show the bank authorise bottom toolbar & hide the pin authorise bottom toolbar
                     $('#transfer-cash-bank-authorise-button').attr("disabled", true);
                     $('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display", "block");
                     $('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display", "none");
@@ -6365,8 +6368,8 @@ utopiasoftware.saveup.controller = {
                         // server responded to cash transfer authorisation check
                         cashTransferAuthorisation.done(function(responseData){
                             if(responseData.status === "success" &&
-                            responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED") > -1
-                            && responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1){ // the server responded with a successful transfer authorisation
+                                (responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED") > -1
+                            || responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1)){ // the server responded with a successful transfer authorisation
 
                                 resolve(responseData); // resolve the cash transfer authorisation promise
                             }
@@ -6488,6 +6491,53 @@ utopiasoftware.saveup.controller = {
                 });
             }
 
+        },
+
+        /**
+         * method is used to trigger the initiation of the Authorization process of
+         * cash transfer with Bank Account
+         */
+        transferCashBankAuthorizeProceed: function(){
+
+            // create an inapp browser to handle the cash transfer bank account authorisation
+            var bankAccountAuthorizationBrowser = cordova.InAppBrowser.
+            open(window.encodeURI(window.sessionStorage.getItem("transaction_authurl")),
+                '_blank',
+                "location=no,clearcache=yes,clearsessioncache=yes,zoom=no,hardwareback=no,closebuttoncaption=Close,disallowoverscroll=no,toolbar=no,enableViewportScale=no,presentationstyle=fullscreen");
+
+            // add listener for the various in-app browser events
+            bankAccountAuthorizationBrowser.addEventListener("loadstop", function(browserEvent){
+                // check if the url being loaded is that for the successful transaction redirect
+                if(browserEvent.url.startsWith("https://postcash.000webhostapp.com/transfer-cash-bank.html")){ // the call url was triggered
+                    // inform the inapp-browser that the browser is about to be auto-closed
+                    bankAccountAuthorizationBrowser.autoClosed = true;
+                    bankAccountAuthorizationBrowser.close(); // close the browser
+                    // call the method to handle the response of the bank authorisation
+                    window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.
+                        transferCashBankRemoteAuthorize, 0);
+                }
+            });
+            // an error listener for the in-app browser
+            bankAccountAuthorizationBrowser.addEventListener("loaderror", function(browserEvent){
+
+                // inform the inapp-browser that the browser can be auto-closed. This will stop the app from showing additional error messages when the in-app browser is closed by the user
+                bankAccountAuthorizationBrowser.autoClosed = true;
+                // call the method to handle the response of the bank authorisation
+                window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.
+                    transferCashBankRemoteAuthorize, 0);
+            });
+
+
+            // an exit listener for the in-app browser
+            bankAccountAuthorizationBrowser.addEventListener("exit", function(browserEvent){
+
+                // check if the in-app browser was auto-closed or not
+                if(! bankAccountAuthorizationBrowser.autoClosed){ // in-app browser was manually closed by user
+                    // call the method to handle the response of the bank authorisation
+                    window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.
+                        transferCashBankRemoteAuthorize, 0);
+                }
+            });
         },
 
 

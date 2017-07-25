@@ -50,7 +50,8 @@ utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardO
 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize();return;// exit method
 }},false);try{// lock the orientation of the device to 'PORTRAIT'
 screen.lockOrientation('portrait');}catch(err){}// set status bar color
-StatusBar.backgroundColorByHexString("#000000");// use Promises to load the other cordova plugins
+StatusBar.backgroundColorByHexString("#000000");// prepare the inapp browser plugin
+window.open=cordova.InAppBrowser.open;// use Promises to load the other cordova plugins
 new Promise(function(resolve,reject){// Get device UUID
 window.plugins.uniqueDeviceID.get(resolve,reject);}).then(function(deviceUUID){utopiasoftware.saveup.model.deviceUUID=deviceUUID;return;}).then(function(){// load the securely stored / encrypted data into the app
 // check if the user is currently logged in
@@ -1127,7 +1128,8 @@ if($(fieldInstance.$element).is('#add-account-number')){// it is the account num
 $('#add-account-number-validation-loading',$thisPage).css("display","none");// check if the user requested for remote account number validation
 if($('#add-account-verify-account').is(":checked")){//user asked for remote validation
 // display the account name to the user (based on remote validation result)
-$('#add-account-page #add-account-account-name').val(utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName);}else{// user did not ask for remote account number validation
+$('#add-account-page #add-account-account-name').val(utopiasoftware.saveup.controller.addAccountPageViewModel.bankAccountName);// update the display of text fields
+Materialize.updateTextFields();}else{// user did not ask for remote account number validation
 }}});// listen for form validation success
 utopiasoftware.saveup.controller.addAccountPageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.addAccountPageViewModel.addAccountFormValidated);/** dynamically create the contents of the various select elements **/// retrieve the sorted array of banks
 Promise.resolve(utopiasoftware.saveup.sortBanksData()).then(function(bankArrayData){var optionTags="";// string to hold all created option tags
@@ -1463,7 +1465,8 @@ if($(fieldInstance.$element).is('#add-recipient-account-number')){// it is the a
 $('#add-recipient-account-number-validation-loading',$thisPage).css("display","none");// check if the user requested for remote account number validation
 if($('#add-recipient-account-verify-account').is(":checked")){//user asked for remote validation
 // display the account name to the user (based on remote validation result)
-$('#add-recipient-page #add-recipient-account-name').val(utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName);}else{// user did not ask for remote account number validation
+$('#add-recipient-page #add-recipient-account-name').val(utopiasoftware.saveup.controller.addRecipientPageViewModel.bankAccountName);// update input field display
+Materialize.updateTextFields();}else{// user did not ask for remote account number validation
 }}});// listen for form validation success
 utopiasoftware.saveup.controller.addRecipientPageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.addRecipientPageViewModel.addRecipientFormValidated);/** dynamically create the contents of the various select elements **/// retrieve the sorted array of banks
 Promise.resolve(utopiasoftware.saveup.sortBanksData()).then(function(bankArrayData){var optionTags="";// string to hold all created option tags
@@ -2061,7 +2064,7 @@ return utopiasoftware.saveup.moneyWaveObject.useToken;}else{// user terminated t
 throw null;}}).then(function(token){if(token===null){// user already terminated transfer
 throw null;}else{// use retrieved token to initiate transfer
 //create the cash transfer data
-var cashTransferData={firstname:utopiasoftware.saveup.model.appUserDetails.firstName,lastname:utopiasoftware.saveup.model.appUserDetails.lastName,phonenumber:utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,email:utopiasoftware.saveup.model.appUserDetails.firstName+utopiasoftware.saveup.model.appUserDetails.lastName+Date.now()+"@mymail.com",apiKey:utopiasoftware.saveup.moneyWaveObject.key.apiKey,medium:"mobile",fee:utopiasoftware.saveup.model.fee+45.00,amount:kendo.parseFloat($('#transfer-cash-bank-amount','#transfer-cash-bank-page').val())};// check if user want to transfer using any of the approve banks (apart from access bank)
+var cashTransferData={firstname:utopiasoftware.saveup.model.appUserDetails.firstName,lastname:utopiasoftware.saveup.model.appUserDetails.lastName,phonenumber:utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,email:utopiasoftware.saveup.model.appUserDetails.firstName+utopiasoftware.saveup.model.appUserDetails.lastName+Date.now()+"@mymail.com",apiKey:utopiasoftware.saveup.moneyWaveObject.key.apiKey,medium:"mobile",recipient:"wallet",fee:utopiasoftware.saveup.model.fee+45.00,amount:kendo.parseFloat($('#transfer-cash-bank-amount','#transfer-cash-bank-page').val())};// check if user want to transfer using any of the approve banks (apart from access bank)
 if($('#transfer-cash-bank-sender-choose-bank','#transfer-cash-bank-form').val()!="044"){// user wants to transfer uding other banks NOT access bank
 cashTransferData.charge_with="ext_account";cashTransferData.charge_auth="INTERNETBANKING";cashTransferData.sender_bank=$('#transfer-cash-bank-sender-choose-bank','#transfer-cash-bank-form').val();cashTransferData.redirecturl="https://postcash.000webhostapp.com/transfer-cash-bank.html";}// initiate the cash transfer request
 return new Promise(function(resolve,reject){var cashTransferRequest=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer",type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
@@ -2077,13 +2080,11 @@ return Promise.all([utopiasoftware.saveup.transactionHistoryOperations.addTransa
 throw null;}var responseData=responseDataArray[1];// retrieve the response from the server
 // update the display info for the bank transaction
 $('#transfer-cash-bank-authorize-amount','#transfer-cash-bank-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToSend),"n2"));$('#transfer-cash-bank-authorize-fee','#transfer-cash-bank-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.chargedFee),"n2"));$('#transfer-cash-bank-authorize-total','#transfer-cash-bank-page').html(kendo.toString(kendo.parseFloat(responseData.data.transfer.amountToCharge),"n2"));$('#transfer-cash-bank-authorize-message','#transfer-cash-bank-page').html(responseData.data.transfer.flutterChargeResponseMessage);// store the transaction id & transaction reference in the session storage
-window.sessionStorage.setItem("transaction_id",responseData.data.transfer.id);window.sessionStorage.setItem("transaction_ref",responseData.data.transfer.flutterChargeReference);// hide the transfer bottom-toolbar
-$('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display","none");// check whether to display the authorisation form OR authorisation iframe
+window.sessionStorage.setItem("transaction_id",responseData.data.transfer.id);window.sessionStorage.setItem("transaction_ref",responseData.data.transfer.flutterChargeReference);window.sessionStorage.setItem("transaction_authurl",responseData.data.authurl||"");// hide the transfer bottom-toolbar
+$('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display","none");// check whether to display the authorisation form OR inapp browser window
 if($('#transfer-cash-bank-sender-choose-bank','#transfer-cash-bank-form').val()!="044"){// NOT access bank
-// update the src attribute for the authorization iframe
-$('#transfer-cash-bank-authorise-iframe','#transfer-cash-bank-page').attr("src",responseData.data.authurl);//  display the authorization iframe
-$('#transfer-cash-bank-authorise-iframe','#transfer-cash-bank-page').css("display","block");// hide the authorization form
-$('#transfer-cash-bank-authorise-form','#transfer-cash-bank-page').css("display","none");// disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
+// hide the authorization form
+$('#transfer-cash-bank-authorise-form','#transfer-cash-bank-page').css("display","none");// disable the 'Authorize' button, show the bank authorise bottom toolbar & hide the pin authorise bottom toolbar
 $('#transfer-cash-bank-authorise-button').attr("disabled",true);$('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display","block");$('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display","none");}else{}// display the authorization form
 /*
                     $('#transfer-cash-card-authorise-form', '#transfer-cash-card-page').css("display", "block");
@@ -2115,7 +2116,7 @@ utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){secureToken=
 // initiate the cash transfer authorisation check
 return new Promise(function(resolve,reject){var cashTransferAuthorisation=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer/"+window.sessionStorage.getItem("transaction_id"),type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
 processData:false,data:JSON.stringify({})});// server responded to cash transfer authorisation check
-cashTransferAuthorisation.done(function(responseData){if(responseData.status==="success"&&responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED")>-1&&responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("SUCCESSFUL")>-1){// the server responded with a successful transfer authorisation
+cashTransferAuthorisation.done(function(responseData){if(responseData.status==="success"&&(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED")>-1||responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("SUCCESSFUL")>-1)){// the server responded with a successful transfer authorisation
 resolve(responseData);// resolve the cash transfer authorisation promise
 }else{// the server responded unsuccessfully
 reject(responseData);// reject the cash transfer authorisation promise
@@ -2141,6 +2142,23 @@ return $('#financial-operations-success-modal').get(0).show();}).then(function()
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){// update the transaction history for the cash transfer (bank) transaction to mark failure
 utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"),error).then(function(){return $('#loader-modal').get(0).hide();// hide loader
 }).then(function(){return ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true});}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');}).catch(function(){$('#loader-modal').get(0).hide();});});}},/**
+         * method is used to trigger the initiation of the Authorization process of
+         * cash transfer with Bank Account
+         */transferCashBankAuthorizeProceed:function transferCashBankAuthorizeProceed(){// create an inapp browser to handle the cash transfer bank account authorisation
+var bankAccountAuthorizationBrowser=cordova.InAppBrowser.open(window.encodeURI(window.sessionStorage.getItem("transaction_authurl")),'_blank',"location=no,clearcache=yes,clearsessioncache=yes,zoom=no,hardwareback=no,closebuttoncaption=Close,disallowoverscroll=no,toolbar=no,enableViewportScale=no,presentationstyle=fullscreen");// add listener for the various in-app browser events
+bankAccountAuthorizationBrowser.addEventListener("loadstop",function(browserEvent){// check if the url being loaded is that for the successful transaction redirect
+if(browserEvent.url.startsWith("https://postcash.000webhostapp.com/transfer-cash-bank.html")){// the call url was triggered
+// inform the inapp-browser that the browser is about to be auto-closed
+bankAccountAuthorizationBrowser.autoClosed=true;bankAccountAuthorizationBrowser.close();// close the browser
+// call the method to handle the response of the bank authorisation
+window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize,0);}});// an error listener for the in-app browser
+bankAccountAuthorizationBrowser.addEventListener("loaderror",function(browserEvent){// inform the inapp-browser that the browser can be auto-closed. This will stop the app from showing additional error messages when the in-app browser is closed by the user
+bankAccountAuthorizationBrowser.autoClosed=true;// call the method to handle the response of the bank authorisation
+window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize,0);});// an exit listener for the in-app browser
+bankAccountAuthorizationBrowser.addEventListener("exit",function(browserEvent){// check if the in-app browser was auto-closed or not
+if(!bankAccountAuthorizationBrowser.autoClosed){// in-app browser was manually closed by user
+// call the method to handle the response of the bank authorisation
+window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize,0);}});},/**
          * method is used to listen for scroll event of the page content
          *
          * @param event
