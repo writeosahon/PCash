@@ -68,6 +68,14 @@ utopiasoftware.saveup.controller = {
             $('#security-pin-lock-modal').get(0).onDeviceBackButton =
                 utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked;
 
+            // add back button listener for the transfer-cash-bank-authorise MODAL
+            $('#transfer-cash-bank-authorise-modal').get(0).onDeviceBackButton = function(){
+                // hide the transfer-cash-bank-authorise-modal
+                $('#transfer-cash-bank-authorise-modal').get(0).hide();
+                // change the src for transfer-cash-bank-authorise-iframe to reset
+                $('#transfer-cash-bank-authorise-iframe').attr("src", "");
+            };
+
         });
 
         /** ADD CUSTOM VALIDATORS FOR PARSLEY HERE **/
@@ -130,6 +138,8 @@ utopiasoftware.saveup.controller = {
 
         // add listener for when a message is posted to the app by an iframe during cash transfers
         window.addEventListener("message", function(event){
+            try{
+
             // check that event is from the expected origin & carrying the proper message
             if(event.origin == "https://postcash.000webhostapp.com" && event.data == "c done"){
                 // call the method to handle the event i.e transfer-cash-card authorisation
@@ -137,11 +147,22 @@ utopiasoftware.saveup.controller = {
                 return; // exit method
             }
 
-            if(event.origin == "https://postcash.000webhostapp.com" && event.data == "b done"){
-                // call the method to handle the event i.e transfer-cash-bank remote authorisation
-                utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize();
+            if(event.origin == "https://postcash.000webhostapp.com" && event.data == "b loaded"){
+                // call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 1");
                 return; // exit method
             }
+            if(event.origin == "https://postcash.000webhostapp.com" && JSON.parse(event.data) &&
+                JSON.parse(event.data).state == "b completed"){
+                // call the method to handle the event i.e transfer-cash-bank remote authorisation stage 2
+                utopiasoftware.saveup.controller.transferCashBankPageViewModel.
+                transferCashBankRemoteAuthorize("stage 2", JSON.parse(event.data));
+                return; // exit method
+            }
+          }
+          catch(err){
+              ///
+          }
         }, false);
 
         try {
@@ -6333,15 +6354,17 @@ utopiasoftware.saveup.controller = {
          * The transfer is thereafter completed on the app's remote business logic container
          *
          */
-        transferCashBankRemoteAuthorize: function(){
+        transferCashBankRemoteAuthorize: function(authorizationStage, authorizationResponseData){
 
             var secureToken = null; // holds the secure transaction token
 
-            // check if user has completed transfer authorisation
-            if(true){ // user completed transfer authorisation
+            // check if user has completed stage 1 of transfer authorisation
+            if(authorizationStage == "stage 1"){ // user completed stage 1 of transfer authorisation
                 // display message to user
                 $('#loader-modal-message').html("Checking Authorization...");
                 $('#loader-modal').get(0).show(); // show loader
+                // hide the transfer-cash-authorise modal, but let the iframe continue authorisation process
+                $('#transfer-cash-bank-authorise-modal').get(0).hide();
                 // get the authorisation token
                 utopiasoftware.saveup.moneyWaveObject.useToken.
                 then(function(token){
@@ -6401,25 +6424,48 @@ utopiasoftware.saveup.controller = {
                         }
                     };
 
-                    // call the method to check if the kinvey library has been initialised
-                    return new Promise(function(resolve, reject){
-                        utopiasoftware.saveup.kinveyBaasOperations.checkKinveyInitialised().
-                        then(function(){ // the kinvey Baas library has already been initialised
-                            resolve([transferData, {}]); // resolve Promise with the data required to take the next step in the cash transfer process
-                        }, function(){ // kinvey has NOT been initialised, so initialise it
-                            resolve(Promise.all([transferData, utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()]));
-                        })
+                    // post the transfer details to the transfer authorization iframe for stage 2 processing
+                    $('#transfer-cash-bank-authorise-modal #transfer-cash-bank-authorise-iframe').get(0).
+                        contentWindow.postMessage(JSON.stringify(transferData), "https://postcash.000webhostapp.com");
+                }).
+                catch(function(error){
+                    // update the transaction history for the cash transfer (bank) transaction to mark failure
+                    utopiasoftware.saveup.transactionHistoryOperations.
+                    updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"), error).
+                    then(function(){
+                        return $('#loader-modal').get(0).hide(); // hide loader
+                    }).
+                    then(function(){
+                        console.log("ERROR", error);
+                       return ons.notification.alert({title: "Cash Transfer Failed",
+                           messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                           'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
+                           '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
+                           cancelable: true
+                       });
+                    }).
+                    then(function(){
+                        $('#app-main-navigator').get(0).resetToPage('main-menu-page.html');
+                    }).catch(function(){
+                        $('#loader-modal').get(0).hide();
                     });
-                }).
-                then(function(contentArray){ // call the method to send the complete the transfer via postcash business logic container
-                    return utopiasoftware.saveup.kinveyBaasOperations.transferCashByBank(contentArray[0]);
-                }).
-                then(function(businessLogicResponse){ // process the response from the business logic container
+
+                });
+            }
+
+            // check if user has completed stage 2 of transfer authorisation
+            if(authorizationStage == "stage 2"){ // user has completed stage 2 of transfer authorisation
+                // display message to user
+                $('#loader-modal-message').html("Checking Authorization...");
+                $('#loader-modal').get(0).show(); // show loader
+
+                Promise.resolve(authorizationResponseData).
+                then(function(authorizationResponseData){ // process the response gotten from the authorization iframe
                     // check that the transfer was completed successfully
-                    if(businessLogicResponse.walletToWallet.status == "success" &&
-                    businessLogicResponse.walletToWallet.data.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1 &&
-                        businessLogicResponse.walletToAccount.status == "success" &&
-                        businessLogicResponse.walletToAccount.data.data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1
+                    if(authorizationResponseData.walletToWallet.status == "success" &&
+                        authorizationResponseData.walletToWallet.data.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1 &&
+                        authorizationResponseData.walletToAccount.status == "success" &&
+                        authorizationResponseData.walletToAccount.data.data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL") > -1
                     ){
                         // cash transfer was successful
                         // update the transaction indicators
@@ -6445,10 +6491,10 @@ utopiasoftware.saveup.controller = {
 
                         $('#loader-modal').get(0).hide(); // hide loader
                         return Promise.
-                        all([businessLogicResponse, $('.transfer-cash-bank-carousel').get(0).next({animation: 'none'})]);
+                        all([authorizationResponseData, $('.transfer-cash-bank-carousel').get(0).next({animation: 'none'})]);
                     }
                     else{
-                        throw businessLogicResponse; // cash transfer could not be authorised
+                        throw authorizationResponseData; // cash transfer could not be authorised
                     }
                 }).
                 then(function(dataArray){ // holds the business logic response
@@ -6476,12 +6522,12 @@ utopiasoftware.saveup.controller = {
                     }).
                     then(function(){
                         console.log("ERROR", error);
-                       return ons.notification.alert({title: "Cash Transfer Failed",
-                           messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                           'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
-                           '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
-                           cancelable: true
-                       });
+                        return ons.notification.alert({title: "Cash Transfer Failed",
+                            messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                            'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
+                            '<br>You can check this transaction status OR resend the cash transfer' + '</span>',
+                            cancelable: true
+                        });
                     }).
                     then(function(){
                         $('#app-main-navigator').get(0).resetToPage('main-menu-page.html');
@@ -6490,6 +6536,7 @@ utopiasoftware.saveup.controller = {
                     });
 
                 });
+
             }
 
         },
@@ -6500,45 +6547,11 @@ utopiasoftware.saveup.controller = {
          */
         transferCashBankAuthorizeProceed: function(){
 
-            // create an inapp browser to handle the cash transfer bank account authorisation
-            var bankAccountAuthorizationBrowser = cordova.InAppBrowser.
-            open(window.encodeURI(window.sessionStorage.getItem("transaction_authurl")),
-                '_blank',
-                "location=no,clearcache=yes,clearsessioncache=yes,zoom=no,hardwareback=no,closebuttoncaption=Close,disallowoverscroll=no,toolbar=no,enableViewportScale=no,presentationstyle=fullscreen");
-
-            // add listener for the various in-app browser events
-            bankAccountAuthorizationBrowser.addEventListener("loadstop", function(browserEvent){
-                // check if the url being loaded is that for the successful transaction redirect
-                if(browserEvent.url.startsWith("https://postcash.000webhostapp.com/transfer-cash-bank.html")){ // the call url was triggered
-                    // inform the inapp-browser that the browser is about to be auto-closed
-                    bankAccountAuthorizationBrowser.autoClosed = true;
-                    bankAccountAuthorizationBrowser.close(); // close the browser
-                    // call the method to handle the response of the bank authorisation
-                    window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.
-                        transferCashBankRemoteAuthorize, 0);
-                }
-            });
-            // an error listener for the in-app browser
-            bankAccountAuthorizationBrowser.addEventListener("loaderror", function(browserEvent){
-
-                // inform the inapp-browser that the browser can be auto-closed. This will stop the app from showing additional error messages when the in-app browser is closed by the user
-                bankAccountAuthorizationBrowser.autoClosed = true;
-                // call the method to handle the response of the bank authorisation
-                window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.
-                    transferCashBankRemoteAuthorize, 0);
-            });
-
-
-            // an exit listener for the in-app browser
-            bankAccountAuthorizationBrowser.addEventListener("exit", function(browserEvent){
-
-                // check if the in-app browser was auto-closed or not
-                if(! bankAccountAuthorizationBrowser.autoClosed){ // in-app browser was manually closed by user
-                    // call the method to handle the response of the bank authorisation
-                    window.setTimeout(utopiasoftware.saveup.controller.transferCashBankPageViewModel.
-                        transferCashBankRemoteAuthorize, 0);
-                }
-            });
+            // change the content of the bank authorisation iframe
+            $('#transfer-cash-bank-authorise-iframe').attr("src", "");
+            $('#transfer-cash-bank-authorise-iframe').attr("src", window.sessionStorage.getItem("transaction_authurl"));
+            // show the modal that contains the modal
+            $('#transfer-cash-bank-authorise-modal').get(0).show();
         },
 
 
