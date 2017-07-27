@@ -6475,6 +6475,7 @@ utopiasoftware.saveup.controller = {
                         return $('#loader-modal').get(0).hide(); // hide loader
                     }).
                     then(function(){
+                        console.log("ERROR", error);
                        return ons.notification.alert({title: "Cash Transfer Failed",
                            messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                            'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +

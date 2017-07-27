@@ -1318,14 +1318,26 @@ var utopiasoftware = {
                         appSecret: '01d0e48b25124e71b1d21a57962b0d9f',
                         appVersion: '1.0.0'
                     }).
-                    then(function(){ // login as the default user for the app to use
+                    then(function(){
+                        return new Promise(function(resolve1, reject1){ // Promise checks if a has been created or logged in
+                            if(Kinvey.User.getActiveUser()){ // user has been created, so kinvey has been fully initialised
+                                resolve1(Kinvey.User.getActiveUser()); // resolve the promise
+                            }
+                            else{ // user has not been created
+                                reject1({}); // resolve the promise
+                            }
+                        });
+                    }).
+                    then(function(activeUser){
+                        return Promise.resolve(activeUser); // return the already logged-in user
+                    }, function(){ // login as the default user for the app to use
                         return Kinvey.User.login({
                             username: '_postcash',
                             password: 'password'
                         }); // return the default user
                     }).
-                    then(function(){
-                        resolve({}); // resolve the promise
+                    then(function(user){
+                        resolve(user); // resolve the promise
                     }).
                     catch(function(err){
                         reject(err); // reject the promise
