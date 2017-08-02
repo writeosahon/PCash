@@ -523,7 +523,11 @@
 </ons-modal>
 
 <!-- modal for displaying cash transfer (via banks) authorisation iframe -->
-<ons-modal id="transfer-cash-bank-authorise-modal" direction="up" style="background: rgba(0, 0, 0, 0)">
+<ons-modal id="transfer-cash-bank-authorise-modal" direction="up" style="background: rgba(211, 211, 211, 1);">
+    <ons-fab modifier="mini" position="top right" onclick="$('#transfer-cash-bank-authorise-modal').get(0).hide();
+                $('#transfer-cash-bank-authorise-iframe').attr('src', '');">
+        <ons-icon icon="md-close"></ons-icon>
+    </ons-fab>
     <div style="width: calc(100% - 0px); height: calc(100% - 0px)">
         <iframe id="transfer-cash-bank-authorise-iframe" src="" style="width: 100%; height: 100%;"></iframe>
     </div>
@@ -622,7 +626,7 @@
             </ons-fab>
         </div>
         <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92;"
+            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff;"
                      onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.okButtonClicked();">
                 OK
             </ons-fab>

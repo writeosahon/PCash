@@ -49,7 +49,7 @@ $('#security-pin-lock-modal').get(0).show();// show the security-pin-lock-modal
 window.addEventListener("message",function(event){try{// check that event is from the expected origin & carrying the proper message
 if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="c done"){// call the method to handle the event i.e transfer-cash-card authorisation
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardOtpAuthorize();return;// exit method
-}if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="b loaded"){// call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
+}if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="b loaded"){console.log("HERE 1");// call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 1");return;// exit method
 }if(event.origin=="https://postcash.000webhostapp.com"&&JSON.parse(event.data)&&JSON.parse(event.data).state=="b completed"){// call the method to handle the event i.e transfer-cash-bank remote authorisation stage 2
 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 2",JSON.parse(event.data));return;// exit method

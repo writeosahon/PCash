@@ -148,6 +148,7 @@ utopiasoftware.saveup.controller = {
             }
 
             if(event.origin == "https://postcash.000webhostapp.com" && event.data == "b loaded"){
+                console.log("HERE 1");
                 // call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
                 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 1");
                 return; // exit method
