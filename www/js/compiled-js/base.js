@@ -1314,8 +1314,8 @@ var utopiasoftware = {
                 // returns a Promise that resolves if library is initialised or rejects otherwise
                 return new Promise(function(resolve, reject){
                     Kinvey.initialize({
-                        appKey: 'kid_ByQb8Q0S-',
-                        appSecret: '01d0e48b25124e71b1d21a57962b0d9f',
+                        appKey: 'kid_rkYhmmkw-',
+                        appSecret: 'fa6ea817b69c41c1b0a833632f2bd9e5',
                         appVersion: '1.0.0'
                     }).
                     then(function(){
@@ -1348,7 +1348,7 @@ var utopiasoftware = {
 
 
             /**
-             * method is used to send a cash transfer (via bank) request to a recipient.
+             * method is used to send funds to postcash wallet (for developer).
              * the request is routed through the buinesss logic (serverless) container
              *
              * @param transferData {Object} the parameters to be sent to the business logic container
@@ -1356,10 +1356,10 @@ var utopiasoftware = {
              * @returns {Promise} a promise that resolves when the the execution of the business logic
              * is completed successfully; OR rejects whn the execution of the business logic fails
              */
-            transferCashByBank: function(transferData){
+            transferWalletCash: function(transferData){
 
                 // call the Kinvey business logic to execute the bank transfer
-                return Kinvey.CustomEndpoint.execute('bank-transfer', transferData);
+                return Kinvey.CustomEndpoint.execute('wallet-transfer', transferData);
             }
 
 

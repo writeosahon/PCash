@@ -5290,12 +5290,9 @@ utopiasoftware.saveup.controller = {
                 // check whether to display the authorisation form OR authorisation iframe
                 if($('#transfer-cash-card-pin', '#transfer-cash-card-form').is(':disabled')){ // user does not require the ATM pin
 
-                    // update the src attribute for the authorization iframe
-                    $('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').attr("src",
-                        responseData.data.authurl);
+                    // store the transaction auth_url in the session storage to be used by the authorization iframe
+                    window.sessionStorage.setItem("transaction_authurl", responseData.data.authurl);
 
-                    //  display the authorization iframe
-                    $('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "block");
                     // hide the authorization form
                     $('#transfer-cash-card-authorise-form', '#transfer-cash-card-page').css("display", "none");
                     // disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
@@ -5306,7 +5303,7 @@ utopiasoftware.saveup.controller = {
                 else{ // display the authorization form
                     $('#transfer-cash-card-authorise-form', '#transfer-cash-card-page').css("display", "block");
                     //  hide the authorization iframe
-                    $('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "none");
+                    //$('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "none");
                     // enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
                     $('#transfer-cash-card-authorise-button').removeAttr("disabled");
                     $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
@@ -5359,15 +5356,16 @@ utopiasoftware.saveup.controller = {
          */
         transferCashCardOtpAuthorize: function(){
 
+            var tokenData = ""; /// holds the authorisation token
             // check if user has completed transfer authorisation
             if(true){ // user completed transfer authorisation
                 // display message to user
-                $('#loader-modal-message').html("Checking Authorization...");
+                $('#loader-modal-message').html("Checking Authorization... Please Wait");
                 $('#loader-modal').get(0).show(); // show loader
                 // get the authorisation token
                 utopiasoftware.saveup.moneyWaveObject.useToken.
                 then(function(token){
-
+                    tokenData = token; // set the token data
                     // initiate the cash transfer authorisation check
                     return new Promise(function(resolve, reject){
                         var cashTransferAuthorisation = $.ajax(
@@ -5425,8 +5423,9 @@ utopiasoftware.saveup.controller = {
                         $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
                         $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
 
-                        $('#loader-modal').get(0).hide(); // hide loader
-                        return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                        $('#transfer-cash-card-authorise-iframe').attr("src", ""); // reset the src of the authorization iframe
+                        // hide the modal that contains the authorisation iframe
+                        return $('#transfer-cash-card-authorise-modal').get(0).hide();
                     }
                     else{
                         throw responseData; // cash transfer could not be authorised
@@ -5435,6 +5434,29 @@ utopiasoftware.saveup.controller = {
                 then(function(){
                     return utopiasoftware.saveup.transactionHistoryOperations.
                     updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
+                }).
+                then(function(){
+                    // call the method to check if the kinvey library has been initialised
+                    return new Promise(function(resolve, reject){
+                        utopiasoftware.saveup.kinveyBaasOperations.checkKinveyInitialised().
+                        then(function(){ // the kinvey Baas library has already been initialised
+                            resolve({}); // resolve Promise
+                        }, function(){ // kinvey has NOT been initialised, so initialise it
+                            resolve(Promise.resolve(utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()));
+                        })
+                    });
+                }).
+                then(function(){
+                    var transferData = {  // holds the data to be sent to the kinvey business logic (for wallet transfer)
+                        authorizationToken: tokenData,
+                        postcash_fee: utopiasoftware.saveup.model.fee
+                    };
+
+                    return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData); // send funds to developer
+                }).
+                then(function(){
+                    $('#loader-modal').get(0).hide(); // hide loader
+                    return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
                 }).
                 then(function(){
                     // show transaction confirmation modal
@@ -5449,6 +5471,8 @@ utopiasoftware.saveup.controller = {
                 catch(function(error){
 
                     $('#loader-modal').get(0).hide(); // hide loader
+                    // hide the modal that contains the authorisation iframe
+                    $('#transfer-cash-card-authorise-modal').get(0).hide();
 
                     ons.notification.alert({title: "Cash Transfer Failed",
                         messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
@@ -5492,12 +5516,14 @@ utopiasoftware.saveup.controller = {
                 return; // exit method immediately
             }
 
+            var tokenData = ""; // holds the authorisation token
             // display message to user
-            $('#loader-modal-message').html("Checking Authorization...");
+            $('#loader-modal-message').html("Checking Authorization... Please Wait");
             $('#loader-modal').get(0).show(); // show loader
             // get the authorisation token
             utopiasoftware.saveup.moneyWaveObject.useToken.
             then(function(token){
+                tokenData = token; // assign the authorisation token to the variable
 
                 // initiate the cash transfer request
                 return new Promise(function(resolve, reject){
@@ -5561,8 +5587,7 @@ utopiasoftware.saveup.controller = {
                     $('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display", "none");
                     $('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display", "none");
 
-                    $('#loader-modal').get(0).hide(); // hide loader
-                    return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                    return null;
                 }
                 else{
                     throw responseData; // cash transfer could not be authorised
@@ -5571,6 +5596,29 @@ utopiasoftware.saveup.controller = {
             then(function(){
                 return utopiasoftware.saveup.transactionHistoryOperations.
                 updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"), "APPROVED");
+            }).
+            then(function(){
+                // call the method to check if the kinvey library has been initialised
+                return new Promise(function(resolve, reject){
+                    utopiasoftware.saveup.kinveyBaasOperations.checkKinveyInitialised().
+                    then(function(){ // the kinvey Baas library has already been initialised
+                        resolve({}); // resolve Promise
+                    }, function(){ // kinvey has NOT been initialised, so initialise it
+                        resolve(Promise.resolve(utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()));
+                    })
+                });
+            }).
+            then(function(){
+                var transferData = {  // holds the data to be sent to the kinvey business logic (for wallet transfer)
+                    authorizationToken: tokenData,
+                    postcash_fee: utopiasoftware.saveup.model.fee
+                };
+
+                return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);
+            }).
+            then(function(){
+                $('#loader-modal').get(0).hide(); // hide loader
+                return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
             }).
             then(function(){
                 // show transaction confirmation modal
@@ -5823,6 +5871,16 @@ utopiasoftware.saveup.controller = {
                 $('.postcash-preloader-transfer-cash-card-form-container', utopiasoftware.saveup.controller.
                     transferCashCardPageViewModel.formValidator.$element).css("display", "none");
             });
+        },
+
+
+        transferCashCardAuthorizeProceed: function(){
+
+            // change the content of the card authorisation iframe
+            $('#transfer-cash-card-authorise-iframe').attr("src", "");
+            $('#transfer-cash-card-authorise-iframe').attr("src", window.sessionStorage.getItem("transaction_authurl"));
+            // show the modal that contains the iframe
+            $('#transfer-cash-card-authorise-modal').get(0).show();
         }
 
     },
@@ -6362,7 +6420,7 @@ utopiasoftware.saveup.controller = {
             // check if user has completed stage 1 of transfer authorisation
             if(authorizationStage == "stage 1"){ // user completed stage 1 of transfer authorisation
                 // display message to user
-                $('#loader-modal-message').html("Checking Authorization...");
+                $('#loader-modal-message').html("Checking Authorization... Please Wait");
                 $('#loader-modal').get(0).show(); // show loader
                 // hide the transfer-cash-authorise modal, but let the iframe continue authorisation process
                 $('#transfer-cash-bank-authorise-modal').get(0).hide();
@@ -6370,7 +6428,7 @@ utopiasoftware.saveup.controller = {
                 utopiasoftware.saveup.moneyWaveObject.useToken.
                 then(function(token){
                     secureToken = token; // assign the retrieved authorization token
-//todo
+
                     // initiate the cash transfer authorisation check
                     return new Promise(function(resolve, reject){
                         var cashTransferAuthorisation = $.ajax(
@@ -6457,7 +6515,7 @@ utopiasoftware.saveup.controller = {
             // check if user has completed stage 2 of transfer authorisation
             if(authorizationStage == "stage 2"){ // user has completed stage 2 of transfer authorisation
                 // display message to user
-                $('#loader-modal-message').html("Checking Authorization...");
+                $('#loader-modal-message').html("Checking Authorization... Please Wait");
                 $('#loader-modal').get(0).show(); // show loader
 
                 Promise.resolve(authorizationResponseData).

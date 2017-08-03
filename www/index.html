@@ -424,7 +424,7 @@
 </ons-popover>
 
 <!-- popver for TRANSFER CASH BANK Page Help-3 message -->
-<ons-popover direction="down" id="transfer-cash-card-page-help-popover-3" modifier="flat" cancelable disable-auto-styling>
+<ons-popover direction="down" id="transfer-cash-bank-page-help-popover-3" modifier="flat" cancelable disable-auto-styling>
     <div style="padding: 10px;">
         <h5 style="font-size: 0.95em; font-weight: bold; text-align: center; color: #ffffff">
             Transfer Recipient
@@ -519,6 +519,16 @@
         then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});">
             Done
         </ons-button>
+    </div>
+</ons-modal>
+
+<ons-modal id="transfer-cash-card-authorise-modal" direction="up" style="background: rgba(211, 211, 211, 1);">
+    <ons-fab modifier="mini" position="top right" onclick="$('#transfer-cash-card-authorise-modal').get(0).hide();
+                $('#transfer-cash-card-authorise-iframe').attr('src', '');">
+        <ons-icon icon="md-close"></ons-icon>
+    </ons-fab>
+    <div style="width: calc(100% - 0px); height: calc(100% - 0px)">
+        <iframe id="transfer-cash-card-authorise-iframe" src="" style="width: 100%; height: 100%;"></iframe>
     </div>
 </ons-modal>
 

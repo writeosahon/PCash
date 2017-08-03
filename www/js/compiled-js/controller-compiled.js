@@ -1771,13 +1771,13 @@ $('#transfer-cash-card-authorize-amount','#transfer-cash-card-page').html(kendo.
 window.sessionStorage.setItem("transaction_id",responseData.data.transfer.id);window.sessionStorage.setItem("transaction_ref",responseData.data.transfer.flutterChargeReference);// hide the transfer bottom-toolbar
 $('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");// check whether to display the authorisation form OR authorisation iframe
 if($('#transfer-cash-card-pin','#transfer-cash-card-form').is(':disabled')){// user does not require the ATM pin
-// update the src attribute for the authorization iframe
-$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').attr("src",responseData.data.authurl);//  display the authorization iframe
-$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","block");// hide the authorization form
+// store the transaction auth_url in the session storage to be used by the authorization iframe
+window.sessionStorage.setItem("transaction_authurl",responseData.data.authurl);// hide the authorization form
 $('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","none");// disable the 'Authorize' button, show the otp authorise bottom toolbar & hide the pin authorise bottom toolbar
 $('#transfer-cash-card-authorise-button').attr("disabled",true);$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","block");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");}else{// display the authorization form
 $('#transfer-cash-card-authorise-form','#transfer-cash-card-page').css("display","block");//  hide the authorization iframe
-$('#transfer-cash-card-authorise-iframe','#transfer-cash-card-page').css("display","none");// enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
+//$('#transfer-cash-card-authorise-iframe', '#transfer-cash-card-page').css("display", "none");
+// enable the 'Authorize' button, hide the otp authorise bottom toolbar & show the pin authorise bottom toolbar
 $('#transfer-cash-card-authorise-button').removeAttr("disabled");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","block");}// update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// transition to 'authorize' block
 return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(serverResponse){if(serverResponse==null){// user already terminated transfer
@@ -1788,12 +1788,14 @@ return;// do nothing
 }ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.data||"")+' Sorry, your cash transfer failed. '+'<br>You can try again'+'</span>',cancelable:true});});},/**
          * method is used to check authorization of a card cash transfer
          * (AUTHORIZATION VIA OTP)
-         */transferCashCardOtpAuthorize:function transferCashCardOtpAuthorize(){// check if user has completed transfer authorisation
+         */transferCashCardOtpAuthorize:function transferCashCardOtpAuthorize(){var tokenData="";/// holds the authorisation token
+// check if user has completed transfer authorisation
 if(true){// user completed transfer authorisation
 // display message to user
-$('#loader-modal-message').html("Checking Authorization...");$('#loader-modal').get(0).show();// show loader
+$('#loader-modal-message').html("Checking Authorization... Please Wait");$('#loader-modal').get(0).show();// show loader
 // get the authorisation token
-utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){// initiate the cash transfer authorisation check
+utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){tokenData=token;// set the token data
+// initiate the cash transfer authorisation check
 return new Promise(function(resolve,reject){var cashTransferAuthorisation=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer/"+window.sessionStorage.getItem("transaction_id"),type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
 processData:false,data:JSON.stringify({})});// server responded to cash transfer authorisation check
 cashTransferAuthorisation.done(function(responseData){if(responseData.status==="success"){// the server responded with a successful transfer authorisation
@@ -1804,12 +1806,21 @@ reject(responseData);// reject the cash transfer authorisation promise
 cashTransferAuthorisation.fail(function(jqxhr){reject(JSON.parse(jqxhr.responseText.trim()));});});}).then(function(responseData){if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase()=="APPROVED"){// cash transfer was success
 // update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(2) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(2) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide ALL the bottom-toolbar blocks
-$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");$('#loader-modal').get(0).hide();// hide loader
-return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}else{throw responseData;// cash transfer could not be authorised
-}}).then(function(){return utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"),"APPROVED");}).then(function(){// show transaction confirmation modal
+$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");$('#transfer-cash-card-authorise-iframe').attr("src","");// reset the src of the authorization iframe
+// hide the modal that contains the authorisation iframe
+return $('#transfer-cash-card-authorise-modal').get(0).hide();}else{throw responseData;// cash transfer could not be authorised
+}}).then(function(){return utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"),"APPROVED");}).then(function(){// call the method to check if the kinvey library has been initialised
+return new Promise(function(resolve,reject){utopiasoftware.saveup.kinveyBaasOperations.checkKinveyInitialised().then(function(){// the kinvey Baas library has already been initialised
+resolve({});// resolve Promise
+},function(){// kinvey has NOT been initialised, so initialise it
+resolve(Promise.resolve(utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()));});});}).then(function(){var transferData={// holds the data to be sent to the kinvey business logic (for wallet transfer)
+authorizationToken:tokenData,postcash_fee:utopiasoftware.saveup.model.fee};return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);// send funds to developer
+}).then(function(){$('#loader-modal').get(0).hide();// hide loader
+return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(){// show transaction confirmation modal
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
-ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});}},/**
+// hide the modal that contains the authorisation iframe
+$('#transfer-cash-card-authorise-modal').get(0).hide();ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});}},/**
          * method is used to check authorization of a card cash transfer
          * (AUTHORIZATION VIA PIN)
          */transferCashCardPinAuthorize:function transferCashCardPinAuthorize(){// check if Internet Connection is available before proceeding
@@ -1818,10 +1829,12 @@ if(navigator.connection.type===Connection.NONE){// no Internet Connection
 window.plugins.toast.showWithOptions({message:"You cannot transfer cash without an active Internet Connection",duration:4500,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
 textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
 window.plugins.toast.hide();}});return;// exit method immediately
-}// display message to user
-$('#loader-modal-message').html("Checking Authorization...");$('#loader-modal').get(0).show();// show loader
+}var tokenData="";// holds the authorisation token
+// display message to user
+$('#loader-modal-message').html("Checking Authorization... Please Wait");$('#loader-modal').get(0).show();// show loader
 // get the authorisation token
-utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){// initiate the cash transfer request
+utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){tokenData=token;// assign the authorisation token to the variable
+// initiate the cash transfer request
 return new Promise(function(resolve,reject){var cashTransferAuthoriseRequest=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer/charge/auth/card",type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
 processData:false,data:JSON.stringify({transactionRef:window.sessionStorage.getItem("transaction_ref"),otp:$('#transfer-cash-card-otp','#transfer-cash-card-page').val()})});// server responded to cash transfer request
 cashTransferAuthoriseRequest.done(function(responseData){if(responseData.status==="success"){// the server responded with a successful transfer initiation
@@ -1832,9 +1845,14 @@ reject(responseData);// reject the cash transfer promise
 cashTransferAuthoriseRequest.fail(function(jqxhr){if(jqxhr.status==500){reject(JSON.parse(jqxhr.responseText.trim()));}else{reject(jqxhr.responseText.trim());}});});}).then(function(responseData){if(responseData.data.flutterChargeResponseMessage.toLocaleUpperCase().indexOf("APPROVED")>-1){// cash transfer was success
 // update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(2) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(2) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide ALL the bottom-toolbar blocks
-$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");$('#loader-modal').get(0).hide();// hide loader
-return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}else{throw responseData;// cash transfer could not be authorised
-}}).then(function(){return utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"),"APPROVED");}).then(function(){// show transaction confirmation modal
+$('.transfer-cash-card-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-otp-block').css("display","none");$('.transfer-cash-card-page-bottom-toolbar-authorize-pin-block').css("display","none");return null;}else{throw responseData;// cash transfer could not be authorised
+}}).then(function(){return utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistory(window.sessionStorage.getItem("transaction_ref"),"APPROVED");}).then(function(){// call the method to check if the kinvey library has been initialised
+return new Promise(function(resolve,reject){utopiasoftware.saveup.kinveyBaasOperations.checkKinveyInitialised().then(function(){// the kinvey Baas library has already been initialised
+resolve({});// resolve Promise
+},function(){// kinvey has NOT been initialised, so initialise it
+resolve(Promise.resolve(utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()));});});}).then(function(){var transferData={// holds the data to be sent to the kinvey business logic (for wallet transfer)
+authorizationToken:tokenData,postcash_fee:utopiasoftware.saveup.model.fee};return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);}).then(function(){$('#loader-modal').get(0).hide();// hide loader
+return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(){// show transaction confirmation modal
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});},/**
@@ -1908,7 +1926,9 @@ $('.postcash-preloader-transfer-cash-card-form-container',utopiasoftware.saveup.
 // update the display of the updated fields
 //Materialize.updateTextFields();
 $('select',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).material_select();// hide the preloaders that block input
-$('.postcash-preloader-transfer-cash-card-form-container',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).css("display","none");});}},/**
+$('.postcash-preloader-transfer-cash-card-form-container',utopiasoftware.saveup.controller.transferCashCardPageViewModel.formValidator.$element).css("display","none");});},transferCashCardAuthorizeProceed:function transferCashCardAuthorizeProceed(){// change the content of the card authorisation iframe
+$('#transfer-cash-card-authorise-iframe').attr("src","");$('#transfer-cash-card-authorise-iframe').attr("src",window.sessionStorage.getItem("transaction_authurl"));// show the modal that contains the iframe
+$('#transfer-cash-card-authorise-modal').get(0).show();}},/**
      * object is view-model for transfer-cash-bank page
      */transferCashBankPageViewModel:{/**
          * used to hold the parsley form validation object for the page
@@ -2115,11 +2135,10 @@ return;// do nothing
 // check if user has completed stage 1 of transfer authorisation
 if(authorizationStage=="stage 1"){// user completed stage 1 of transfer authorisation
 // display message to user
-$('#loader-modal-message').html("Checking Authorization...");$('#loader-modal').get(0).show();// show loader
+$('#loader-modal-message').html("Checking Authorization... Please Wait");$('#loader-modal').get(0).show();// show loader
 // hide the transfer-cash-authorise modal, but let the iframe continue authorisation process
 $('#transfer-cash-bank-authorise-modal').get(0).hide();// get the authorisation token
 utopiasoftware.saveup.moneyWaveObject.useToken.then(function(token){secureToken=token;// assign the retrieved authorization token
-//todo
 // initiate the cash transfer authorisation check
 return new Promise(function(resolve,reject){var cashTransferAuthorisation=$.ajax({url:utopiasoftware.saveup.moneyWaveObject.gateway+"v1/transfer/"+window.sessionStorage.getItem("transaction_id"),type:"post",contentType:"application/json",beforeSend:function beforeSend(jqxhr){jqxhr.setRequestHeader("Authorization",token);},dataType:"json",timeout:240000,// wait for 4 minutes before timeout of request
 processData:false,data:JSON.stringify({})});// server responded to cash transfer authorisation check
@@ -2136,7 +2155,7 @@ utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistoryData(
 }).then(function(){console.log("ERROR",error);return ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true});}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');}).catch(function(){$('#loader-modal').get(0).hide();});});}// check if user has completed stage 2 of transfer authorisation
 if(authorizationStage=="stage 2"){// user has completed stage 2 of transfer authorisation
 // display message to user
-$('#loader-modal-message').html("Checking Authorization...");$('#loader-modal').get(0).show();// show loader
+$('#loader-modal-message').html("Checking Authorization... Please Wait");$('#loader-modal').get(0).show();// show loader
 Promise.resolve(authorizationResponseData).then(function(authorizationResponseData){// process the response gotten from the authorization iframe
 // check that the transfer was completed successfully
 if(authorizationResponseData.walletToWallet.status=="success"&&authorizationResponseData.walletToWallet.data.toLocaleUpperCase().indexOf("SUCCESSFUL")>-1&&authorizationResponseData.walletToAccount.status=="success"&&authorizationResponseData.walletToAccount.data.data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL")>-1){// cash transfer was successful
