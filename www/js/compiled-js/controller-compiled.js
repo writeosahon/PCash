@@ -1815,8 +1815,8 @@ resolve({});// resolve Promise
 },function(){// kinvey has NOT been initialised, so initialise it
 resolve(Promise.resolve(utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()));});});}).then(function(){var transferData={// holds the data to be sent to the kinvey business logic (for wallet transfer)
 authorizationToken:tokenData,postcash_fee:utopiasoftware.saveup.model.fee};return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);// send funds to developer
-}).then(function(){$('#loader-modal').get(0).hide();// hide loader
-return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(){// show transaction confirmation modal
+}).then(function(){// hide loader & move carousel to the confirmation item
+return Promise.all([$('#loader-modal').get(0).hide(),$('.transfer-cash-card-carousel').get(0).next({animation:'none'})]);}).then(function(){// show transaction confirmation modal
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 // hide the modal that contains the authorisation iframe
@@ -1851,8 +1851,8 @@ return new Promise(function(resolve,reject){utopiasoftware.saveup.kinveyBaasOper
 resolve({});// resolve Promise
 },function(){// kinvey has NOT been initialised, so initialise it
 resolve(Promise.resolve(utopiasoftware.saveup.kinveyBaasOperations.initialiseKinvey()));});});}).then(function(){var transferData={// holds the data to be sent to the kinvey business logic (for wallet transfer)
-authorizationToken:tokenData,postcash_fee:utopiasoftware.saveup.model.fee};return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);}).then(function(){$('#loader-modal').get(0).hide();// hide loader
-return $('.transfer-cash-card-carousel').get(0).next({animation:'none'});}).then(function(){// show transaction confirmation modal
+authorizationToken:tokenData,postcash_fee:utopiasoftware.saveup.model.fee};return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);}).then(function(){// hide loader & move the carousel to the confirmation item
+return Promise.all([$('#loader-modal').get(0).hide(),$('.transfer-cash-card-carousel').get(0).next({animation:'none'})]);}).then(function(){// show transaction confirmation modal
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){$('#loader-modal').get(0).hide();// hide loader
 ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');});});},/**
@@ -2161,8 +2161,8 @@ Promise.resolve(authorizationResponseData).then(function(authorizationResponseDa
 if(authorizationResponseData.walletToWallet.status=="success"&&authorizationResponseData.walletToWallet.data.toLocaleUpperCase().indexOf("SUCCESSFUL")>-1&&authorizationResponseData.walletToAccount.status=="success"&&authorizationResponseData.walletToAccount.data.data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL")>-1){// cash transfer was successful
 // update the transaction indicators
 $('.postcash-pay-progress .col:eq(0) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(0) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(1) span:eq(0)').removeClass('postcash-pay-progress-milestone-active').addClass('postcash-pay-progress-milestone');$('.postcash-pay-progress .col:eq(1) span:eq(1)').removeClass('postcash-pay-progress-milestone-text-active').addClass('postcash-pay-progress-milestone-text');$('.postcash-pay-progress .col:eq(2) span:eq(0)').removeClass('postcash-pay-progress-milestone').addClass('postcash-pay-progress-milestone-active');$('.postcash-pay-progress .col:eq(2) span:eq(1)').removeClass('postcash-pay-progress-milestone-text').addClass('postcash-pay-progress-milestone-text-active');// hide ALL the bottom-toolbar blocks
-$('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display","none");$('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display","none");$('#loader-modal').get(0).hide();// hide loader
-return Promise.all([authorizationResponseData,$('.transfer-cash-bank-carousel').get(0).next({animation:'none'})]);}else{throw authorizationResponseData;// cash transfer could not be authorised
+$('.transfer-cash-bank-page-bottom-toolbar-transfer-block').css("display","none");$('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display","none");$('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display","none");// pass response data for onward processing, hide loader & move to the confirmation item on the carousel
+return Promise.all([authorizationResponseData,$('#loader-modal').get(0).hide(),$('.transfer-cash-bank-carousel').get(0).next({animation:'none'})]);}else{throw authorizationResponseData;// cash transfer could not be authorised
 }}).then(function(dataArray){// holds the business logic response
 // update the transaction history for the cash transfer (bank) transaction to mark success
 return utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"),dataArray[0]);}).then(function(){// show transaction confirmation modal

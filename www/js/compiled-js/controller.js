@@ -5455,8 +5455,8 @@ utopiasoftware.saveup.controller = {
                     return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData); // send funds to developer
                 }).
                 then(function(){
-                    $('#loader-modal').get(0).hide(); // hide loader
-                    return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                    // hide loader & move carousel to the confirmation item
+                    return Promise.all([$('#loader-modal').get(0).hide(), $('.transfer-cash-card-carousel').get(0).next({animation: 'none'})]);
                 }).
                 then(function(){
                     // show transaction confirmation modal
@@ -5617,8 +5617,8 @@ utopiasoftware.saveup.controller = {
                 return utopiasoftware.saveup.kinveyBaasOperations.transferWalletCash(transferData);
             }).
             then(function(){
-                $('#loader-modal').get(0).hide(); // hide loader
-                return $('.transfer-cash-card-carousel').get(0).next({animation: 'none'});
+                // hide loader & move the carousel to the confirmation item
+                return Promise.all([$('#loader-modal').get(0).hide(), $('.transfer-cash-card-carousel').get(0).next({animation: 'none'})]);
             }).
             then(function(){
                 // show transaction confirmation modal
@@ -6548,9 +6548,9 @@ utopiasoftware.saveup.controller = {
                         $('.transfer-cash-bank-page-bottom-toolbar-authorize-bank-block').css("display", "none");
                         $('.transfer-cash-bank-page-bottom-toolbar-authorize-pin-block').css("display", "none");
 
-                        $('#loader-modal').get(0).hide(); // hide loader
+                        // pass response data for onward processing, hide loader & move to the confirmation item on the carousel
                         return Promise.
-                        all([authorizationResponseData, $('.transfer-cash-bank-carousel').get(0).next({animation: 'none'})]);
+                        all([authorizationResponseData, $('#loader-modal').get(0).hide(), $('.transfer-cash-bank-carousel').get(0).next({animation: 'none'})]);
                     }
                     else{
                         throw authorizationResponseData; // cash transfer could not be authorised
