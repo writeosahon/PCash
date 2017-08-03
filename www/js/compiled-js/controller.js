@@ -1625,6 +1625,37 @@ utopiasoftware.saveup.controller = {
 
             if(label == "transfer cash"){ // 'Transfer Cash to account' button was clicked
 
+                // close the side menu
+                $('ons-splitter').get(0).left.close().
+                then(function(){
+                    // ask user for secure PIN before proceeding. secure pin MUST match
+                    return ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                        messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                        'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                        'Please enter your PostCash Secure PIN to proceed</span></div>',
+                        cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                        submitOnEnter: true
+                    });
+                }).
+                then(function(userInput){ // user has provided a secured PIN , now authenticate it
+                    if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                        $('#transfer-cash-page').remove(); // remove previous transfer cash pages
+                        // call the transfer-cash=page and pass the verified account as recipient details data
+                        $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
+                            recipient_details: {recipientAccount: $('#verify-account-page #verify-account-number').val(),
+                            recipientBankCode: $('#verify-account-page #verify-account-choose-bank').val()}
+                        }); // navigate to the specified page
+                    }
+                    else{ // inform user that security check failed/user authentication failed
+                        ons.notification.alert({title: "Security Check",
+                            messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                            'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
+                            cancelable: true
+                        });
+                    }
+                }).
+                catch(function(){});
+
                 return;
             }
 
@@ -4997,7 +5028,7 @@ utopiasoftware.saveup.controller = {
                     // initialise the 'bank' select element
                     $('#transfer-cash-card-choose-bank', $thisPage).material_select();
                     return; // return at this point, so the page can continue initialisation
-                }, function(){}).
+                }, function(){return null;}).
                 then(function(){
                     /** dynamically create the contents of the 'year' select elements **/
                     var optionTags = ""; // string to hold all created option tags for the Card Expiry Year
