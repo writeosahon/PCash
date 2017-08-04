@@ -5105,9 +5105,8 @@ utopiasoftware.saveup.controller = {
                         val(pageDataObject.recipient_details.recipientAccount);
                         $('#transfer-cash-card-choose-bank', $thisPage).
                         val(pageDataObject.recipient_details.recipientBankCode);
-                        // update the display of all the select element
-                        $('select', $thisPage).material_select();
-                        Materialize.updateTextFields(); // update the display of text input fields
+                        $('#hidden-choose-bank-input', $thisPage).
+                        val(pageDataObject.recipient_details.recipientBankCode);
                     }
 
                     // check if the data contains sender account details
@@ -5116,7 +5115,9 @@ utopiasoftware.saveup.controller = {
                         $('.transfer-cash-tabbar').get(0).setActiveTab(1, {animation: "slide"});
                     }
 
-
+                    // update the display of all the select element
+                    $('select', $thisPage).material_select();
+                    Materialize.updateTextFields(); // update the display of text input fields
                     return null; // return null to move to the next step
                 }, function(){return null;}).
                 then(function(){
@@ -5129,62 +5130,6 @@ utopiasoftware.saveup.controller = {
                     // hide the loader
                     $('#loader-modal').get(0).hide();
                 }, function(){});
-
-
-                /*
-                // check if the page was sent a financial card id.
-                // if so preload the financial card data into the form
-                if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){
-                    // get the details of the card to be edited
-                    utopiasoftware.saveup.financialCardOperations.
-                    getCard($('#app-main-navigator').get(0).topPage.data.edit).then(function(card){
-                        $('#add-card-page #add-card-unique-id').val(card.cardUniqueId);
-                        $('#add-card-page #add-card-card-holder').val(card.cardHolderName);
-                        $('#add-card-page #add-card-alias').val(card.cardNickName);
-                        $('#add-card-page #add-card-card-number').val(card.cardNumber);
-                        $('#add-card-page #add-card-cvv').val(card.cvv);
-                        $('#add-card-page #add-card-expiry-month').val(card.cardExpiryMonth);
-                        $('#add-card-page #hidden-card-expiry-month-input').val(card.cardExpiryMonth);
-                        $('#add-card-page #add-card-expiry-year').val(card.cardExpiryYear);
-                        $('#add-card-page #hidden-card-expiry-year-input').val(card.cardExpiryYear);
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = card.cardBrand;
-                        $('#add-card-page #add-card-verify-card').prop("checked", card.cardBrand !== "Unknown");
-                        // reset the card number validation check and all its related actions
-                        utopiasoftware.saveup.controller.addCardPageViewModel.
-                        isCardNumberValidated($('#add-card-page #add-card-verify-card'));
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = card.cardLocale;
-                        utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = card.cardImage;
-
-                        // update the card image file
-                        $('#add-card-page #add-card-image').attr("src", utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage);
-                        // display the card image row
-                        $('#add-card-image-container', $thisPage).css("display", "block");
-
-                        // re-update the form input fields
-                        Materialize.updateTextFields();
-                        //re-initialise the form select elements
-                        $('select', $thisPage).material_select();
-
-                        // remove the progress indeterminate loader
-                        $('.progress', $thisPage).remove();
-                        // make the add card form visible
-                        $('#add-card-form', $thisPage).css("display", "block");
-                        // enable the 'Cancel' & 'Save' buttons
-                        $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
-                        // hide the loader
-                        $('#loader-modal').get(0).hide();
-                    });
-                }
-                else {
-                    // remove the progress indeterminate loader
-                    $('.progress', $thisPage).remove();
-                    // make the add card form visible
-                    $('#add-card-form', $thisPage).css("display", "block");
-                    // enable the 'Cancel' & 'Save' buttons
-                    $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
-                    // hide the loader
-                    $('#loader-modal').get(0).hide();
-                } */
 
             }
 
@@ -6190,6 +6135,8 @@ utopiasoftware.saveup.controller = {
                         val(pageDataObject.recipient_details.recipientAccount);
                         $('#transfer-cash-bank-recipient-choose-bank', $thisPage).
                         val(pageDataObject.recipient_details.recipientBankCode);
+                        $('#hidden-choose-recipient-bank-input', $thisPage).
+                        val(pageDataObject.recipient_details.recipientBankCode);
                     }
 
                     // check if the data contains sender account details
@@ -6198,6 +6145,8 @@ utopiasoftware.saveup.controller = {
                         $('#transfer-cash-bank-sender-account-name', $thisPage).
                         val(pageDataObject.sender_details.senderAccount);
                         $('#transfer-cash-bank-sender-choose-bank', $thisPage).
+                        val(pageDataObject.sender_details.senderBankCode);
+                        $('#hidden-choose-sender-bank-input', $thisPage).
                         val(pageDataObject.sender_details.senderBankCode);
                     }
 
@@ -6216,62 +6165,6 @@ utopiasoftware.saveup.controller = {
                     // hide the loader
                     $('#loader-modal').get(0).hide();
                 }, function(){});
-
-
-                /*
-                 // check if the page was sent a financial card id.
-                 // if so preload the financial card data into the form
-                 if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.edit){
-                 // get the details of the card to be edited
-                 utopiasoftware.saveup.financialCardOperations.
-                 getCard($('#app-main-navigator').get(0).topPage.data.edit).then(function(card){
-                 $('#add-card-page #add-card-unique-id').val(card.cardUniqueId);
-                 $('#add-card-page #add-card-card-holder').val(card.cardHolderName);
-                 $('#add-card-page #add-card-alias').val(card.cardNickName);
-                 $('#add-card-page #add-card-card-number').val(card.cardNumber);
-                 $('#add-card-page #add-card-cvv').val(card.cvv);
-                 $('#add-card-page #add-card-expiry-month').val(card.cardExpiryMonth);
-                 $('#add-card-page #hidden-card-expiry-month-input').val(card.cardExpiryMonth);
-                 $('#add-card-page #add-card-expiry-year').val(card.cardExpiryYear);
-                 $('#add-card-page #hidden-card-expiry-year-input').val(card.cardExpiryYear);
-                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardBrand = card.cardBrand;
-                 $('#add-card-page #add-card-verify-card').prop("checked", card.cardBrand !== "Unknown");
-                 // reset the card number validation check and all its related actions
-                 utopiasoftware.saveup.controller.addCardPageViewModel.
-                 isCardNumberValidated($('#add-card-page #add-card-verify-card'));
-                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardLocale = card.cardLocale;
-                 utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage = card.cardImage;
-
-                 // update the card image file
-                 $('#add-card-page #add-card-image').attr("src", utopiasoftware.saveup.controller.addCardPageViewModel.newCardImage);
-                 // display the card image row
-                 $('#add-card-image-container', $thisPage).css("display", "block");
-
-                 // re-update the form input fields
-                 Materialize.updateTextFields();
-                 //re-initialise the form select elements
-                 $('select', $thisPage).material_select();
-
-                 // remove the progress indeterminate loader
-                 $('.progress', $thisPage).remove();
-                 // make the add card form visible
-                 $('#add-card-form', $thisPage).css("display", "block");
-                 // enable the 'Cancel' & 'Save' buttons
-                 $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
-                 // hide the loader
-                 $('#loader-modal').get(0).hide();
-                 });
-                 }
-                 else {
-                 // remove the progress indeterminate loader
-                 $('.progress', $thisPage).remove();
-                 // make the add card form visible
-                 $('#add-card-form', $thisPage).css("display", "block");
-                 // enable the 'Cancel' & 'Save' buttons
-                 $('#add-card-cancel-button, #add-card-save-button', $thisPage).removeAttr("disabled");
-                 // hide the loader
-                 $('#loader-modal').get(0).hide();
-                 } */
 
             }
 
