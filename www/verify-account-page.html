@@ -42,7 +42,7 @@
                 </div>
                 <div class="col s8 input-field" style="position: relative">
                     <select id="verify-account-choose-bank"
-                            onchange="$('#hidden-choose-bank-input').val($(this).val()); $('#hidden-choose-bank-input').blur();
+                            onchange="$('#verify-account-page #hidden-choose-bank-input').val($(this).val()); $('#verify-account-page #hidden-choose-bank-input').blur();
                             utopiasoftware.saveup.controller.verifyAccountPageViewModel.resetVerifiedAcctDisplay();">
                         <option value="" disabled selected>Choose Bank</option>
                     </select>

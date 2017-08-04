@@ -4016,8 +4016,10 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                data-acct-object='${JSON.stringify({recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
@@ -4114,8 +4116,10 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                data-acct-object='${JSON.stringify({recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
@@ -4231,8 +4235,10 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                data-acct-object='${JSON.stringify({recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
@@ -4353,6 +4359,48 @@ utopiasoftware.saveup.controller = {
             $('#app-main-navigator').get(0).pushPage("add-recipient-page.html", {
                 animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
             });
+        },
+
+
+        /**
+         * method is used to trigger the transfer cash operation. It uses the
+         * selected user's 'Saved Recipient' object as the recipient account for the initiated
+         * cash transfer
+         *
+         * @param buttonElem
+         */
+        transferCashButtonClicked: function(buttonElem){
+
+            // ask user for secure PIN before proceeding. secure pin MUST match
+            ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                'Please enter your PostCash Secure PIN to proceed</span></div>',
+                cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                submitOnEnter: true
+            }).
+            then(function(userInput){ // user has provided a secured PIN , now authenticate it
+                if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                    // close the 'verify account' the bottom sheets
+                    $('#verify-account-bottom-sheet').modal('close');
+                    $('#transfer-cash-page').remove(); // remove previous transfer cash pages
+                    // call the transfer-cash-page and pass the 'saved recipient' details contained in the data attribute as recipient details data
+                    $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
+                        data: {
+                            recipient_details: JSON.parse($(buttonElem).attr("data-acct-object"))}
+                    }); // navigate to the specified page
+                }
+                else{ // inform user that security check failed/user authentication failed
+                    ons.notification.alert({title: "Security Check",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
+                        cancelable: true
+                    });
+                }
+            }).
+            catch(function(){});
+
+            return;
         }
 
     },

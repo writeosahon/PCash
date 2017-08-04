@@ -72,8 +72,10 @@
                             <label for="transfer-cash-bank-sender-choose-bank"></label>
                         </div>
                         <input id="hidden-choose-sender-bank-input" type="text" required
+                               data-parsley-equalto="#transfer-cash-bank-sender-choose-bank"
                                data-parsley-trigger-after-failure="focusout"
                                data-parsley-required-message="pick a bank"
+                               data-parsley-equalto-message="pick a bank"
                                class="hint--bottom-left utopiasoftware-no-style"
                                style="position: absolute; top: 10%; left: 20%; visibility: collapse; z-index: -10">
                     </div>
