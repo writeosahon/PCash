@@ -1625,25 +1625,24 @@ utopiasoftware.saveup.controller = {
 
             if(label == "transfer cash"){ // 'Transfer Cash to account' button was clicked
 
-                // close the side menu
-                $('ons-splitter').get(0).left.close().
-                then(function(){
-                    // ask user for secure PIN before proceeding. secure pin MUST match
-                    return ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
-                        messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
-                        'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
-                        'Please enter your PostCash Secure PIN to proceed</span></div>',
-                        cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
-                        submitOnEnter: true
-                    });
+                // ask user for secure PIN before proceeding. secure pin MUST match
+                ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                    messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                    'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                    'Please enter your PostCash Secure PIN to proceed</span></div>',
+                    cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                    submitOnEnter: true
                 }).
                 then(function(userInput){ // user has provided a secured PIN , now authenticate it
                     if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                        // close the 'verify account' the bottom sheets
+                        $('#verify-account-bottom-sheet').modal('close');
                         $('#transfer-cash-page').remove(); // remove previous transfer cash pages
                         // call the transfer-cash=page and pass the verified account as recipient details data
                         $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
-                            recipient_details: {recipientAccount: $('#verify-account-page #verify-account-number').val(),
-                            recipientBankCode: $('#verify-account-page #verify-account-choose-bank').val()}
+                            data: {
+                                recipient_details: {recipientAccount: $('#verify-account-page #verify-account-number').val(),
+                                    recipientBankCode: $('#verify-account-page #verify-account-choose-bank').val()}}
                         }); // navigate to the specified page
                     }
                     else{ // inform user that security check failed/user authentication failed
@@ -2977,8 +2976,10 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                data-acct-object='${JSON.stringify({senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
@@ -3075,8 +3076,11 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                data-acct-object='${JSON.stringify({senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}'
+                                modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
@@ -3192,11 +3196,11 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
-                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
-                                </ons-icon>
-                                </ons-button>
+                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                data-acct-object='${JSON.stringify({senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}'
+                                modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
@@ -3313,6 +3317,47 @@ utopiasoftware.saveup.controller = {
             $('#app-main-navigator').get(0).pushPage("add-account-page.html", {
                 animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
             });
+        },
+
+        /**
+         * method is used to trigger the transfer cash operation. It uses the
+         * selected user's 'My Account' object as the sender account for the initiated
+         * cash transfer
+         *
+         * @param buttonElem
+         */
+        transferCashButtonClicked: function(buttonElem){
+
+            // ask user for secure PIN before proceeding. secure pin MUST match
+            ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                'Please enter your PostCash Secure PIN to proceed</span></div>',
+                cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                submitOnEnter: true
+            }).
+            then(function(userInput){ // user has provided a secured PIN , now authenticate it
+                if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                    // close the 'verify account' the bottom sheets
+                    $('#verify-account-bottom-sheet').modal('close');
+                    $('#transfer-cash-page').remove(); // remove previous transfer cash pages
+                    // call the transfer-cash=page and pass the 'my account' details contained in the data attribute as sender details data
+                    $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
+                        data: {
+                            sender_details: JSON.parse($(buttonElem).attr("data-acct-object"))}
+                    }); // navigate to the specified page
+                }
+                else{ // inform user that security check failed/user authentication failed
+                    ons.notification.alert({title: "Security Check",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
+                        cancelable: true
+                    });
+                }
+            }).
+            catch(function(){});
+
+            return;
         }
 
     },
@@ -4924,7 +4969,7 @@ utopiasoftware.saveup.controller = {
                         $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
                     }
                     else{ // the second tab is active
-                        // move the tab view to the Bank tab
+                        // move the tab view to the Card tab
                         $('.transfer-cash-tabbar').get(0).setActiveTab(0, {animation: "slide"});
                     }
 
@@ -5049,7 +5094,31 @@ utopiasoftware.saveup.controller = {
                     // initialise all the select element
                     $('select', $thisPage).material_select();
                     return null;
-                }, function(){return null}).
+                }, function(){return null;}).
+                then(function(){
+                    var pageDataObject = $('#app-main-navigator').get(0).topPage.data; // get the data attached to this page
+
+                    // check if the data contains recipient account details
+                    if(pageDataObject && pageDataObject.recipient_details){ // recipient account details are present
+                        // update the form details to contains the received recipient account details
+                        $('#transfer-cash-card-recipient-account-name', $thisPage).
+                        val(pageDataObject.recipient_details.recipientAccount);
+                        $('#transfer-cash-card-choose-bank', $thisPage).
+                        val(pageDataObject.recipient_details.recipientBankCode);
+                        // update the display of all the select element
+                        $('select', $thisPage).material_select();
+                        Materialize.updateTextFields(); // update the display of text input fields
+                    }
+
+                    // check if the data contains sender account details
+                    if(pageDataObject && pageDataObject.sender_details){ // sender account details are present
+                        // move the tab view to the Bank tab
+                        $('.transfer-cash-tabbar').get(0).setActiveTab(1, {animation: "slide"});
+                    }
+
+
+                    return null; // return null to move to the next step
+                }, function(){return null;}).
                 then(function(){
                     // remove the progress indeterminate loader
                     $('.progress', $thisPage).remove();
@@ -5987,7 +6056,7 @@ utopiasoftware.saveup.controller = {
                         $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
                     }
                     else{ // the second tab is active
-                        // move the tab view to the Bank tab
+                        // move the tab view to the Card tab
                         $('.transfer-cash-tabbar').get(0).setActiveTab(0, {animation: "slide"});
                     }
 
@@ -6093,7 +6162,7 @@ utopiasoftware.saveup.controller = {
                     // initialise the 'sender bank' select element
                     $('#transfer-cash-bank-sender-choose-bank', $thisPage).material_select();
                     return bankArrayData; // return at this point, so the page can continue initialisation
-                }, function(){}).
+                }, function(){return [[],[]];}).
                 then(function(bankArrayData){
                     var optionTags = ""; // string to hold all created option tags
 
@@ -6110,7 +6179,33 @@ utopiasoftware.saveup.controller = {
                     // initialise the 'recipient bank' select element
                     $('#transfer-cash-bank-recipient-choose-bank', $thisPage).material_select();
                     return bankArrayData; // return at this point, so the page can continue initialisation
-                }, function(){}).
+                }, function(){return null;}).
+                then(function(){
+                    var pageDataObject = $('#app-main-navigator').get(0).topPage.data; // get the data attached to this page
+
+                    // check if the data contains recipient account details
+                    if(pageDataObject && pageDataObject.recipient_details){ // recipient account details are present
+                        // update the form details to contains the received recipient account details
+                        $('#transfer-cash-bank-recipient-account-name', $thisPage).
+                        val(pageDataObject.recipient_details.recipientAccount);
+                        $('#transfer-cash-bank-recipient-choose-bank', $thisPage).
+                        val(pageDataObject.recipient_details.recipientBankCode);
+                    }
+
+                    // check if the data contains sender account details
+                    if(pageDataObject && pageDataObject.sender_details){
+                        // update the form details to contain the received sender account details
+                        $('#transfer-cash-bank-sender-account-name', $thisPage).
+                        val(pageDataObject.sender_details.senderAccount);
+                        $('#transfer-cash-bank-sender-choose-bank', $thisPage).
+                        val(pageDataObject.sender_details.senderBankCode);
+                    }
+
+                    // update the display of all the select element
+                    $('select', $thisPage).material_select();
+                    Materialize.updateTextFields(); // update the display of text input fields
+                    return null; // return null to move to the next step
+                }, function(){return null;}).
                 then(function(){
                     // remove the progress indeterminate loader
                     $('.progress', $thisPage).remove();
