@@ -1886,8 +1886,13 @@ utopiasoftware.saveup.controller = {
                                 ${cardsArray[index].cardLocale == "international" ? "(International)" : ""}</div>
                                 </div>
                                 <div class="card-action" style="padding: 0;">
-                                <ons-button modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-button data-id="${cardsArray[index].cardUniqueId}"
+                                data-acct-object='${JSON.stringify({senderCardNickName:cardsArray[index].cardNickName,
+                                    senderCardNumber:cardsArray[index].cardNumber,
+                                    senderCardCvv:cardsArray[index].cvv,senderCardExpiryMonth:cardsArray[index].cardExpiryMonth,
+                                    senderCardExpiryYear:cardsArray[index].cardExpiryYear})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
                                 </ons-button>
@@ -1986,11 +1991,16 @@ utopiasoftware.saveup.controller = {
                             ${cardsArray[index].cardLocale == "international" ? "(International)" : ""}</div>
                             </div>
                             <div class="card-action" style="padding: 0;">
-                            <ons-button modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
-                            <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
-                            </ons-icon>
-                            </ons-button>
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}"
+                                data-acct-object='${JSON.stringify({senderCardNickName:cardsArray[index].cardNickName,
+                                senderCardNumber:cardsArray[index].cardNumber,
+                                senderCardCvv:cardsArray[index].cvv,senderCardExpiryMonth:cardsArray[index].cardExpiryMonth,
+                                senderCardExpiryYear:cardsArray[index].cardExpiryYear})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.transferCashButtonClicked(this);">
+                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                                </ons-icon>
+                                </ons-button>
                             <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
                                     style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
                                     onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.editCardButtonClicked(this)">
@@ -2105,11 +2115,16 @@ utopiasoftware.saveup.controller = {
                             ${cardsArray[index].cardLocale == "international" ? "(International)" : ""}</div>
                             </div>
                             <div class="card-action" style="padding: 0;">
-                            <ons-button modifier="quiet" disable-auto-styling class="right"
-                                    style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
-                            <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
-                            </ons-icon>
-                            </ons-button>
+                            <ons-button data-id="${cardsArray[index].cardUniqueId}"
+                                data-acct-object='${JSON.stringify({senderCardNickName:cardsArray[index].cardNickName,
+                                senderCardNumber:cardsArray[index].cardNumber,
+                                senderCardCvv:cardsArray[index].cvv,senderCardExpiryMonth:cardsArray[index].cardExpiryMonth,
+                                senderCardExpiryYear:cardsArray[index].cardExpiryYear})}' modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
+                                        onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.transferCashButtonClicked(this);">
+                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                                </ons-icon>
+                                </ons-button>
                             <ons-button data-id="${cardsArray[index].cardUniqueId}" modifier="quiet" disable-auto-styling class="right"
                                     style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
                                     onclick="utopiasoftware.saveup.controller.myCardsPageViewModel.editCardButtonClicked(this)">
@@ -2230,6 +2245,49 @@ utopiasoftware.saveup.controller = {
             $('#app-main-navigator').get(0).pushPage("add-card-page.html", {
                 animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
             });
+        },
+
+
+
+        /**
+         * method is used to trigger the transfer cash operation. It uses the
+         * selected user's 'My Card' object as the sender's card for the initiated
+         * cash transfer
+         *
+         * @param buttonElem
+         */
+        transferCashButtonClicked: function(buttonElem){
+
+            // ask user for secure PIN before proceeding. secure pin MUST match
+            ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
+                messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
+                'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
+                'Please enter your PostCash Secure PIN to proceed</span></div>',
+                cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
+                submitOnEnter: true
+            }).
+            then(function(userInput){ // user has provided a secured PIN , now authenticate it
+                if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
+                    // close the 'verify account' the bottom sheets
+                    $('#verify-account-bottom-sheet').modal('close');
+                    $('#transfer-cash-page').remove(); // remove previous transfer cash pages
+                    // call the transfer-cash=page and pass the 'my card' details contained in the data attribute as card details data
+                    $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
+                        data: {
+                            sender_card_details: JSON.parse($(buttonElem).attr("data-acct-object"))}
+                    }); // navigate to the specified page
+                }
+                else{ // inform user that security check failed/user authentication failed
+                    ons.notification.alert({title: "Security Check",
+                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                        'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
+                        cancelable: true
+                    });
+                }
+            }).
+            catch(function(){});
+
+            return;
         }
 
     },
@@ -5161,6 +5219,27 @@ utopiasoftware.saveup.controller = {
                     if(pageDataObject && pageDataObject.sender_details){ // sender account details are present
                         // move the tab view to the Bank tab
                         $('.transfer-cash-tabbar').get(0).setActiveTab(1, {animation: "slide"});
+                    }
+
+                    // check if the data contains sender card details
+                    if(pageDataObject && pageDataObject.sender_card_details){ // sender card details are present
+                        // update the form details to contain the sender card details
+                        $('#transfer-cash-card-number', $thisPage).
+                        val(pageDataObject.sender_card_details.senderCardNickName + " - " +
+                            pageDataObject.sender_card_details.senderCardNumber);
+                        $('#transfer-cash-card-cvv', $thisPage).
+                        val(pageDataObject.sender_card_details.senderCardCvv);
+                        $('#transfer-cash-card-expiry-month', $thisPage).
+                        val(pageDataObject.sender_card_details.senderCardExpiryMonth);
+                        $('#hidden-card-expiry-month-input', $thisPage).
+                        val(pageDataObject.sender_card_details.senderCardExpiryMonth);
+                        $('#transfer-cash-card-expiry-year', $thisPage).
+                        val(pageDataObject.sender_card_details.senderCardExpiryYear);
+                        $('#hidden-card-expiry-year-input', $thisPage).
+                        val(pageDataObject.sender_card_details.senderCardExpiryYear);
+
+                        // display the verify card type checkbox to the user
+                        $('.postcash-transfer-cash-card-hidden-info:eq(0)', $thisPage).css("display", "block");
                     }
 
                     // update the display of all the select element
