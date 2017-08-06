@@ -1641,7 +1641,9 @@ utopiasoftware.saveup.controller = {
                         // call the transfer-cash=page and pass the verified account as recipient details data
                         $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
                             data: {
-                                recipient_details: {recipientAccount: $('#verify-account-page #verify-account-number').val(),
+                                recipient_details: {
+                                    recipientAccountName: $('#verify-account-name').val(),
+                                    recipientAccount: $('#verify-account-page #verify-account-number').val(),
                                     recipientBankCode: $('#verify-account-page #verify-account-choose-bank').val()}}
                         }); // navigate to the specified page
                     }
@@ -3035,7 +3037,7 @@ utopiasoftware.saveup.controller = {
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
@@ -3135,8 +3137,7 @@ utopiasoftware.saveup.controller = {
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}'
-                                modifier="quiet" disable-auto-styling class="right"
+                                data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
@@ -3255,10 +3256,12 @@ utopiasoftware.saveup.controller = {
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}'
-                                modifier="quiet" disable-auto-styling class="right"
+                                data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
+                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                                </ons-icon>
+                                </ons-button>
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
@@ -4075,7 +4078,7 @@ utopiasoftware.saveup.controller = {
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                data-acct-object='${JSON.stringify({recipientAccountName: banksAcctsArray[index].bankAccountName, recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
@@ -4175,7 +4178,7 @@ utopiasoftware.saveup.controller = {
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                data-acct-object='${JSON.stringify({recipientAccountName: banksAcctsArray[index].bankAccountName, recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
@@ -4294,7 +4297,7 @@ utopiasoftware.saveup.controller = {
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
+                                data-acct-object='${JSON.stringify({recipientAccountName: banksAcctsArray[index].bankAccountName, recipientAccount: banksAcctsArray[index].bankAccountNumber,recipientBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.savedRecipientsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
@@ -5208,7 +5211,8 @@ utopiasoftware.saveup.controller = {
                     if(pageDataObject && pageDataObject.recipient_details){ // recipient account details are present
                         // update the form details to contains the received recipient account details
                         $('#transfer-cash-card-recipient-account-name', $thisPage).
-                        val(pageDataObject.recipient_details.recipientAccount);
+                        val(pageDataObject.recipient_details.recipientAccountName + " - " +
+                            pageDataObject.recipient_details.recipientAccount);
                         $('#transfer-cash-card-choose-bank', $thisPage).
                         val(pageDataObject.recipient_details.recipientBankCode);
                         $('#hidden-choose-bank-input', $thisPage).
@@ -6259,7 +6263,8 @@ utopiasoftware.saveup.controller = {
                     if(pageDataObject && pageDataObject.recipient_details){ // recipient account details are present
                         // update the form details to contains the received recipient account details
                         $('#transfer-cash-bank-recipient-account-name', $thisPage).
-                        val(pageDataObject.recipient_details.recipientAccount);
+                        val(pageDataObject.recipient_details.recipientAccountName + " - " +
+                            pageDataObject.recipient_details.recipientAccount);
                         $('#transfer-cash-bank-recipient-choose-bank', $thisPage).
                         val(pageDataObject.recipient_details.recipientBankCode);
                         $('#hidden-choose-recipient-bank-input', $thisPage).
@@ -6270,7 +6275,8 @@ utopiasoftware.saveup.controller = {
                     if(pageDataObject && pageDataObject.sender_details){
                         // update the form details to contain the received sender account details
                         $('#transfer-cash-bank-sender-account-name', $thisPage).
-                        val(pageDataObject.sender_details.senderAccount);
+                        val(pageDataObject.sender_details.senderAccountName + " - " +
+                            pageDataObject.sender_details.senderAccount);
                         $('#transfer-cash-bank-sender-choose-bank', $thisPage).
                         val(pageDataObject.sender_details.senderBankCode);
                         $('#hidden-choose-sender-bank-input', $thisPage).
