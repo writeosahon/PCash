@@ -852,8 +852,8 @@ utopiasoftware.saveup.controller = {
             }).
             then(function(){
 
-                return null;
-                //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
+                //return null;
+                return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
             }).
             then(function(){
                 // display the loader message to indicate that account is being created;

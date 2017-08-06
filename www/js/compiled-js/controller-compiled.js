@@ -275,8 +275,8 @@ utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.destro
          */createAccountFormValidated:function createAccountFormValidated(){// tell the user that phoe number verification is necessary
 new Promise(function(resolve,reject){ons.notification.confirm('To complete sign up, your phone number must be verified. <br>'+'Usual SMS charge from your phone network provider will apply',{title:'Verify Phone Number',buttonLabels:['Cancel','Ok']})// Ask for confirmation
 .then(function(index){if(index===1){// OK button
-resolve();}else{reject("your phone number could not be verified");}});}).then(function(){return null;//return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
-}).then(function(){// display the loader message to indicate that account is being created;
+resolve();}else{reject("your phone number could not be verified");}});}).then(function(){//return null;
+return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());}).then(function(){// display the loader message to indicate that account is being created;
 $('#loader-modal-message').html("Completing Sign Up...");$('#loader-modal').get(0).show();// show loader
 // create the app user details object and persist it
 utopiasoftware.saveup.model.appUserDetails={firstName:$('#create-account-form #create-first-name').val(),lastName:$('#create-account-form #create-last-name').val(),phoneNumber:$('#create-account-form #create-phone').val(),phoneNumber_intlFormat:$('#create-account-form #create-phone').val().startsWith("0")?$('#create-account-form #create-phone').val().replace("0","+234"):$('#create-account-form #create-phone').val(),securePin:$('#create-account-form #create-secure-pin').val()};return utopiasoftware.saveup.model.appUserDetails;}).// TODO DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
