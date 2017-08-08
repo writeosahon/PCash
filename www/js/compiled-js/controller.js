@@ -852,13 +852,73 @@ utopiasoftware.saveup.controller = {
             }).
             then(function(){
 
-                //return null;
-                return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
+                return null;
+                //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
             }).
             then(function(){
                 // display the loader message to indicate that account is being created;
                 $('#loader-modal-message').html("Completing Sign Up...");
-                $('#loader-modal').get(0).show(); // show loader
+                return Promise.resolve($('#loader-modal').get(0).show()); // show loader
+            }).
+            then(function(){ // clear all data belonging to previous user
+                var promisesArray = []; // holds all the Promise objects for all data being deleted
+
+                var promiseObject = new Promise(function(resolve, reject){
+                    // delete the user app details from secure storage if it exists
+                    Promise.resolve(intel.security.secureStorage.
+                    delete({'id':'postcash-user-details'})).
+                    then(function(){resolve();},function(){resolve();}); // ALWAYS resolve the promise
+                });
+
+                // add the promise object to the promise array
+                promisesArray.push(promiseObject);
+
+                promiseObject = new Promise(function(resolve, reject){
+                    /// delete all the user's financial cards data
+                    utopiasoftware.saveup.financialCardOperations.deleteAllCards().
+                    then(function(){resolve();},function(){resolve();}); // ALWAYS resolve the promise
+                });
+
+                // add the promise object to the promise array
+                promisesArray.push(promiseObject);
+
+                promiseObject = new Promise(function(resolve, reject){
+                    /// delete all the user's bank account data
+                    utopiasoftware.saveup.bankAccountOperations.deleteAllMyAccounts().
+                    then(function(){resolve();},function(){resolve();}); // ALWAYS resolve the promise
+                });
+
+                // add the promise object to the promise array
+                promisesArray.push(promiseObject);
+
+                promiseObject = new Promise(function(resolve, reject){
+                    /// delete all the user's saved recipients data
+                    utopiasoftware.saveup.savedRecipientsBankAccountOperations.deleteAllSavedRecipientAccounts().
+                    then(function(){resolve();},function(){resolve();}); // ALWAYS resolve the promise
+                });
+
+                // add the promise object to the promise array
+                promisesArray.push(promiseObject);
+
+                promiseObject = new Promise(function(resolve, reject){
+                    /// delete all the user's transaction history data
+                    utopiasoftware.saveup.transactionHistoryOperations.deleteAllTransactionHistory().
+                    then(function(){resolve();},function(){resolve();}); // ALWAYS resolve the promise
+                });
+
+                // add the promise object to the promise array
+                promisesArray.push(promiseObject);
+
+                // return promise when all operations have completed
+                return Promise.all(promisesArray);
+            }).
+            then(function(){
+                // clear all data in the device local/session storage
+                window.localStorage.clear();
+                window.sessionStorage.clear();
+                return null;
+            }).
+            then(function(){
 
                 // create the app user details object and persist it
                 utopiasoftware.saveup.model.appUserDetails = {

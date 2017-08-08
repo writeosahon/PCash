@@ -275,10 +275,29 @@ utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.destro
          */createAccountFormValidated:function createAccountFormValidated(){// tell the user that phoe number verification is necessary
 new Promise(function(resolve,reject){ons.notification.confirm('To complete sign up, your phone number must be verified. <br>'+'Usual SMS charge from your phone network provider will apply',{title:'Verify Phone Number',buttonLabels:['Cancel','Ok']})// Ask for confirmation
 .then(function(index){if(index===1){// OK button
-resolve();}else{reject("your phone number could not be verified");}});}).then(function(){//return null;
-return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());}).then(function(){// display the loader message to indicate that account is being created;
-$('#loader-modal-message').html("Completing Sign Up...");$('#loader-modal').get(0).show();// show loader
-// create the app user details object and persist it
+resolve();}else{reject("your phone number could not be verified");}});}).then(function(){return null;//return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
+}).then(function(){// display the loader message to indicate that account is being created;
+$('#loader-modal-message').html("Completing Sign Up...");return Promise.resolve($('#loader-modal').get(0).show());// show loader
+}).then(function(){// clear all data belonging to previous user
+var promisesArray=[];// holds all the Promise objects for all data being deleted
+var promiseObject=new Promise(function(resolve,reject){// delete the user app details from secure storage if it exists
+Promise.resolve(intel.security.secureStorage.delete({'id':'postcash-user-details'})).then(function(){resolve();},function(){resolve();});// ALWAYS resolve the promise
+});// add the promise object to the promise array
+promisesArray.push(promiseObject);promiseObject=new Promise(function(resolve,reject){/// delete all the user's financial cards data
+utopiasoftware.saveup.financialCardOperations.deleteAllCards().then(function(){resolve();},function(){resolve();});// ALWAYS resolve the promise
+});// add the promise object to the promise array
+promisesArray.push(promiseObject);promiseObject=new Promise(function(resolve,reject){/// delete all the user's bank account data
+utopiasoftware.saveup.bankAccountOperations.deleteAllMyAccounts().then(function(){resolve();},function(){resolve();});// ALWAYS resolve the promise
+});// add the promise object to the promise array
+promisesArray.push(promiseObject);promiseObject=new Promise(function(resolve,reject){/// delete all the user's saved recipients data
+utopiasoftware.saveup.savedRecipientsBankAccountOperations.deleteAllSavedRecipientAccounts().then(function(){resolve();},function(){resolve();});// ALWAYS resolve the promise
+});// add the promise object to the promise array
+promisesArray.push(promiseObject);promiseObject=new Promise(function(resolve,reject){/// delete all the user's transaction history data
+utopiasoftware.saveup.transactionHistoryOperations.deleteAllTransactionHistory().then(function(){resolve();},function(){resolve();});// ALWAYS resolve the promise
+});// add the promise object to the promise array
+promisesArray.push(promiseObject);// return promise when all operations have completed
+return Promise.all(promisesArray);}).then(function(){// clear all data in the device local/session storage
+window.localStorage.clear();window.sessionStorage.clear();return null;}).then(function(){// create the app user details object and persist it
 utopiasoftware.saveup.model.appUserDetails={firstName:$('#create-account-form #create-first-name').val(),lastName:$('#create-account-form #create-last-name').val(),phoneNumber:$('#create-account-form #create-phone').val(),phoneNumber_intlFormat:$('#create-account-form #create-phone').val().startsWith("0")?$('#create-account-form #create-phone').val().replace("0","+234"):$('#create-account-form #create-phone').val(),securePin:$('#create-account-form #create-secure-pin').val()};return utopiasoftware.saveup.model.appUserDetails;}).// TODO DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
 then(function(newUser){// create a cypher data of the user details
 return Promise.resolve(intel.security.secureData.createFromData({"data":JSON.stringify(newUser)}));}).then(function(instanceId){// store the cyphered data in secure persistent storage
