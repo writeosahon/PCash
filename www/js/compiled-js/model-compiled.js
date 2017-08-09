@@ -149,4 +149,13 @@ $(document).on("hide", "#transfer-cash-bank-page", utopiasoftware.saveup.control
 // listen for the destroy event of the Transfer-Cash-Bank page
 $(document).on("destroy", "#transfer-cash-bank-page", utopiasoftware.saveup.controller.transferCashBankPageViewModel.pageDestroy);
 
+// listen for the initialisation of the Onboarding page
+$(document).on("init", "#onboarding-page", utopiasoftware.saveup.controller.onboardingPageViewModel.pageInit);
+
+// listen for when the Onboarding page is shown
+$(document).on("show", "#onboarding-page", utopiasoftware.saveup.controller.onboardingPageViewModel.pageShow);
+
+// listen for the destroy event of the Onboarding page
+$(document).on("destroy", "#onboarding-page", utopiasoftware.saveup.controller.onboardingPageViewModel.pageDestroy);
+
 //# sourceMappingURL=model-compiled.js.map

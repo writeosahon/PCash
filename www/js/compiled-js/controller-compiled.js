@@ -1,4 +1,4 @@
-'use strict';/**
+'use strict';function _defineProperty(obj,key,value){if(key in obj){Object.defineProperty(obj,key,{value:value,enumerable:true,configurable:true,writable:true});}else{obj[key]=value;}return obj;}/**
  * Created by UTOPIA SOFTWARE on 20/03/2017.
  *//**
  * file defines all View-Models, Controllers and Event Listeners used by the app
@@ -7,7 +7,7 @@
  * The author uses the terms 'method' and function interchangeably; likewise the terms 'attribute' and 'property' are
  * also used interchangeably
  */// define the controller namespace
-utopiasoftware.saveup.controller={/**
+utopiasoftware.saveup.controller=_defineProperty({/**
      * method is used to handle the special event created by the intel xdk developer library. The special event (app.Ready)
      * is triggered when ALL the hybrid app pluigins have been loaded/readied and also the document DOM content is ready
      */appReady:function appReady(){// initialise the onsen library
@@ -20,8 +20,12 @@ $('#security-pin-lock-modal #security-pin-lock-pin').val("");return;// exit
 }});if(utopiasoftware.saveup.model.isAppReady===false){// if app has not completed loading
 // displaying prepping message
 $('#loader-modal-message').html("Preparing App...");$('#loader-modal').get(0).show();// show loader
-}//set the first page to be displayed to be the login page
-$('ons-splitter').get(0).content.load("login-template");// initialise verify-account bottom sheet plugin
+}// check if the user is currently logged in
+if(window.localStorage.getItem("app-status")&&window.localStorage.getItem("app-status")!=""){// user is logged in
+//set the first page to be displayed to be the login page
+$('ons-splitter').get(0).content.load("login-template");}else{// user has NOT been logged in
+// set the first page to be displayed to be the onboarding page
+$('ons-splitter').get(0).content.load("onboarding-template");}// initialise verify-account bottom sheet plugin
 $('#verify-account-bottom-sheet').modal({ready:function ready(){// callback for when bottom sheet is opened
 // flag a state that indicates the bottom sheet is currently open
 $('#verify-account-bottom-sheet').data("saveupSheetState","open");},complete:function complete(){// callback for when bottom sheet is closed
@@ -36,6 +40,14 @@ window.plugins.toast.showWithOptions({message:"No Internet Connection. App funct
 position:"bottom",styling:{opacity:1,backgroundColor:'#000000',textColor:'#FFFFFF',textSize:14}});},false);// add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
 document.addEventListener("pause",function(){// function handles the display of the security-pin-lock-modal
 if($('#login-tabbar').get(0)&&$('#login-tabbar').get(0).visible){// if the login-tab is visible
+// don't display security-pin-lock-modal
+return;// exit the function immediately
+}// check if the onboarding-navigator is active and if the top page has asked for security lock modal NOT to be displayed
+if($('#onboarding-navigator').get(0)&&$('#onboarding-navigator').get(0).topPage.alwaysShowSecurityLockModal==false){// user does NOT want security lock modal
+// don't display security-pin-lock-modal
+return;// exit the function immediately
+}// check if the app-main-navigator is active and if the top page has asked for security lock modal NOT to be displayed
+if($('#app-main-navigator').get(0)&&$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal==false){// user does NOT want security lock modal
 // don't display security-pin-lock-modal
 return;// exit the function immediately
 }// check if the security lock modal can be display
@@ -298,8 +310,7 @@ utopiasoftware.saveup.transactionHistoryOperations.deleteAllTransactionHistory()
 promisesArray.push(promiseObject);// return promise when all operations have completed
 return Promise.all(promisesArray);}).then(function(){// clear all data in the device local/session storage
 window.localStorage.clear();window.sessionStorage.clear();return null;}).then(function(){// create the app user details object and persist it
-utopiasoftware.saveup.model.appUserDetails={firstName:$('#create-account-form #create-first-name').val(),lastName:$('#create-account-form #create-last-name').val(),phoneNumber:$('#create-account-form #create-phone').val(),phoneNumber_intlFormat:$('#create-account-form #create-phone').val().startsWith("0")?$('#create-account-form #create-phone').val().replace("0","+234"):$('#create-account-form #create-phone').val(),securePin:$('#create-account-form #create-secure-pin').val()};return utopiasoftware.saveup.model.appUserDetails;}).// TODO DON'T FORGET TO DESTROY ALL USER STORED DATA BEFORE CREATING NEW ACCOUNT. VERY IMPORTANT!!
-then(function(newUser){// create a cypher data of the user details
+utopiasoftware.saveup.model.appUserDetails={firstName:$('#create-account-form #create-first-name').val(),lastName:$('#create-account-form #create-last-name').val(),phoneNumber:$('#create-account-form #create-phone').val(),phoneNumber_intlFormat:$('#create-account-form #create-phone').val().startsWith("0")?$('#create-account-form #create-phone').val().replace("0","+234"):$('#create-account-form #create-phone').val(),securePin:$('#create-account-form #create-secure-pin').val()};return utopiasoftware.saveup.model.appUserDetails;}).then(function(newUser){// create a cypher data of the user details
 return Promise.resolve(intel.security.secureData.createFromData({"data":JSON.stringify(newUser)}));}).then(function(instanceId){// store the cyphered data in secure persistent storage
 return Promise.resolve(intel.security.secureStorage.write({"id":"postcash-user-details","instanceID":instanceId}));}).then(function(){$('#loader-modal').get(0).hide();// hide loader
 // set app-status local storage (as user phone number)
@@ -398,62 +409,8 @@ if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authenti
 $('#app-main-navigator').get(0).pushPage("saved-recipients-page.html",{});// navigate to the saved recipients pages
 }else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="intro"){// intro button was clicked
-$('ons-splitter').get(0).content.load("onboarding-template");// navigate to the onboarding presentation
+$('#app-main-navigator').get(0).pushPage("onboarding-page.html",{});// navigate ot the onboarding page
 return;}}},/**
-     * object is view-model for join-savings-groups page
-     */joinSavingsGroupsViewModel:{/**
-         * used to hold the parsley form validation object for the page
-         */formValidator:null,/**
-         * event is triggered when page is initialised
-         */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
-// find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
-$('ons-input input',$thisPage).addClass('utopiasoftware-no-style');// enable the swipeable feature for the app splitter
-$('ons-splitter-side').attr("swipeable",true);// call the function used to initialise the app page if the app is fully loaded
-loadPageOnAppReady();//function is used to initialise the page if the app is fully ready for execution
-function loadPageOnAppReady(){// check to see if onsen is ready and if all app loading has been completed
-if(!ons.isReady()||utopiasoftware.saveup.model.isAppReady===false){setTimeout(loadPageOnAppReady,500);// call this function again after half a second
-return;}// listen for the back button event
-$('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){$('#app-main-navigator').get(0).popPage({refresh:false});};// initilise the select element
-$('#join-savings-group-choose-group',$thisPage).material_select();// initialise the create-account form validation
-utopiasoftware.saveup.controller.joinSavingsGroupsViewModel.formValidator=$('#create-account-form').parsley();// attach listener for the create account button on the create account page
-$('#create-account-button').get(0).onclick=function(){// run the validation method for the create account form
-utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.whenValidate();};// listen for log in form field validation failure event
-utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.on('field:error',function(fieldInstance){// get the element that triggered the field validation error and use it to display tooltip
-// display tooltip
-$(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint",fieldInstance.getErrorsMessages()[0]);});// listen for log in form field validation success event
-utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.on('field:success',function(fieldInstance){// remove tooltip from element
-$(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");});// listen for log in form validation success
-utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.createAccountPageViewModel.createAccountFormValidated);// hide the loader
-$('#loader-modal').get(0).hide();}},/**
-         * method is triggered when the create-account page is hidden
-         * @param event
-         */pageHide:function pageHide(event){try{// remove any tooltip being displayed on all forms on the page
-$('#create-account-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#create-account-page [data-hint]').removeAttr("data-hint");// reset the form validator object on the page
-utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.reset();}catch(err){}},/**
-         * method is triggered when the sign-in page is destroyed
-         * @param event
-         */pageDestroy:function pageDestroy(event){try{// remove any tooltip being displayed on all forms on the page
-$('#create-account-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#create-account-page [data-hint]').removeAttr("data-hint");// destroy the form validator objects on the page
-utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.destroy();}catch(err){}},/**
-         * method is triggered when sign-in form is successfully validated
-         */createAccountFormValidated:function createAccountFormValidated(){// tell the user that phoe number verification is necessary
-new Promise(function(resolve,reject){ons.notification.confirm('To complete account creation, your phone number must be verified. <br>'+'Usual SMS charge from your phone network provider will apply',{title:'Verify Phone Number',buttonLabels:['Cancel','Ok']})// Ask for confirmation
-.then(function(index){if(index===1){// OK button
-resolve();}else{reject("your phone number could not be verified");}});}).then(function(){return null;//return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
-}).then(function(){$('ons-splitter').get(0).content.load("onboarding-template");}).catch(function(err){ons.notification.alert({title:"Account Creation Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+err+'</span>',cancelable:false});});},/**
-         * method is triggered when the Create Account PIN visibility button is clicked.
-         * It toggles pin visibility
-         *
-         * @param buttonElement
-         */pinVisibilityButtonClicked:function pinVisibilityButtonClicked(buttonElement){if($(buttonElement).attr("data-saveup-visible")==="no"){// pin is not visible, make it visible
-$('#create-secure-pin').css("-webkit-text-security","none");// change the text-security for the input field
-$(buttonElement).find('ons-icon').attr("icon","md-eye-off");// change the icon associated with the input
-$(buttonElement).attr("data-saveup-visible","yes");// flag the pin is now visible
-}else{// make the pin not visible
-$('#create-secure-pin').css("-webkit-text-security","disc");// change the text-security for the input field
-$(buttonElement).find('ons-icon').attr("icon","md-eye");// change the icon associated with the input
-$(buttonElement).attr("data-saveup-visible","no");// flag the pin is now invisible
-}}},/**
      * object is view-model for verify-account page
      */verifyAccountPageViewModel:{/**
          * used to hold the parsley form validation object for the page
@@ -2213,6 +2170,53 @@ $('.postcash-preloader-transfer-cash-bank-form-container',utopiasoftware.saveup.
 // update the display of the updated fields
 //Materialize.updateTextFields();
 $('select',utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.$element).material_select();// hide the preloaders that block input
-$('.postcash-preloader-transfer-cash-bank-form-container',utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.$element).css("display","none");});}}};
+$('.postcash-preloader-transfer-cash-bank-form-container',utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.$element).css("display","none");});}}},'onboardingPageViewModel',{//todo
+/**
+         * method is triggered when page is initialised
+         */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
+// disable the swipeable feature for the app splitter
+$('ons-splitter-side').removeAttr("swipeable");// call the function used to initialise the app page if the app is fully loaded
+loadPageOnAppReady();//function is used to initialise the page if the app is fully ready for execution
+function loadPageOnAppReady(){// check to see if onsen is ready and if all app loading has been completed
+if(!ons.isReady()||utopiasoftware.saveup.model.isAppReady===false){setTimeout(loadPageOnAppReady,500);// call this function again after half a second
+return;}// if the onboarding-navigator is active
+if($('#onboarding-navigator').get(0)&&$('#onboarding-navigator').get(0).topPage){// set the flag to inform the app NOT to display Security Lock Modal
+$('#onboarding-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;// listen for the back button event
+$('#onboarding-navigator').get(0).topPage.onDeviceBackButton=function(){ons.notification.confirm('Do you want to close the app?',{title:'Exit',buttonLabels:['No','Yes']})// Ask for confirmation
+.then(function(index){if(index===1){// OK button
+navigator.app.exitApp();// Close the app
+}});};}// if the app-main-navigator is active
+if($('#app-main-navigator').get(0)&&$('#app-main-navigator').get(0).topPage){// set the flag to inform the app NOT to display Security Lock Modal
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;//todo
+// listen for the back button event
+$('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check if the side menu is open
+if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
+$('ons-splitter').get(0).left.close();return;// exit the method
+}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};}// initialise carousel
+$('#onboarding-carousel',$thisPage).carousel({dist:0,fullWidth:true,indicators:true,noWrap:true});// hide the loader
+$('#loader-modal').get(0).hide();}},/**
+         * method is triggered when page is shown
+         */pageShow:function pageShow(){// disable the swipeable feature for the app splitter
+$('ons-splitter-side').removeAttr("swipeable");},/**
+         * method is triggered when page is destroyed
+         */pageDestroy:function pageDestroy(event){var $thisPage=$(event.target);// get the current page shown
+// destroy the carousel used for the onboarding slide
+$('#onboarding-carousel',$thisPage).off();$('#onboarding-carousel',$thisPage).removeData();},/**
+         * method is used to move the onboarding presentation to the next slide
+         *
+         * @param buttonElem
+         */nextSlideButtonClicked:function nextSlideButtonClicked(buttonElem){$('#onboarding-carousel').carousel('next');// move to the next slide
+// wait for the slide animation to complete
+setTimeout(function(){// check if this is the last slide in the presentation
+if($('.carousel-item.active').is('[href="#three!"]')){// this is the last slide
+$(buttonElem).css("display","none");// hide the Next button
+}},205);},/**
+         * method is used to end the onboarding presentation
+         */endButtonClicked:function endButtonClicked(){// check if the user is currently logged in
+if(window.localStorage.getItem("app-status")&&window.localStorage.getItem("app-status")!=""){// user is logged in
+// load the main menu template
+$('ons-splitter').get(0).content.load("app-main-template");}else{// user has NOT been logged in
+//set the first page to be displayed to be the login page
+$('ons-splitter').get(0).content.load("login-template");}}});
 
 //# sourceMappingURL=controller-compiled.js.map
