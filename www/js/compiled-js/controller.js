@@ -5288,11 +5288,11 @@ utopiasoftware.saveup.controller = {
 
                     //create the cash transfer data
                     var cashTransferData = {
-                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
-                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
+                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName.split(" ")[0],
+                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName.split(" ")[0],
                         phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
-                        email: (utopiasoftware.saveup.model.appUserDetails.firstName +
-                        utopiasoftware.saveup.model.appUserDetails.lastName) + Date.now() + "@mymail.com",
+                        email: (utopiasoftware.saveup.model.appUserDetails.firstName.split(" ")[0] +
+                        utopiasoftware.saveup.model.appUserDetails.lastName.split(" ")[0]) + Date.now() + "@mymail.com",
                         apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
                         medium: "mobile",
                         fee: utopiasoftware.saveup.model.fee,
@@ -6326,11 +6326,11 @@ utopiasoftware.saveup.controller = {
 
                     //create the cash transfer data
                     var cashTransferData = {
-                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName,
-                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName,
+                        firstname: utopiasoftware.saveup.model.appUserDetails.firstName.split(" ")[0],
+                        lastname: utopiasoftware.saveup.model.appUserDetails.lastName.split(" ")[0],
                         phonenumber: utopiasoftware.saveup.model.appUserDetails.phoneNumber_intlFormat,
-                        email: (utopiasoftware.saveup.model.appUserDetails.firstName +
-                        utopiasoftware.saveup.model.appUserDetails.lastName) + Date.now() + "@mymail.com",
+                        email: (utopiasoftware.saveup.model.appUserDetails.firstName.split(" ")[0] +
+                        utopiasoftware.saveup.model.appUserDetails.lastName.split(" ")[0]) + Date.now() + "@mymail.com",
                         apiKey: utopiasoftware.saveup.moneyWaveObject.key.apiKey,
                         medium: "mobile",
                         recipient: "wallet",
