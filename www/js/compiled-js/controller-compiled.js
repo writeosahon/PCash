@@ -140,9 +140,9 @@ return ons.notification.prompt({title:"Security Check",id:"pin-security-check",c
 if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
 $('#app-main-navigator').get(0).bringPageTop("saved-recipients-page.html",{});// navigate to the specified page
 }else{// inform user that security check failed/user authentication failed
-ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="intro"){// intro button was clicked
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="intro"){// 'intro' button was clicked
 // close the side menu
-$('ons-splitter').get(0).left.close().then(function(){$('ons-splitter').get(0).content.load("onboarding-template");// navigate to the onboarding presentation
+$('ons-splitter').get(0).left.close().then(function(){$('#app-main-navigator').get(0).bringPageTop("onboarding-page.html",{});// navigate to the onboarding page
 }).catch(function(){});return;}}},/**
      * object is the view-model for the app security-pin-lock-modal
      */securityPinLockModalViewModel:{/**
@@ -2171,8 +2171,7 @@ $('.postcash-preloader-transfer-cash-bank-form-container',utopiasoftware.saveup.
 // update the display of the updated fields
 //Materialize.updateTextFields();
 $('select',utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.$element).material_select();// hide the preloaders that block input
-$('.postcash-preloader-transfer-cash-bank-form-container',utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.$element).css("display","none");});}}},'onboardingPageViewModel',{//todo
-/**
+$('.postcash-preloader-transfer-cash-bank-form-container',utopiasoftware.saveup.controller.transferCashBankPageViewModel.formValidator.$element).css("display","none");});}}},'onboardingPageViewModel',{/**
          * method is triggered when page is initialised
          */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
 // disable the swipeable feature for the app splitter
@@ -2188,8 +2187,7 @@ $('#onboarding-navigator').get(0).topPage.onDeviceBackButton=function(){ons.noti
 navigator.app.exitApp();// Close the app
 }});};}// if the app-main-navigator is active
 if($('#app-main-navigator').get(0)&&$('#app-main-navigator').get(0).topPage){// set the flag to inform the app NOT to display Security Lock Modal
-$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;//todo
-// listen for the back button event
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;// listen for the back button event
 $('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check if the side menu is open
 if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
 $('ons-splitter').get(0).left.close();return;// exit the method

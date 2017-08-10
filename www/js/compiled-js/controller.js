@@ -447,12 +447,12 @@ utopiasoftware.saveup.controller = {
                 return;
             }
 
-            if(label == "intro"){ // intro button was clicked
+            if(label == "intro"){ // 'intro' button was clicked
 
                 // close the side menu
                 $('ons-splitter').get(0).left.close().
                 then(function(){
-                    $('ons-splitter').get(0).content.load("onboarding-template"); // navigate to the onboarding presentation
+                    $('#app-main-navigator').get(0).bringPageTop("onboarding-page.html", {}); // navigate to the onboarding page
                 }).catch(function(){});
 
                 return;
@@ -6849,7 +6849,7 @@ utopiasoftware.saveup.controller = {
     /**
      * object is view-model for onboarding page
      */
-    onboardingPageViewModel: { //todo
+    onboardingPageViewModel: {
 
         /**
          * method is triggered when page is initialised
@@ -6890,7 +6890,7 @@ utopiasoftware.saveup.controller = {
                 // if the app-main-navigator is active
                 if($('#app-main-navigator').get(0) && $('#app-main-navigator').get(0).topPage){
                     // set the flag to inform the app NOT to display Security Lock Modal
-                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;//todo
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
                     // listen for the back button event
                     $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
                         // check if the side menu is open
