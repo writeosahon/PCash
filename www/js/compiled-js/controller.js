@@ -170,7 +170,7 @@ utopiasoftware.saveup.controller = {
             }
 
             if(event.origin == "https://postcash.000webhostapp.com" && event.data == "b loaded"){
-                console.log("HERE 1");
+
                 // call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
                 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 1");
                 return; // exit method
@@ -872,10 +872,10 @@ utopiasoftware.saveup.controller = {
                         }
                     });
             }).
-            then(function(){
+            then(function(){ // verify the user's phone number
 
-                return null;
-                //return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
+                //return null;
+                return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
             }).
             then(function(){
                 // display the loader message to indicate that account is being created;
@@ -6567,7 +6567,7 @@ utopiasoftware.saveup.controller = {
                         return $('#loader-modal').get(0).hide(); // hide loader
                     }).
                     then(function(){
-                        console.log("ERROR", error);
+
                        return ons.notification.alert({title: "Cash Transfer Failed",
                            messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                            'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +
@@ -6652,7 +6652,7 @@ utopiasoftware.saveup.controller = {
                         return $('#loader-modal').get(0).hide(); // hide loader
                     }).
                     then(function(){
-                        console.log("ERROR", error);
+
                         return ons.notification.alert({title: "Cash Transfer Failed",
                             messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
                             'style="color: red;"></ons-icon> <span>' + (error.message || "") + ' Sorry, your cash transfer was not authorised. ' +

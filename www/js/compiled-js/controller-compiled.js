@@ -61,7 +61,7 @@ $('#security-pin-lock-modal').get(0).show();// show the security-pin-lock-modal
 window.addEventListener("message",function(event){try{// check that event is from the expected origin & carrying the proper message
 if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="c done"){// call the method to handle the event i.e transfer-cash-card authorisation
 utopiasoftware.saveup.controller.transferCashCardPageViewModel.transferCashCardOtpAuthorize();return;// exit method
-}if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="b loaded"){console.log("HERE 1");// call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
+}if(event.origin=="https://postcash.000webhostapp.com"&&event.data=="b loaded"){// call the method to handle the event i.e transfer-cash-bank remote authorisation stage 1
 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 1");return;// exit method
 }if(event.origin=="https://postcash.000webhostapp.com"&&JSON.parse(event.data)&&JSON.parse(event.data).state=="b completed"){// call the method to handle the event i.e transfer-cash-bank remote authorisation stage 2
 utopiasoftware.saveup.controller.transferCashBankPageViewModel.transferCashBankRemoteAuthorize("stage 2",JSON.parse(event.data));return;// exit method
@@ -287,8 +287,9 @@ utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.destro
          */createAccountFormValidated:function createAccountFormValidated(){// tell the user that phoe number verification is necessary
 new Promise(function(resolve,reject){ons.notification.confirm('To complete sign up, your phone number must be verified. <br>'+'Usual SMS charge from your phone network provider will apply',{title:'Verify Phone Number',buttonLabels:['Cancel','Ok']})// Ask for confirmation
 .then(function(index){if(index===1){// OK button
-resolve();}else{reject("your phone number could not be verified");}});}).then(function(){return null;//return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());
-}).then(function(){// display the loader message to indicate that account is being created;
+resolve();}else{reject("your phone number could not be verified");}});}).then(function(){// verify the user's phone number
+//return null;
+return utopiasoftware.saveup.validatePhoneNumber($('#create-phone').val());}).then(function(){// display the loader message to indicate that account is being created;
 $('#loader-modal-message').html("Completing Sign Up...");return Promise.resolve($('#loader-modal').get(0).show());// show loader
 }).then(function(){// clear all data belonging to previous user
 var promisesArray=[];// holds all the Promise objects for all data being deleted
@@ -2095,7 +2096,7 @@ cashTransferAuthorisation.fail(function(jqxhr){reject(JSON.parse(jqxhr.responseT
 var transferData={transferData:responseData.data,authorizationToken:secureToken,postcash_fee:utopiasoftware.saveup.model.fee,postcash_transferDetails:{narration:$('#transfer-cash-bank-narration','#transfer-cash-bank-page').val(),sender_bank:$('#transfer-cash-bank-sender-choose-bank','#transfer-cash-bank-page').val(),sender_account_number:$('#transfer-cash-bank-sender-account-name','#transfer-cash-bank-page').val().split(" - ").pop(),recipient_bank:$('#transfer-cash-bank-recipient-choose-bank','#transfer-cash-bank-page').val(),recipient_account_number:$('#transfer-cash-bank-recipient-account-name','#transfer-cash-bank-page').val().split(" - ").pop()}};// post the transfer details to the transfer authorization iframe for stage 2 processing
 $('#transfer-cash-bank-authorise-modal #transfer-cash-bank-authorise-iframe').get(0).contentWindow.postMessage(JSON.stringify(transferData),"https://postcash.000webhostapp.com");}).catch(function(error){// update the transaction history for the cash transfer (bank) transaction to mark failure
 utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"),error).then(function(){return $('#loader-modal').get(0).hide();// hide loader
-}).then(function(){console.log("ERROR",error);return ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true});}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');}).catch(function(){$('#loader-modal').get(0).hide();});});}// check if user has completed stage 2 of transfer authorisation
+}).then(function(){return ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true});}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');}).catch(function(){$('#loader-modal').get(0).hide();});});}// check if user has completed stage 2 of transfer authorisation
 if(authorizationStage=="stage 2"){// user has completed stage 2 of transfer authorisation
 // display message to user
 $('#loader-modal-message').html("Checking Authorization... Please Wait");$('#loader-modal').get(0).show();// show loader
@@ -2112,7 +2113,7 @@ return utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHisto
 return $('#financial-operations-success-modal').get(0).show();}).then(function(){// show the financial operations success modal after 1 second
 window.setTimeout(function(){$('#financial-operations-success-modal .circle').addClass("show");},1000);}).catch(function(error){// update the transaction history for the cash transfer (bank) transaction to mark failure
 utopiasoftware.saveup.transactionHistoryOperations.updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"),error).then(function(){return $('#loader-modal').get(0).hide();// hide loader
-}).then(function(){console.log("ERROR",error);return ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true});}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');}).catch(function(){$('#loader-modal').get(0).hide();});});}},/**
+}).then(function(){return ons.notification.alert({title:"Cash Transfer Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+(error.message||"")+' Sorry, your cash transfer was not authorised. '+'<br>You can check this transaction status OR resend the cash transfer'+'</span>',cancelable:true});}).then(function(){$('#app-main-navigator').get(0).resetToPage('main-menu-page.html');}).catch(function(){$('#loader-modal').get(0).hide();});});}},/**
          * method is used to trigger the initiation of the Authorization process of
          * cash transfer with Bank Account
          */transferCashBankAuthorizeProceed:function transferCashBankAuthorizeProceed(){// change the content of the bank authorisation iframe
