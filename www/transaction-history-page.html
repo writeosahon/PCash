@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- transaction-history page -->
+<ons-page id="transaction-history-page">
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button onclick="$('#side-menu').get(0).toggle()">
+                <ons-icon icon="md-saveup-icon-saveup-square-menu" size="14px"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+            Transaction History
+        </div>
+        <div class="right">
+            <ons-toolbar-button class="page-options-button"
+                                onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#secondary-menu-options', this)"><ons-icon icon="md-more-vert"></ons-icon></ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <ons-pull-hook id="transaction-history-pull-hook" fixed-content disabled style="text-align: center">
+        <ons-fab id="transaction-history-pull-hook-fab" style="background-color: #b388ff" class="fab--mini">
+            <ons-icon icon="fa-long-arrow-down" size="24px"></ons-icon>
+        </ons-fab>
+    </ons-pull-hook>
+
+    <div class="progress">
+        <div class="indeterminate"></div>
+    </div>
+
+    <ons-fab id="transaction-history-help-1" position="top right" class="fab--mini"
+             style=" display: none; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 75%;
+             border-bottom-right-radius: 0; margin-right: -20px; margin-top: 36px;"
+    onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#transaction-history-page-help-popover', this)">
+        <ons-icon icon="fa-question"></ons-icon>
+    </ons-fab>
+
+
+    <p id="transaction-history-page-message" style="margin-top: 3em; margin-left: 1em; margin-right:1em; text-align: center; min-height: 4em; display: none">
+        <ons-icon icon="md-saveup-icon-saveup-transaction-history" size="55px" style="color: gray"></ons-icon><br>
+        <span style="text-align: center; font-size: 1.1em; color: gray">No Transaction History In Here.
+            <br>perform some transactions with PostCash, then check back </span>
+    </p>
+
+    <p id="transaction-history-page-error" style="margin-top: 3em; margin-left: 1em; margin-right:1em; text-align: center; min-height: 4em; display: none">
+        <ons-icon icon="md-close-circle-o" size="55px" style="color: gray"></ons-icon><br>
+        <span style="text-align: center; font-size: 1.1em; color: gray">Sorry we could not load the requested data.
+            <br>Please 'Pull Down' to refresh</span>
+    </p>
+
+    <ons-list id="transaction-history-list" style="display: none;">
+
+        <div class="row">
+            <div class="col s12">
+                <div class="card horizontal">
+                    <div class="card-image" style="padding: 3%;">
+                        <img src="css/app-images/avatar-1.png">
+                    </div>
+                    <div class="card-stacked">
+                    <div class="card-content" style="padding-bottom: 0;">
+                        <div style="font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;
+                        padding-bottom: 0.5em;">Osahon Dennis Okungbowa</div>
+                    </div>
+                    <div class="card-action" style="font-weight: bold; font-size: 0.75em;
+                        color: #464646; padding-bottom: 0.5em;">0506789678</div>
+                    <div  class="card-action" style="font-weight: bold; font-size: 0.75em;
+                        color: #464646; padding-bottom: 0.5em;">FIRST CITY INTERNATIONAL BANK</div>
+                    <div class="card-action" style="padding: 0;">
+                        <div style="display: inline-block; margin-left: auto; margin-right: auto">
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;">
+                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
+                                </ons-icon>
+                            </ons-button>
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-icon icon="md-edit" size="25px">
+                                </ons-icon>
+                            </ons-button>
+                            <ons-button modifier="quiet" disable-auto-styling class="right"
+                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;">
+                                <ons-icon icon="md-delete" size="25px">
+                                </ons-icon>
+                            </ons-button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    </ons-list>
+
+    <ons-bottom-toolbar style="height: 50px; background: rgb(197, 197, 197)">
+        <ons-row>
+            <ons-col width="100%" style="text-align: center; padding-top: 0.5em">
+                <ons-button id="my-accounts-add-account-button" disabled onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.addAccountButtonClicked();">
+                    <ons-icon icon="md-plus-circle">
+                    </ons-icon> Add Account
+                </ons-button>
+            </ons-col>
+        </ons-row>
+    </ons-bottom-toolbar>
+
+</ons-page>
+</body>
+</html>
