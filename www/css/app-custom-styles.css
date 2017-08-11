@@ -721,3 +721,15 @@ label[data-hint]:after {
     color: #ffffff;
 }
 /** STYLE FOR BANK SELECT ELEMENT IN TRANSFER-CASH-BANK PAGE ENDS **/
+
+
+/** STYLE FOR TRANSACTION HISTORY PAGE BEGINS **/
+#transaction-history-page .page--material__background {
+    background-image: linear-gradient(0deg, rgba(255, 255, 255,0.8) 0%, rgba(255, 255, 255,0.8) 100%),
+    url('app-images/transaction-history-background.jpg');
+    background-repeat: no-repeat;
+    background-size: contain, cover;
+}
+#transaction-history-page ons-list, #transaction-history-page ons-list-item {
+    background-color: transparent;
+}
