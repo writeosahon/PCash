@@ -1123,6 +1123,41 @@ var utopiasoftware = {
             },
 
             /**
+             * method is used to load the collection of transaction history data from
+             * the device secure storage
+             *
+             * @return {Promise} method returns a Promise object that resolves with
+             * the retrieved transaction history data as an array OR
+             * rejects when the transaction history data cannot be retrieved.
+             *
+             * NOTE: the Promise object resolve with an empty array when no transaction history data are available
+             */
+            loadTransactionHistoryData: function loadTransactionHistoryData() {
+                // return the Promise object
+                return new Promise(function (resolve, reject) {
+                    // read the saved transaction history data from secure storage
+                    Promise.resolve(intel.security.secureStorage.read({ 'id': 'postcash-transaction-history-collection' })).then(function (instanceId) {
+                        // read the content of the securely stored transaction history data
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }, function (errObject) {
+                        if (errObject.code == 1) {
+                            // the secure transaction history storage has not been created before
+                            resolve([]); // return an empty transaction history data array
+                        } else {
+                            // another error occurred (which is considered severe)
+                            throw errObject;
+                        }
+                    }).then(function (transactionHistoryDataArray) {
+                        transactionHistoryDataArray = JSON.parse(transactionHistoryDataArray); // convert the string data to an object
+                        resolve(transactionHistoryDataArray);
+                    }).catch(function (err) {
+                        // reject the Promise
+                        reject(err);
+                    });
+                });
+            },
+
+            /**
              * method is used to delete all user's transaction history data details that are
              * securely stored on user's device
              *
