@@ -749,7 +749,7 @@ label[data-hint]:after {
     -moz-animation: ons-icon-spin 0.8s infinite linear;
     animation: ons-icon-spin 0.8s infinite linear;
 }
-#transaction-history-page .transaction-history-item-container {
+#transaction-history-page .transaction-history-items-container {
     border-left: 2px ridge #ababab;
     overflow-x: visible;
     margin-left: 1em

@@ -7105,7 +7105,7 @@ utopiasoftware.saveup.controller = {
                             $('#transaction-history-page-message', $thisPage).css("display", "block");
                             // hide the error message from displaying
                             $('#transaction-history-page-error', $thisPage).css("display", "none");
-                            // hide the transaction-histroy-list from display
+                            // hide the transaction-history-list from display
                             $('#transaction-history-list', $thisPage).css("display", "none");
                             // flag that loading is done
                             loadingDone();
@@ -7113,60 +7113,28 @@ utopiasoftware.saveup.controller = {
                         else{ // there are transaction history data available
                             // empty the contents of the transaction history list
                             $('#transaction-history-list', $thisPage).html("");
-
-                            for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "My Accounts" list
-                                // create the bank account content
-                                let bankAcctContent = `<div class="row"><div class="col s12"><div class="card horizontal">
-                                <div class="card-image" style="padding: 3%;">
-                                <img src="${banksAcctsArray[index].bankAccountAvatar}">
-                                </div>
-                                <div class="card-stacked">
-                                <div class="card-content" style="padding-bottom: 0;">
-                                <div style="font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;
-                                padding-bottom: 0.5em;">${banksAcctsArray[index].bankAccountName}</div>
-                                </div><div class="card-action" style="font-weight: bold; font-size: 0.75em;
-                                color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankAccountNumber}</div>
-                                <div  class="card-action" style="font-weight: bold; font-size: 0.75em;
-                                color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
-                                <div class="card-action" style="padding: 0;">
-                                <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
-                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
-                                </ons-icon>
-                                </ons-button>
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
-                                disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
-                                   <ons-icon icon="md-edit" size="25px">
-                                </ons-icon>
-                                </ons-button>
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
-                                <ons-icon icon="md-delete" size="25px"></ons-icon>
-                                </ons-button>
-                                </div></div></div></div></div></div>` ;
-                                // append the bank account content to the "My Accounts" list
-                                $('#my-accounts-list', $thisPage).append(bankAcctContent);
+                            // create the transaction history content
+                            let transactionHistoryContent = `<ons-row class="transaction-history-items-container">` ;
+                            for(let index = 0; index < transactionHistoryArray.length; index++){ // append the stored transaction history to the "Transaction History" list
+                                // create the transaction history content
+                                transactionHistoryContent +=
+                                    `<ons-col width="25%" class="transaction-history-indicator-container">
+                                    ` ; //todo
+                                // append the transaction history content to the "Transaction History" list
+                                $('#transaction-history-list', $thisPage).append(transactionHistoryContent);
                             }
                             // remove the page preloader progress bar
                             $('.progress', $thisPage).remove();
                             // display the help button
-                            $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                            $('#transaction-history-help-1', $thisPage).css("display", "inline-block");
                             // enable the pull-to-refresh widget for the page
-                            $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                            // hide message to inform user that there are no accounts available
-                            $('#my-accounts-page-message', $thisPage).css("display", "none");
+                            $('#transaction-history-pull-hook', $thisPage).removeAttr("disabled");
+                            // hide message to inform user that there are no transaction history data available
+                            $('#transaction-history-page-message', $thisPage).css("display", "none");
                             // hide the error message from displaying
-                            $('#my-accounts-page-error', $thisPage).css("display", "none");
-                            // display the my-accounts-list
-                            $('#my-accounts-list', $thisPage).css("display", "block");
-                            // enable the 'Add Account' button
-                            $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                            $('#transaction-history-page-error', $thisPage).css("display", "none");
+                            // display the transaction-history-list
+                            $('#transaction-history-list', $thisPage).css("display", "block");
                             // flag that loading is done
                             loadingDone();
                         }
@@ -7175,17 +7143,15 @@ utopiasoftware.saveup.controller = {
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#transaction-history-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // hide a message to inform user that there are no accounts available
-                        $('#my-accounts-page-message', $thisPage).css("display", "none");
+                        $('#transaction-history-pull-hook', $thisPage).removeAttr("disabled");
+                        // hide a message to inform user that there are no transaction history data available
+                        $('#transaction-history-page-message', $thisPage).css("display", "none");
                         // display the error message to user
-                        $('#my-accounts-page-error', $thisPage).css("display", "block");
-                        // hide the my-accounts-list from display
-                        $('#my-accounts-list', $thisPage).css("display", "none");
-                        // disable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).attr("disabled", true);
+                        $('#transaction-history-page-error', $thisPage).css("display", "block");
+                        // hide the transaction-history-list from display
+                        $('#transaction-history-list', $thisPage).css("display", "none");
                         // flag that loading is done
                         loadingDone();
                     });
