@@ -156,3 +156,9 @@ $(document).on("show", "#onboarding-page", utopiasoftware.saveup.controller.onbo
 
 // listen for the destroy event of the Onboarding page
 $(document).on("destroy", "#onboarding-page", utopiasoftware.saveup.controller.onboardingPageViewModel.pageDestroy);
+
+// listen for the initialisation of the Transaction History page
+$(document).on("init", "#transaction-history-page", utopiasoftware.saveup.controller.transactionHistoryPageViewModel.pageInit);
+
+// listen for when the Transaction History page is shown
+$(document).on("show", "#transaction-history-page", utopiasoftware.saveup.controller.transactionHistoryPageViewModel.pageShow);

@@ -7112,16 +7112,70 @@ utopiasoftware.saveup.controller = {
                         }
                         else{ // there are transaction history data available
                             // empty the contents of the transaction history list
-                            $('#transaction-history-list', $thisPage).html("");
+                            $('#transaction-history-list .transaction-history-items-container', $thisPage).html("");
                             // create the transaction history content
-                            let transactionHistoryContent = `<ons-row class="transaction-history-items-container">` ;
+                            let transactionHistoryContent = `` ;
+
                             for(let index = 0; index < transactionHistoryArray.length; index++){ // append the stored transaction history to the "Transaction History" list
-                                // create the transaction history content
-                                transactionHistoryContent +=
-                                    `<ons-col width="25%" class="transaction-history-indicator-container">
-                                    ` ; //todo
+
+                                // check what type of postcash transaction it is
+                                switch(transactionHistoryArray[index].postcash_transaction_type){
+                                    case "Cash Transfer (Card)": // transaction type is "Cash Transfer (Card)"
+
+                                        // create the transaction history content
+                                        transactionHistoryContent +=
+                                            `<ons-col width="25%" class="transaction-history-indicator-container">` ;
+                                        if(transactionHistoryArray[index].flutterChargeResponseMessage.toLocaleUpperCase() != "APPROVED"){
+                                            // transaction is pending
+                                            transactionHistoryContent += `<span class="transaction-history-item-incomplete-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                            toString(kendo.parseDate(transactionHistoryArray[index].createdAt,
+                                                "yyyy-MM-ddTHH:mm:ss.fffZ"), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                            toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Incomplete</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].beneficiary.accountNumber + " - " +
+                                            transactionHistoryArray[index].beneficiary.accountName}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                        }
+                                        break; // end of "Cash Transfer (Card)" transaction type
+                                }
+
                                 // append the transaction history content to the "Transaction History" list
-                                $('#transaction-history-list', $thisPage).append(transactionHistoryContent);
+                                $('#transaction-history-list .transaction-history-items-container', $thisPage).
+                                append(transactionHistoryContent);
+                                transactionHistoryContent = ``; // reset the content in prepareation for another loop
                             }
                             // remove the page preloader progress bar
                             $('.progress', $thisPage).remove();
@@ -7157,99 +7211,117 @@ utopiasoftware.saveup.controller = {
                     });
                 };
 
-                // load the user's bank account data from the device secure store
-                utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().
-                then(function(banksAcctsArray){ // the user's bank acct array collection has been returned
-                    if(banksAcctsArray.length == 0){ // there are no bank account data available
+                // load the user's transaction history data from the device secure store
+                utopiasoftware.saveup.transactionHistoryOperations.loadTransactionHistoryData().
+                then(function(transactionHistoryArray){ // the user's transaction history data array collection has been returned
+                    if(transactionHistoryArray.length == 0){ // there are no transaction history data available
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#transaction-history-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // display a message to inform user that there are no cards available
-                        $('#my-accounts-page-message', $thisPage).css("display", "block");
+                        $('#transaction-history-pull-hook', $thisPage).removeAttr("disabled");
+                        // display a message to inform user that there are no transaction-history data available
+                        $('#transaction-history-page-message', $thisPage).css("display", "block");
                         // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
-                        // hide the my-accounts-list from display
-                        $('#my-accounts-list', $thisPage).css("display", "none");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                        $('#transaction-history-page-error', $thisPage).css("display", "none");
+                        // hide the transaction-history-list from display
+                        $('#transaction-history-list', $thisPage).css("display", "none");
                     }
-                    else{ // there are card data available
-                        // empty the contents of the my accounts list
-                        $('#my-accounts-list', $thisPage).html("");
+                    else{ // there are transaction history data available
+                        // empty the contents of the transaction history list
+                        $('#transaction-history-list .transaction-history-items-container', $thisPage).html("");
+                        // create the transaction history content
+                        let transactionHistoryContent = `` ;
 
-                        for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "My Accounts" list
-                            // create the bank account content
-                            let bankAcctContent = `<div class="row"><div class="col s12"><div class="card horizontal">
-                                <div class="card-image" style="padding: 3%;">
-                                <img src="${banksAcctsArray[index].bankAccountAvatar}">
-                                </div>
-                                <div class="card-stacked">
-                                <div class="card-content" style="padding-bottom: 0;">
-                                <div style="font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;
-                                padding-bottom: 0.5em;">${banksAcctsArray[index].bankAccountName}</div>
-                                </div><div class="card-action" style="font-weight: bold; font-size: 0.75em;
-                                color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankAccountNumber}</div>
-                                <div  class="card-action" style="font-weight: bold; font-size: 0.75em;
-                                color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
-                                <div class="card-action" style="padding: 0;">
-                                <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
-                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
-                                </ons-icon>
-                                </ons-button>
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
-                                disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
-                                   <ons-icon icon="md-edit" size="25px">
-                                </ons-icon>
-                                </ons-button>
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
-                                <ons-icon icon="md-delete" size="25px"></ons-icon>
-                                </ons-button>
-                                </div></div></div></div></div></div>` ;
-                            // append the bank account content to the "My Accounts" list
-                            $('#my-accounts-list', $thisPage).append(bankAcctContent);
+                        for(let index = 0; index < transactionHistoryArray.length; index++){ // append the stored transaction history to the "Transaction History" list
+
+                            // check what type of postcash transaction it is
+                            switch(transactionHistoryArray[index].postcash_transaction_type){
+                                case "Cash Transfer (Card)": // transaction type is "Cash Transfer (Card)"
+
+                                    // create the transaction history content
+                                    transactionHistoryContent +=
+                                        `<ons-col width="25%" class="transaction-history-indicator-container">` ;
+                                    if(transactionHistoryArray[index].flutterChargeResponseMessage.toLocaleUpperCase() != "APPROVED"){
+                                        // transaction is pending
+                                        transactionHistoryContent += `<span class="transaction-history-item-incomplete-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                        toString(kendo.parseDate(transactionHistoryArray[index].createdAt,
+                                            "yyyy-MM-ddTHH:mm:ss.fffZ"), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                        toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Incomplete</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].beneficiary.accountNumber + " - " +
+                                        transactionHistoryArray[index].beneficiary.accountName}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                    }
+                                    break; // end of "Cash Transfer (Card)" transaction type
+                            }
+
+                            // append the transaction history content to the "Transaction History" list
+                            $('#transaction-history-list .transaction-history-items-container', $thisPage).
+                            append(transactionHistoryContent);
+                            transactionHistoryContent = ``; // reset the content in prepareation for another loop
                         }
                         // remove the page preloader progress bar
                         $('.progress', $thisPage).remove();
                         // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                        $('#transaction-history-help-1', $thisPage).css("display", "inline-block");
                         // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // hide message to inform user that there are no accounts available
-                        $('#my-accounts-page-message', $thisPage).css("display", "none");
+                        $('#transaction-history-pull-hook', $thisPage).removeAttr("disabled");
+                        // hide message to inform user that there are no transaction history data available
+                        $('#transaction-history-page-message', $thisPage).css("display", "none");
                         // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
-                        // display the my-accounts-list
-                        $('#my-accounts-list', $thisPage).css("display", "block");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
+                        $('#transaction-history-page-error', $thisPage).css("display", "none");
+                        // display the transaction-history-list
+                        $('#transaction-history-list', $thisPage).css("display", "block");
                     }
                 }).
                 catch(function(){ // an error occurred, so display the error message to the user
                     // remove the page preloader progress bar
                     $('.progress', $thisPage).remove();
                     // display the help button
-                    $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
+                    $('#transaction-history-help-1', $thisPage).css("display", "inline-block");
                     // enable the pull-to-refresh widget for the page
-                    $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                    // hide a message to inform user that there are no accounts available
-                    $('#my-accounts-page-message', $thisPage).css("display", "none");
+                    $('#transaction-history-pull-hook', $thisPage).removeAttr("disabled");
+                    // hide a message to inform user that there are no transaction history data available
+                    $('#transaction-history-page-message', $thisPage).css("display", "none");
                     // display the error message to user
-                    $('#my-accounts-page-error', $thisPage).css("display", "block");
-                    // hide the my-accounts-list from display
-                    $('#my-accounts-list', $thisPage).css("display", "none");
-                    // disable the 'Add Account' button
-                    $('#my-accounts-add-account-button', $thisPage).attr("disabled", true);
+                    $('#transaction-history-page-error', $thisPage).css("display", "block");
+                    // hide the transaction-history-list from display
+                    $('#transaction-history-list', $thisPage).css("display", "none");
                 });
 
                 // hide the loader
@@ -7269,109 +7341,6 @@ utopiasoftware.saveup.controller = {
             var $thisPage = $(event.target); // get the current page shown
             // enable the swipeable feature for the app splitter
             $('ons-splitter-side').attr("swipeable", true);
-
-            // check if the data on the page should be refreshed
-            if($('#app-main-navigator').get(0).topPage.data && $('#app-main-navigator').get(0).topPage.data.refresh
-                && $('#app-main-navigator').get(0).topPage.data.refresh === true){ // user wants this page refreshed
-                // add & display the preloader for the page
-                $('#my-accounts-pull-hook', $thisPage).after('<div class="progress"><div class="indeterminate"></div> </div>');
-
-                // load the user's bank account data from the device secure store
-                utopiasoftware.saveup.bankAccountOperations.loadMyAccountsData().
-                then(function(banksAcctsArray){ // the user's bank acct array collection has been returned
-                    if(banksAcctsArray.length == 0){ // there are no bank account data available
-                        // remove the page preloader progress bar
-                        $('.progress', $thisPage).remove();
-                        // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
-                        // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // display a message to inform user that there are no cards available
-                        $('#my-accounts-page-message', $thisPage).css("display", "block");
-                        // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
-                        // hide the my-accounts-list from display
-                        $('#my-accounts-list', $thisPage).css("display", "none");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
-                    }
-                    else{ // there are card data available
-                        // empty the contents of the my accounts list
-                        $('#my-accounts-list', $thisPage).html("");
-
-                        for(let index = 0; index < banksAcctsArray.length; index++){ // append the stored bank accounts to the "My Accounts" list
-                            // create the bank account content
-                            let bankAcctContent = `<div class="row"><div class="col s12"><div class="card horizontal">
-                                <div class="card-image" style="padding: 3%;">
-                                <img src="${banksAcctsArray[index].bankAccountAvatar}">
-                                </div>
-                                <div class="card-stacked">
-                                <div class="card-content" style="padding-bottom: 0;">
-                                <div style="font-weight: bold; font-size: 0.75em; font-style: italic; color: #464646;
-                                padding-bottom: 0.5em;">${banksAcctsArray[index].bankAccountName}</div>
-                                </div><div class="card-action" style="font-weight: bold; font-size: 0.75em;
-                                color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankAccountNumber}</div>
-                                <div  class="card-action" style="font-weight: bold; font-size: 0.75em;
-                                color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
-                                <div class="card-action" style="padding: 0;">
-                                <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
-                                data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
-                                <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
-                                </ons-icon>
-                                </ons-button>
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
-                                disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.editAccountButtonClicked(this);">
-                                   <ons-icon icon="md-edit" size="25px">
-                                </ons-icon>
-                                </ons-button>
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet" disable-auto-styling class="right"
-                                        style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
-                                        onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.deleteAccountButtonClicked(this);">
-                                <ons-icon icon="md-delete" size="25px"></ons-icon>
-                                </ons-button>
-                                </div></div></div></div></div></div>` ;
-                            // append the bank account content to the "My Accounts" list
-                            $('#my-accounts-list', $thisPage).append(bankAcctContent);
-                        }
-                        // remove the page preloader progress bar
-                        $('.progress', $thisPage).remove();
-                        // display the help button
-                        $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
-                        // enable the pull-to-refresh widget for the page
-                        $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                        // hide message to inform user that there are no accounts available
-                        $('#my-accounts-page-message', $thisPage).css("display", "none");
-                        // hide the error message from displaying
-                        $('#my-accounts-page-error', $thisPage).css("display", "none");
-                        // display the my-accounts-list
-                        $('#my-accounts-list', $thisPage).css("display", "block");
-                        // enable the 'Add Account' button
-                        $('#my-accounts-add-account-button', $thisPage).removeAttr("disabled");
-                    }
-                }).
-                catch(function(){ // an error occurred, so display the error message to the user
-                    // remove the page preloader progress bar
-                    $('.progress', $thisPage).remove();
-                    // display the help button
-                    $('#my-accounts-help-1', $thisPage).css("display", "inline-block");
-                    // enable the pull-to-refresh widget for the page
-                    $('#my-accounts-pull-hook', $thisPage).removeAttr("disabled");
-                    // hide a message to inform user that there are no accounts available
-                    $('#my-accounts-page-message', $thisPage).css("display", "none");
-                    // display the error message to user
-                    $('#my-accounts-page-error', $thisPage).css("display", "block");
-                    // hide the my-accounts-list from display
-                    $('#my-accounts-list', $thisPage).css("display", "none");
-                    // disable the 'Add Account' button
-                    $('#my-accounts-add-account-button', $thisPage).attr("disabled", true);
-                });
-            }
-
         },
 
 

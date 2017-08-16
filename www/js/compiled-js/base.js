@@ -1077,7 +1077,9 @@ var utopiasoftware = {
                             // update the transaction status
                             transactionDataArray[transactionDataIndex].flutterChargeResponseMessage = newStatus;
                         }
-
+                        else{ // transaction data was NOT found
+                            throw {"message": "Transaction not found."}
+                        }
 
                         // store the updated transaction history collection securely on user's device
                         return intel.security.secureData.createFromData({'data': JSON.stringify(transactionDataArray)});
