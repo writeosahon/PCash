@@ -7063,7 +7063,7 @@ utopiasoftware.saveup.controller = {
                 };
 
                 // register listener for the pull-to-refresh widget
-                $('transaction-history-pull-hook', $thisPage).on("changestate", function(event){
+                $('#transaction-history-pull-hook', $thisPage).on("changestate", function(event){
 
                     // check the state of the pull-to-refresh widget
                     switch (event.originalEvent.state){
@@ -7130,8 +7130,50 @@ utopiasoftware.saveup.controller = {
                                             transactionHistoryContent += `<span class="transaction-history-item-incomplete-indicator">
                                             </span><span class="transaction-history-item-time-indicator">
                                             ${kendo.
-                                            toString(kendo.parseDate(transactionHistoryArray[index].createdAt,
-                                                "yyyy-MM-ddTHH:mm:ss.fffZ"), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                            toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                            toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Incomplete</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].beneficiary.accountNumber + " - " +
+                                            transactionHistoryArray[index].beneficiary.accountName}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                        }
+                                        else{
+                                            // transaction is successful
+                                            transactionHistoryContent += `<span class="transaction-history-item-success-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                            toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
                                                 <ons-col width="75%" class="transaction-history-content-container">
                                             <div style="font-size: 0.8em; width: 100%">
                                             <span class="transaction-history-content-label">
@@ -7248,8 +7290,50 @@ utopiasoftware.saveup.controller = {
                                         transactionHistoryContent += `<span class="transaction-history-item-incomplete-indicator">
                                             </span><span class="transaction-history-item-time-indicator">
                                             ${kendo.
-                                        toString(kendo.parseDate(transactionHistoryArray[index].createdAt,
-                                            "yyyy-MM-ddTHH:mm:ss.fffZ"), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                        toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                        toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Incomplete</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].beneficiary.accountNumber + " - " +
+                                        transactionHistoryArray[index].beneficiary.accountName}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                    }
+                                    else{
+                                        // transaction is successful
+                                        transactionHistoryContent += `<span class="transaction-history-item-success-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                        toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
                                                 <ons-col width="75%" class="transaction-history-content-container">
                                             <div style="font-size: 0.8em; width: 100%">
                                             <span class="transaction-history-content-label">
