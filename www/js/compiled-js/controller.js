@@ -7192,7 +7192,7 @@ utopiasoftware.saveup.controller = {
                                             <div style="font-size: 0.8em; width: 100%">
                                             <span class="transaction-history-content-label">
                                             Transaction Status
-                                            </span><span>Incomplete</span></div>
+                                            </span><span>Successful</span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <span  class="transaction-history-content-label">
                                             Beneficiary
@@ -7352,7 +7352,7 @@ utopiasoftware.saveup.controller = {
                                             <div style="font-size: 0.8em; width: 100%">
                                             <span class="transaction-history-content-label">
                                             Transaction Status
-                                            </span><span>Incomplete</span></div>
+                                            </span><span>Successful</span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <span  class="transaction-history-content-label">
                                             Beneficiary
