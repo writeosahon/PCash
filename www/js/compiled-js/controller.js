@@ -7671,61 +7671,6 @@ utopiasoftware.saveup.controller = {
         saveDetailsButtonClicked: function(buttonElem){
             console.log("SAVED DETAILS CLICKED");
 
-            var pdfOutput = null;
-            $('#transaction-history-save-pdf-modal').get(0).show().
-            then(function(){
-                var transactionDetailsDoc = new jsPDF({orientation: 'portrait', unit: 'pt', format: 'a4'});
-
-                transactionDetailsDoc.fromHTML(
-                    $('#transaction-history-save-pdf-modal #transaction-history-save-pdf-container').get(0),
-                    15,
-                    15,
-                    {
-                        'width': 180,'elementHandlers': {
-                        '#ignorePDF': function (element, renderer) {
-                            return true;
-                        }
-                    }
-                    });
-
-                pdfOutput = transactionDetailsDoc.output();
-                 return new Promise(function(resolve, reject){
-                     window.resolveLocalFileSystemURL(cordova.file.dataDirectory, resolve, reject);
-                 });
-            }).
-            then(function(dirEntry){
-                return new Promise(function(resolve, reject){
-                    dirEntry.getFile('sample.pdf', {create: true, exclusive: false}, resolve, reject);
-                });
-            }).
-            then(function(fileEntry){
-                console.log(fileEntry.fullPath);
-                return new Promise(function(resolve, reject){
-                    fileEntry.createWriter(resolve, reject);
-                });
-            }).
-            then(function(fileWriter){
-                return new Promise(function(resolve, reject){
-                    fileWriter.onwriteend = function(){
-                        console.log("WRITE END");
-                        resolve();
-                    };
-
-                    fileWriter.onerror = function(){
-                        console.log("WRITE ERROR");
-                        reject();
-                    };
-
-
-                    fileWriter.write(pdfOutput);
-                });
-            }).
-            then(function(){
-                $('#transaction-history-save-pdf-modal').get(0).hide();
-            }).
-            catch(function(){
-                console.log("OVERALL ERROR");
-            });
 
         }
 
