@@ -961,7 +961,7 @@ var utopiasoftware = {
             /**
              * method is used to add financial transaction history data details to the collection
              * of transaction history on the device.
-             * Transaction history collection stores a limit of 20 transactions data.
+             * Transaction history collection stores a limit of 25 transactions data.
              * If the limit is attained, the least recent transaction is removed from
              * the collection first before the latest transaction is added
              *
@@ -987,8 +987,8 @@ var utopiasoftware = {
                         }
                     }).then(function (transactionDataArray) {
                         transactionDataArray = JSON.parse(transactionDataArray); // convert the string data to an object
-                        // check if the transaction array has reached the limit of 20 items
-                        if (transactionDataArray.length == 20) {
+                        // check if the transaction array has reached the limit of 25 items
+                        if (transactionDataArray.length == 25) {
                             // array has reached its limit
                             // remove the least recent transaction item
                             transactionDataArray.pop();
@@ -1107,6 +1107,9 @@ var utopiasoftware = {
                             // transaction data object was found
                             // update the transaction data object with the new data object
                             Object.assign(transactionDataArray[transactionDataIndex], newData);
+                        } else {
+                            // transaction data was NOT found
+                            throw { "message": "Transaction not found." };
                         }
 
                         // store the updated transaction history collection securely on user's device

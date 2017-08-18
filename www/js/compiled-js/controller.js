@@ -6446,7 +6446,22 @@ utopiasoftware.saveup.controller = {
                 }
             }).
             then(function(responseData){ // securely store the transaction history from the responseData on the user's device
+                var transferRecipientDetailsArray = $('#transfer-cash-bank-recipient-account-name', '#transfer-cash-bank-page').
+                val().split(" - "); // holds the details of the transfer recipient in an array gotten from the 'transfer-cash-bank-recipient-account-name' input
+
                 responseData.data.transfer.postcash_transaction_type = "Cash Transfer (Bank)"; // set the postcash transaction type
+                // set additional postcash transfer details
+                responseData.data.transfer.postcash_transferDetails = {
+                    narration: $('#transfer-cash-bank-narration', '#transfer-cash-bank-page').val(),
+                    sender_bank: $('#transfer-cash-bank-sender-choose-bank', '#transfer-cash-bank-page').val(),
+                    sender_account_number:
+                        $('#transfer-cash-bank-sender-account-name', '#transfer-cash-bank-page').val().split(" - ").pop(),
+                    recipient_bank: $('#transfer-cash-bank-recipient-choose-bank', '#transfer-cash-bank-page').val(),
+                    recipient_account_name: transferRecipientDetailsArray.length >1 ?
+                        transferRecipientDetailsArray[transferRecipientDetailsArray.length-2] : "",
+                    recipient_account_number: transferRecipientDetailsArray.pop()
+                };
+
                 return Promise.all([utopiasoftware.saveup.transactionHistoryOperations.
                 addTransactionHistory(responseData.data.transfer), Promise.resolve(responseData)]);
             }).
@@ -6597,6 +6612,9 @@ utopiasoftware.saveup.controller = {
                     });
                 }).
                 then(function(responseData){ // send the server data to the postcash business logic container
+                    var transferRecipientDetailsArray = $('#transfer-cash-bank-recipient-account-name', '#transfer-cash-bank-page').
+                    val().split(" - "); // holds the details of the transfer recipient in an array gotten from the 'transfer-cash-bank-recipient-account-name' input
+
                     // create the data to be sent to the postcash business logic container
                     var transferData = {
                         transferData: responseData.data,
@@ -6608,14 +6626,23 @@ utopiasoftware.saveup.controller = {
                             sender_account_number:
                              $('#transfer-cash-bank-sender-account-name', '#transfer-cash-bank-page').val().split(" - ").pop(),
                             recipient_bank: $('#transfer-cash-bank-recipient-choose-bank', '#transfer-cash-bank-page').val(),
-                            recipient_account_number:
-                             $('#transfer-cash-bank-recipient-account-name', '#transfer-cash-bank-page').val().split(" - ").pop()
+                            recipient_account_name: transferRecipientDetailsArray.length >1 ?
+                                transferRecipientDetailsArray[transferRecipientDetailsArray.length-2] : "",
+                            recipient_account_number: transferRecipientDetailsArray.pop()
                         }
                     };
 
-                    // post the transfer details to the transfer authorization iframe for stage 2 processing
+                    // update the transaction history with the 'postcash_transferDetails' property and move the transferData object to the next phase
+                    return Promise.
+                    all([utopiasoftware.saveup.transactionHistoryOperations.
+                    updateTransactionHistoryData(window.sessionStorage.getItem("transaction_ref"),
+                        {postcash_transferDetails: transferData.postcash_transferDetails}),
+                        Promise.resolve(transferData)]);
+                }).
+                then(function(transferDataArray){
+                    // post the transfer data to the transfer authorization iframe for stage 2 processing
                     $('#transfer-cash-bank-authorise-modal #transfer-cash-bank-authorise-iframe').get(0).
-                        contentWindow.postMessage(JSON.stringify(transferData), "https://postcash.000webhostapp.com");
+                    contentWindow.postMessage(JSON.stringify(transferDataArray[1]), "https://postcash.000webhostapp.com");
                 }).
                 catch(function(error){
                     // update the transaction history for the cash transfer (bank) transaction to mark failure
@@ -7212,6 +7239,110 @@ utopiasoftware.saveup.controller = {
                                             </div></ons-col>`;
                                         }
                                         break; // end of "Cash Transfer (Card)" transaction type
+
+                                    case "Cash Transfer (Bank)": // transaction type is "Cash Transfer (Bank)"
+
+                                        // create the transaction history content
+                                        transactionHistoryContent +=
+                                            `<ons-col width="25%" class="transaction-history-indicator-container">` ;
+                                        if(!transactionHistoryArray[index].walletToWallet ||
+                                            transactionHistoryArray[index].walletToWallet.status != "success" ||
+                                            transactionHistoryArray[index].walletToWallet.data.
+                                            toLocaleUpperCase().indexOf("SUCCESSFUL") < 0 ||
+                                            !transactionHistoryArray[index].walletToAccount ||
+                                            transactionHistoryArray[index].walletToAccount.status != "success" ||
+                                            transactionHistoryArray[index].walletToAccount.data.
+                                            data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL") < 0
+                                        )
+                                        {
+                                            // transaction is pending
+                                            transactionHistoryContent += `<span class="transaction-history-item-incomplete-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                            toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                            toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Incomplete</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].postcash_transferDetails.recipient_account_number +
+                                            " " +
+                                            transactionHistoryArray[index].postcash_transferDetails.recipient_account_name}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                        }
+                                        else{
+                                            // transaction is successful
+                                            transactionHistoryContent += `<span class="transaction-history-item-success-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                            toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                            toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Successful</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].postcash_transferDetails.recipient_account_number +
+                                            " " +
+                                            transactionHistoryArray[index].postcash_transferDetails.recipient_account_name}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                        }
+                                        break; // end of "Cash Transfer (Bank)" transaction type
                                 }
 
                                 // append the transaction history content to the "Transaction History" list
@@ -7372,6 +7503,110 @@ utopiasoftware.saveup.controller = {
                                             </div></ons-col>`;
                                     }
                                     break; // end of "Cash Transfer (Card)" transaction type
+
+                                case "Cash Transfer (Bank)": // transaction type is "Cash Transfer (Bank)"
+
+                                    // create the transaction history content
+                                    transactionHistoryContent +=
+                                        `<ons-col width="25%" class="transaction-history-indicator-container">` ;
+                                    if(!transactionHistoryArray[index].walletToWallet ||
+                                        transactionHistoryArray[index].walletToWallet.status != "success" ||
+                                        transactionHistoryArray[index].walletToWallet.data.
+                                        toLocaleUpperCase().indexOf("SUCCESSFUL") < 0 ||
+                                        !transactionHistoryArray[index].walletToAccount ||
+                                        transactionHistoryArray[index].walletToAccount.status != "success" ||
+                                        transactionHistoryArray[index].walletToAccount.data.
+                                        data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL") < 0
+                                    )
+                                    {
+                                        // transaction is pending
+                                        transactionHistoryContent += `<span class="transaction-history-item-incomplete-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                        toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                        toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Incomplete</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].postcash_transferDetails.recipient_account_number +
+                                        " " +
+                                        transactionHistoryArray[index].postcash_transferDetails.recipient_account_name}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                    }
+                                    else{
+                                        // transaction is successful
+                                        transactionHistoryContent += `<span class="transaction-history-item-success-indicator">
+                                            </span><span class="transaction-history-item-time-indicator">
+                                            ${kendo.
+                                        toString(new Date(transactionHistoryArray[index].createdAt), "HH:mm yyyy-MM-dd")}</span></ons-col>
+                                                <ons-col width="75%" class="transaction-history-content-container">
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Type
+                                            </span>
+                                            <span>
+                                            ${transactionHistoryArray[index].postcash_transaction_type}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Amount (NGN)
+                                            </span><span>
+                                            ${kendo.
+                                        toString(kendo.parseFloat(transactionHistoryArray[index].amountToCharge), "n2")}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span class="transaction-history-content-label">
+                                            Transaction Status
+                                            </span><span>Successful</span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <span  class="transaction-history-content-label">
+                                            Beneficiary
+                                            </span><span>
+                                            ${transactionHistoryArray[index].postcash_transferDetails.recipient_account_number +
+                                        " " +
+                                        transactionHistoryArray[index].postcash_transferDetails.recipient_account_name}
+                                            </span></div>
+                                            <div style="font-size: 0.8em; width: 100%">
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Save Details
+                                            </ons-button>
+                                            <ons-button class="transaction-history-content-button"
+                                                onclick="">
+                                            Send Feedback
+                                            </ons-button>
+                                            </div></ons-col>`;
+                                    }
+                                    break; // end of "Cash Transfer (Bank)" transaction type
                             }
 
                             // append the transaction history content to the "Transaction History" list
