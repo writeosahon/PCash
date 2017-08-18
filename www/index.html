@@ -50,6 +50,12 @@
     <!-- script library for random.js -->
     <script src="js/random.min.js"></script>
 
+    <!-- script libraries for jspdf -->
+    <script src="js/jspdf.debug.js"></script>
+    <!--<script src="js/from_html.js"></script>
+    <script src="js/split_text_to_size.js"></script>
+    <script src="js/standard_fonts_metrics.js"></script>-->
+
     <!-- hybrid script libraries for intel xdk and cordova -->
     <script src="cordova.js"></script>
 
@@ -660,6 +666,13 @@
             </ons-fab>
         </div>
 
+    </div>
+</ons-modal>
+
+<!-- modal for displaying pdf for saving transaction history -->
+<ons-modal id="transaction-history-save-pdf-modal" direction="up">
+    <div id="transaction-history-save-pdf-container">
+        <h4>PostCash Transaction Details</h4>
     </div>
 </ons-modal>
 

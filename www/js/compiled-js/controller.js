@@ -7186,7 +7186,7 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7229,7 +7229,7 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7289,7 +7289,7 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7333,7 +7333,7 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7662,111 +7662,71 @@ utopiasoftware.saveup.controller = {
             $('ons-splitter-side').attr("swipeable", true);
         },
 
-
         /**
-         * method is triggered when the 'Add Account' button is clicked
-         */
-        addAccountButtonClicked: function(){
-            $('#app-main-navigator').get(0).pushPage("add-account-page.html", {
-                animation: "lift-md"
-            });
-        },
-
-
-        /**
-         * method is used to trigger the delete operation of a user's bank account
-         * and updating the user-interface (UI)
+         * method is used to trigger the save transaction history details operation.
+         * Transaction details are saved on the user's device as a pdf document
          *
          * @param buttonElem
          */
-        deleteAccountButtonClicked: function(buttonElem){
+        saveDetailsButtonClicked: function(buttonElem){
+            console.log("SAVED DETAILS CLICKED");
 
-            // confirm that user wants to delete the account before proceeding
-            ons.notification.confirm('Do you want to delete this bank account?', {title: 'Confirm Delete',
-                    buttonLabels: ['No', 'Yes']}) // Ask for confirmation
-                .then(function(index) {
-                    if (index === 1) { // YES button clicked
-                        // call the utility method used to delete a specified bank account
-                        utopiasoftware.saveup.bankAccountOperations.deleteMyAccount($(buttonElem).attr("data-id")).
-                        then(function(){ // account has been deleted
-                            $(buttonElem).closest('.row').remove(); // remove the account from display
-                            // inform the user that card was deleted
-                            Materialize.toast('Bank Account deleted', 3000);
-                        }).
-                        catch(function(){
-                            // inform the user that the specified bank account could not be deleted
-                            window.plugins.toast.showWithOptions({
-                                message: "Sorry, the bank account could not be deleted.\n Try again",
-                                duration: 4000,
-                                position: "top",
-                                styling: {
-                                    opacity: 1,
-                                    backgroundColor: '#ff0000', //red
-                                    textColor: '#FFFFFF',
-                                    textSize: 14
-                                }
-                            }, function(toastEvent){
-                                if(toastEvent && toastEvent.event == "touch"){ // user tapped the toast, so hide toast immediately
-                                    window.plugins.toast.hide();
-                                }
-                            });
-                        });
+            var pdfOutput = null;
+            $('#transaction-history-save-pdf-modal').get(0).show().
+            then(function(){
+                var transactionDetailsDoc = new jsPDF({orientation: 'portrait', unit: 'pt', format: 'a4'});
+
+                transactionDetailsDoc.fromHTML(
+                    $('#transaction-history-save-pdf-modal #transaction-history-save-pdf-container').get(0),
+                    15,
+                    15,
+                    {
+                        'width': 180,'elementHandlers': {
+                        '#ignorePDF': function (element, renderer) {
+                            return true;
+                        }
                     }
-                });
-        },
-
-
-        /**
-         * method is used to trigger the edit operation of a user's bank account
-         * and updating/changing the user-interface (UI)
-         *
-         * @param buttonElem
-         */
-        editAccountButtonClicked: function(buttonElem){
-            $('#app-main-navigator').get(0).pushPage("add-account-page.html", {
-                animation: "lift-md", data: {edit: $(buttonElem).attr("data-id")}
-            });
-        },
-
-        /**
-         * method is used to trigger the transfer cash operation. It uses the
-         * selected user's 'My Account' object as the sender account for the initiated
-         * cash transfer
-         *
-         * @param buttonElem
-         */
-        transferCashButtonClicked: function(buttonElem){
-
-            // ask user for secure PIN before proceeding. secure pin MUST match
-            ons.notification.prompt({title: "Security Check", id: "pin-security-check", class: "utopiasoftware-no-style",
-                messageHTML: '<div><ons-icon icon="ion-lock-combination" size="24px" ' +
-                'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">' +
-                'Please enter your PostCash Secure PIN to proceed</span></div>',
-                cancelable: true, placeholder: "Secure PIN", inputType: "number", defaultValue: "", autofocus: true,
-                submitOnEnter: true
-            }).
-            then(function(userInput){ // user has provided a secured PIN , now authenticate it
-                if(userInput === utopiasoftware.saveup.model.appUserDetails.securePin){ // authentication successful
-                    // close the 'verify account' the bottom sheets
-                    $('#verify-account-bottom-sheet').modal('close');
-                    $('#transfer-cash-page').remove(); // remove previous transfer cash pages
-                    // call the transfer-cash=page and pass the 'my account' details contained in the data attribute as sender details data
-                    $('#app-main-navigator').get(0).pushPage("transfer-cash-page.html", {
-                        data: {
-                            sender_details: JSON.parse($(buttonElem).attr("data-acct-object"))}
-                    }); // navigate to the specified page
-                }
-                else{ // inform user that security check failed/user authentication failed
-                    ons.notification.alert({title: "Security Check",
-                        messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                        'style="color: red;"></ons-icon> <span>' + 'Security check failed. Invalid credentials' + '</span>',
-                        cancelable: true
                     });
-                }
-            }).
-            catch(function(){});
 
-            return;
+                pdfOutput = transactionDetailsDoc.output();
+                 return new Promise(function(resolve, reject){
+                     window.resolveLocalFileSystemURL(cordova.file.dataDirectory, resolve, reject);
+                 });
+            }).
+            then(function(dirEntry){
+                return new Promise(function(resolve, reject){
+                    dirEntry.getFile('sample.pdf', {create: true, exclusive: false}, resolve, reject);
+                });
+            }).
+            then(function(fileEntry){
+                console.log(fileEntry.fullPath);
+                return new Promise(function(resolve, reject){
+                    fileEntry.createWriter(resolve, reject);
+                });
+            }).
+            then(function(fileWriter){
+                return new Promise(function(resolve, reject){
+                    fileWriter.onwriteend = function(){
+                        console.log("WRITE END");
+                        resolve();
+                    };
+
+                    fileWriter.onerror = function(){
+                        console.log("WRITE ERROR");
+                        reject();
+                    };
+
+
+                    fileWriter.write(pdfOutput);
+                });
+            }).
+            then(function(){
+                $('#transaction-history-save-pdf-modal').get(0).hide();
+            }).
+            catch(function(){
+                console.log("OVERALL ERROR");
+            });
+
         }
 
     }
