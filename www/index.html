@@ -563,103 +563,104 @@
 
 <!-- modal for displaying security pin authorisation -->
 <ons-modal id="security-pin-lock-modal" direction="up" style="background: rgba(49, 27, 146, 1)">
-    <div class="row">
-        <div class="col s12">
-            <div id="security-pin-lock-message" style="text-align: center"></div>
+    <div>
+        <div class="row">
+            <div class="col s12">
+                <div id="security-pin-lock-message" style="text-align: center"></div>
+            </div>
         </div>
-    </div>
-    <div class="row" style="border-bottom: 2px solid #cccccc">
-        <div class="col s9 input-field" style="position: relative;">
-            <!-- div below prevents users from tapping directly in the input field -->
-            <div style="position: absolute; top: 0; bottom: 0; width: 100%; height: 100%; z-index: 1"></div>
-            <input id="security-pin-lock-pin" type="number" readonly placeholder="PostCash Secure PIN"
-            oncontextmenu="utopiasoftware.saveup.controller.securityPinLockModalViewModel.preventContextMenuForInput(event);">
+        <div class="row" style="border-bottom: 2px solid #cccccc">
+            <div class="col s9 input-field" style="position: relative;">
+                <!-- div below prevents users from tapping directly in the input field -->
+                <div style="position: absolute; top: 0; bottom: 0; width: 100%; height: 100%; z-index: 1"></div>
+                <input id="security-pin-lock-pin" type="number" readonly placeholder="PostCash Secure PIN"
+                       oncontextmenu="utopiasoftware.saveup.controller.securityPinLockModalViewModel.preventContextMenuForInput(event);">
+            </div>
+            <div class="col s3">
+                <ons-gesture-detector>
+                    <ons-fab id="security-pin-lock-backspace" style="box-shadow: none; background-color: #311B92;"
+                             onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.backspaceButtonClicked();">
+                        <ons-icon icon="md-tag-close" size="28px" style=" color: #ffffff; background-color: transparent;"></ons-icon>
+                    </ons-fab>
+                </ons-gesture-detector>
+            </div>
         </div>
-        <div class="col s3">
-            <ons-gesture-detector>
-                <ons-fab id="security-pin-lock-backspace" style="box-shadow: none; background-color: #311B92;"
-                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.backspaceButtonClicked();">
-                    <ons-icon icon="md-tag-close" size="28px" style=" color: #ffffff; background-color: transparent;"></ons-icon>
+        <div class="row">
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('1');">
+                    1
                 </ons-fab>
-            </ons-gesture-detector>
-        </div>
-    </div>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('2');">
+                    2
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('3');">
+                    3
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('4');">
+                    4
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('5');">
+                    5
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('6');">
+                    6
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('7');">
+                    7
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('8');">
+                    8
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('9');">
+                    9
+                </ons-fab>
+            </div>
 
-    <div class="row">
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-            onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('1');">
-                1
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('2');">
-                2
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('3');">
-                3
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('4');">
-                4
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('5');">
-                5
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('6');">
-                6
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('7');">
-                7
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('8');">
-                8
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('9');">
-                9
-            </ons-fab>
-        </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92;"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked();">
+                    <ons-icon icon="md-close-circle-o" size="28px" style=" color: #ffffff; background-color: transparent;"></ons-icon>
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('0');">
+                    0
+                </ons-fab>
+            </div>
+            <div class="col s4" style="text-align: center">
+                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff;"
+                         onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.okButtonClicked();">
+                    OK
+                </ons-fab>
+            </div>
 
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92;"
-            onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked();">
-                <ons-icon icon="md-close-circle-o" size="28px" style=" color: #ffffff; background-color: transparent;"></ons-icon>
-            </ons-fab>
         </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('0');">
-                0
-            </ons-fab>
-        </div>
-        <div class="col s4" style="text-align: center">
-            <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff;"
-                     onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.okButtonClicked();">
-                OK
-            </ons-fab>
-        </div>
-
     </div>
 </ons-modal>
 
