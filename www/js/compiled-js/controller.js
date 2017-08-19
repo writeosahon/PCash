@@ -743,7 +743,8 @@ utopiasoftware.saveup.controller = {
             $('#loader-modal-message').html("Signing In...");
             $('#loader-modal').get(0).show(); // show loader
 
-            if(($('#login-form #user-phone').val() === utopiasoftware.saveup.model.appUserDetails.phoneNumber) &&
+            if(utopiasoftware.saveup.model.appUserDetails &&
+                ($('#login-form #user-phone').val() === utopiasoftware.saveup.model.appUserDetails.phoneNumber) &&
                 ($('#login-form #secure-pin').val() === utopiasoftware.saveup.model.appUserDetails.securePin)){ // user can sign in
 
                 $('#loader-modal').get(0).hide(); // hide loader
@@ -7670,6 +7671,14 @@ utopiasoftware.saveup.controller = {
          */
         saveDetailsButtonClicked: function(buttonElem){
             console.log("SAVED DETAILS CLICKED");
+
+            pdf.htmlToPDF({
+                data: "<html> <body><h1>  Hello World  </h1> </body></html>",
+                documentSize: "A4",
+                landscape: "portrait",
+                type: "share",
+                fileName: "MyPDF.pdf"
+            }, function(){console.log("ALL DONE")}, function(){console.log("PDF FAILED")});
 
 
         }

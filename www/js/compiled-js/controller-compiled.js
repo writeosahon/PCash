@@ -242,7 +242,7 @@ utopiasoftware.saveup.controller.signInPageViewModel.formValidator.destroy();}ca
          * method is triggered when sign-in form is successfully validated
          */signinFormValidated:function signinFormValidated(){// display the loader message to indicate is being signed in;
 $('#loader-modal-message').html("Signing In...");$('#loader-modal').get(0).show();// show loader
-if($('#login-form #user-phone').val()===utopiasoftware.saveup.model.appUserDetails.phoneNumber&&$('#login-form #secure-pin').val()===utopiasoftware.saveup.model.appUserDetails.securePin){// user can sign in
+if(utopiasoftware.saveup.model.appUserDetails&&$('#login-form #user-phone').val()===utopiasoftware.saveup.model.appUserDetails.phoneNumber&&$('#login-form #secure-pin').val()===utopiasoftware.saveup.model.appUserDetails.securePin){// user can sign in
 $('#loader-modal').get(0).hide();// hide loader
 // update the first name being displayed in the side menu
 $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);$('ons-splitter').get(0).content.load("app-main-template");// move to the main menu
@@ -2343,6 +2343,6 @@ $('ons-splitter-side').attr("swipeable",true);},/**
          * Transaction details are saved on the user's device as a pdf document
          *
          * @param buttonElem
-         */saveDetailsButtonClicked:function saveDetailsButtonClicked(buttonElem){console.log("SAVED DETAILS CLICKED");}}),_utopiasoftware$saveu);
+         */saveDetailsButtonClicked:function saveDetailsButtonClicked(buttonElem){console.log("SAVED DETAILS CLICKED");pdf.htmlToPDF({data:"<html> <body><h1>  Hello World  </h1> </body></html>",documentSize:"A4",landscape:"portrait",type:"share",fileName:"MyPDF.pdf"},function(){console.log("ALL DONE");},function(){console.log("PDF FAILED");});}}),_utopiasoftware$saveu);
 
 //# sourceMappingURL=controller-compiled.js.map
