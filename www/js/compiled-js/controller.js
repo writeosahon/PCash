@@ -76,6 +76,14 @@ utopiasoftware.saveup.controller = {
             $('#security-pin-lock-modal').get(0).onDeviceBackButton =
                 utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked;
 
+            // add back button listener for the transfer-cash-card-authorise MODAL
+            $('#transfer-cash-card-authorise-modal').get(0).onDeviceBackButton = function(){
+                // hide the transfer-cash-card-authorise-modal
+                $('#transfer-cash-card-authorise-modal').get(0).hide();
+                // change the src for transfer-cash-card-authorise-iframe to reset
+                $('#transfer-cash-card-authorise-iframe').attr("src", "");
+            };
+
             // add back button listener for the transfer-cash-bank-authorise MODAL
             $('#transfer-cash-bank-authorise-modal').get(0).onDeviceBackButton = function(){
                 // hide the transfer-cash-bank-authorise-modal
@@ -107,7 +115,7 @@ utopiasoftware.saveup.controller = {
             // display a toast message to let user no there is no Internet connection
             window.plugins.toast.showWithOptions({
                 message: "No Internet Connection. App functionality may be limited",
-                duration: 4000, // 2000 ms
+                duration: 4000, // 4000 ms
                 position: "bottom",
                 styling: {
                     opacity: 1,
@@ -7187,7 +7195,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7230,7 +7239,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7290,7 +7300,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7334,7 +7345,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked()">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7451,7 +7463,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7494,7 +7507,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7554,7 +7568,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7598,7 +7613,8 @@ utopiasoftware.saveup.controller = {
                                             </span></div>
                                             <div style="font-size: 0.8em; width: 100%">
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                                data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.saveDetailsButtonClicked(this)">
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
@@ -7665,20 +7681,256 @@ utopiasoftware.saveup.controller = {
 
         /**
          * method is used to trigger the save transaction history details operation.
-         * Transaction details are saved on the user's device as a pdf document
+         * Transaction details are saved on the user's device as a png document/file
          *
          * @param buttonElem
          */
         saveDetailsButtonClicked: function(buttonElem){
-            console.log("SAVED DETAILS CLICKED");
 
-            pdf.htmlToPDF({
-                data: "<html> <body><h1>  Hello World  </h1> </body></html>",
-                documentSize: "A4",
-                landscape: "portrait",
-                type: "share",
-                fileName: "MyPDF.pdf"
-            }, function(){console.log("ALL DONE")}, function(){console.log("PDF FAILED")});
+
+            var fileContentBlob = null; // holds the blob content of the file to be stored on user's device
+            var fileObj = null; // holds reference to File object used to store store file/document on user's device
+
+            // inform user that transaction details are being saved
+            // displaying the message
+            $('#loader-modal-message').html("Saving Transaction Details...");
+            $('#loader-modal').get(0).show().
+            then(function(){
+                // get the specific transaction history which is to be saved
+                var transactionRef = $(buttonElem).attr("data-transaction-id");
+                return utopiasoftware.saveup.transactionHistoryOperations.getTransactionHistoryById(transactionRef);
+            }).
+            then(function(transactionData){ // receive the requested transaction data
+                if(!transactionData){ // no transaction data was found
+                    throw {"message": "Transaction not found."};
+                }
+
+                return transactionData;
+            }).
+            then(function(transactionData){ // use the receive transaction data to create the necessary document/file DOM
+                // empty the contents of the transaction-history-saver-container
+                $('#transaction-history-saver-container').html("");
+
+                var transactionHistoryDocContent = `<h3 style="text-align: center; min-width: 100%; width: 100%; margin-top: 1.5em;">
+                PostCash Transaction Details</h3>
+                <div style="text-align: right; min-width: 90%; max-width: 90%; width: 90%;">
+                <span style="font-weight: bold; font-size: 1.5em">Transaction Date: </span>
+                <span style="font-size: 1.5em">${kendo.
+                toString(new Date(transactionData.createdAt), "HH:mm yyyy-MM-dd")}</span>
+                </div>
+                <table style="margin-top: 1.5em; border: 2px #000000 solid; min-width: 100%; width: 100%;">
+
+                <tr>
+                <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                Transaction Reference
+                </td>
+                <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                ${transactionData.flutterChargeReference}
+                </td>
+                </tr>`;
+
+                // handle the content to be created based on the postcash transaction type
+                switch(transactionData.postcash_transaction_type){
+                    case "Cash Transfer (Card)": // transaction type is "Cash Transfer (Card)"
+
+                        transactionHistoryDocContent += `<tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">` ;
+                        if(transactionData.flutterChargeResponseMessage.toLocaleUpperCase() != "APPROVED"){
+                            // transaction is pending
+                            transactionHistoryDocContent += `Transaction Type </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.postcash_transaction_type}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Amount (NGN) </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${kendo.
+                            toString(kendo.parseFloat(transactionData.amountToCharge), "n2")}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Status</td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            Incomplete
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Beneficiary </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.beneficiary.accountNumber + " - " +
+                            transactionData.beneficiary.accountName}
+                                            </td></tr></table>`;
+                        }
+                        else{
+                            // transaction is successful
+                            transactionHistoryDocContent += `Transaction Type </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.postcash_transaction_type}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Amount (NGN) </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${kendo.
+                            toString(kendo.parseFloat(transactionData.amountToCharge), "n2")}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Status</td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            Successful
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Beneficiary </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.beneficiary.accountNumber + " - " +
+                            transactionData.beneficiary.accountName}
+                                            </td></tr></table>`;
+                        }
+                        break; // end of "Cash Transfer (Card)" transaction type
+
+                    case "Cash Transfer (Bank)": // transaction type is "Cash Transfer (Bank)"
+
+                        transactionHistoryDocContent += `<tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">` ;
+                        if(!transactionData.walletToWallet ||
+                            transactionData.walletToWallet.status != "success" ||
+                            transactionData.walletToWallet.data.
+                            toLocaleUpperCase().indexOf("SUCCESSFUL") < 0 ||
+                            !transactionData.walletToAccount ||
+                            transactionData.walletToAccount.status != "success" ||
+                            transactionData.walletToAccount.data.
+                            data.responsemessage.toLocaleUpperCase().indexOf("SUCCESSFUL") < 0
+                        )
+                        {
+                            // transaction is pending
+                            transactionHistoryDocContent += `Transaction Type </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.postcash_transaction_type}
+                                            </td></tr>
+                                             <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Amount (NGN)</td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${kendo.
+                            toString(kendo.parseFloat(transactionData.amountToCharge), "n2")}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Status</td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            Incomplete
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Beneficiary </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.postcash_transferDetails.recipient_account_number +
+                            " " +
+                            transactionData.postcash_transferDetails.recipient_account_name}
+                                            </td></tr></table>`;
+                        }
+                        else{
+                            // transaction is successful
+                            transactionHistoryDocContent += `Transaction Type </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.postcash_transaction_type}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Amount (NGN) </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${kendo.
+                            toString(kendo.parseFloat(transactionData.amountToCharge), "n2")}
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Transaction Status</td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            Successful
+                                            </td></tr>
+                                            <tr>
+                        <td style="min-width:30%; width:30%; font-size: 1.5em; font-weight: bold; border: 1px #000000 solid;">
+                                            Beneficiary </td>
+                                            <td style="min-width:70%; width:70%; font-size: 1.5em; border: 1px #000000 solid;">
+                                            ${transactionData.postcash_transferDetails.recipient_account_number +
+                            " " +
+                            transactionData.postcash_transferDetails.recipient_account_name}
+                                            </td></tr></table>`;
+                        }
+                        break; // end of "Cash Transfer (Bank)" transaction type
+                }
+
+                // append the generated content to the transaction-history-saver-container
+                $('#transaction-history-saver-container').append(transactionHistoryDocContent);
+
+                // convert the generate html content to a png image file/document
+                return domtoimage.toBlob($('#transaction-history-saver-container').get(0),
+                    {cacheBust: true, bgcolor: '#ffffff', width: 1880, height: 2908});
+            }).
+            then(function(blob){ // get the blob content
+                fileContentBlob = blob; // assign blob content to the function variable
+
+                return new Promise(function(resolve, reject){ // return the directory where to store the document/image
+                    window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, resolve, reject);
+                });
+            }).
+            then(function(directory){
+                return new Promise(function(resolve, reject){ // return the created file which holds the image document
+                    directory.getFile('PostCash-T-' + Date.now() + '.png', {create:true, exclusive: false}, resolve, reject);
+                });
+            }).
+            then(function(file){ // get the file object
+                fileObj = file; // assign the file object to the function variable
+
+                return new Promise(function(resolve, reject){ // return the FileWriter object used to write content to the created file
+                    file.createWriter(resolve, reject);
+                });
+            }).
+            then(function(fileWriter){ // get the FileWriter object
+                return new Promise(function(resolve, reject){
+                    fileWriter.onwriteend = resolve;
+                    fileWriter.onerror = reject;
+
+                    fileWriter.write(fileContentBlob); // write the content of the blob to the file
+                });
+            }).
+            then(function(){
+                // empty the content of transaction-history-saver-container since file saving is completed
+                $('#transaction-history-saver-container').html("");
+
+                return $('#loader-modal').get(0).hide(); // hide loader
+            }).
+            then(function(){
+
+                // display a toast message to let user know that file has been saved
+                window.plugins.toast.showWithOptions({
+                    message: "Transaction details saved to file",
+                    duration: 4000, // 2000 ms
+                    position: "bottom",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#808080',
+                        textColor: '#FFFFFF',
+                        textSize: 14
+                    }
+                });
+            }).
+            catch(function(){
+                // empty the content of transaction-history-saver-container since file savingcould not complete
+                $('#transaction-history-saver-container').html("");
+
+                $('#loader-modal').get(0).hide(); // hide loader
+
+                ons.notification.alert({title: "File Save Failed",
+                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                    'style="color: red;"></ons-icon> <span>Sorry, the details of this transaction could not be saved to file. ' +
+                    '<br>You can try again </span>',
+                    cancelable: true
+                });
+            });
 
 
         }

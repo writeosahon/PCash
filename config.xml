@@ -16,6 +16,7 @@
 <allow-intent href="sms:*"/>
 <allow-intent href="mailto:*"/>
 <allow-intent href="market:*"/>
+<allow-intent href="data:*"/>
 <access origin="*"/>
 <preference name="phonegap-version" value="cli-6.2.0" />
 <preference name="xwalkMultipleApk" value="true" />
@@ -34,7 +35,14 @@
 <plugin name="ionic-plugin-keyboard" spec="2.2.1"/>
 <plugin name="cordova-plugin-inappbrowser" spec="1.4.0"/>
 <plugin name="cordova-pdf-generator" spec="1.5.4"/>
+ <plugin name="cordova-plugin-file" spec="4.2.0"/>
 <plugin name="cordova-plugin-whitelist" spec="1.2.2"/>
+
+<preference name="AndroidPersistentFileLocation" value="Internal" />
+
+<config-file platform="android" target="AndroidManifest.xml" parent="/*">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+</config-file>
 
 <preference  name="AutoHideSplashScreen" value="true"/>
 <preference  name="SplashShowOnlyFirstTime" value="false"/>

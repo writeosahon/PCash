@@ -1196,6 +1196,47 @@ var utopiasoftware = {
                 });
             },
 
+
+            /**
+             * method is used to retrieve a specific transaction history data using the
+             * specified transaction reference/id
+             *
+             * @param transactionRef {String} the unique reference for the transaction
+             *
+             * @returns {Promise} a promise is returned which resolves
+             */
+            getTransactionHistoryById: function(transactionRef){
+
+                // return a Promise which resolves when transaction history data has been found or rejects otherwise
+                return new Promise(function(resolve, reject){
+                    // get the transaction history data collection on the user's device
+                    Promise.resolve(intel.security.secureStorage.read({'id':'postcash-transaction-history-collection'})).
+                    then(function(instanceId){
+                        return Promise.resolve(intel.security.secureData.getData(instanceId));
+                    }).
+                    then(function(transactionDataArray){
+                        transactionDataArray = JSON.parse(transactionDataArray); // convert the string data to an object
+                        // find the specified transaction using the provided reference
+                        var transactionData = transactionDataArray.find(function(arrayElem){
+                            if(arrayElem.flutterChargeReference == transactionRef){
+                                return true;
+                            }
+                        });
+
+                        // if element was not found, resolve the promise to null
+                        if(!transactionData) { // transaction data object was NOT found
+                            resolve(null);
+                        }
+                        else{ // transaction data was found
+                            resolve(transactionData);
+                        }
+                    }).
+                    catch(function(err){ // there was an error
+                        reject(err); // reject promise
+                    });
+                });
+            },
+
             /**
              * method is used to delete all user's transaction history data details that are
              * securely stored on user's device
@@ -1297,6 +1338,5 @@ var utopiasoftware = {
 
 
         }
-
     }
 };
