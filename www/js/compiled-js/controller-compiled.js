@@ -2341,7 +2341,8 @@ $('#loader-modal').get(0).hide();}},/**
          * @param event
          */pageShow:function pageShow(event){var $thisPage=$(event.target);// get the current page shown
 // enable the swipeable feature for the app splitter
-$('ons-splitter-side').attr("swipeable",true);},/**
+$('ons-splitter-side').attr("swipeable",true);// set the flag to inform the app to display Security Lock Modal
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=true;},/**
          * method is used to trigger the save transaction history details operation.
          * Transaction details are saved on the user's device as a png document/file
          *
@@ -2377,9 +2378,13 @@ file.createWriter(resolve,reject);});}).then(function(fileWriter){// get the Fil
 return new Promise(function(resolve,reject){fileWriter.onwriteend=resolve;fileWriter.onerror=reject;fileWriter.write(fileContentBlob);// write the content of the blob to the file
 });}).then(function(){// empty the content of transaction-history-saver-container since file saving is completed
 $('#transaction-history-saver-container').html("");return $('#loader-modal').get(0).hide();// hide loader
-}).then(function(){// display a toast message to let user know that file has been saved
+}).then(function(){// set the flag to inform the app NOT to display Security Lock Modal
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;// display a toast message to let user know that file has been saved
 window.plugins.toast.showWithOptions({message:"Transaction details saved to file",duration:4000,// 2000 ms
-position:"bottom",styling:{opacity:1,backgroundColor:'#808080',textColor:'#FFFFFF',textSize:14}});}).catch(function(){// empty the content of transaction-history-saver-container since file savingcould not complete
+position:"top",styling:{opacity:1,backgroundColor:'#808080',textColor:'#FFFFFF',textSize:14}});// open the saved document/image
+return new Promise(function(resolve,reject){cordova.plugins.fileOpener2.open(fileObj.toURL(),"image/png",{error:reject,success:resolve});});}).then(function(){// do nothing here
+}).catch(function(err){// set the flag to inform the app to display Security Lock Modal
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=true;// empty the content of transaction-history-saver-container since file saving could not complete
 $('#transaction-history-saver-container').html("");$('#loader-modal').get(0).hide();// hide loader
 ons.notification.alert({title:"File Save Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>Sorry, the details of this transaction could not be saved to file. '+'<br>You can try again </span>',cancelable:true});});}}),_utopiasoftware$saveu);
 

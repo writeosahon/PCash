@@ -7677,6 +7677,9 @@ utopiasoftware.saveup.controller = {
             var $thisPage = $(event.target); // get the current page shown
             // enable the swipeable feature for the app splitter
             $('ons-splitter-side').attr("swipeable", true);
+
+            // set the flag to inform the app to display Security Lock Modal
+            $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = true;
         },
 
         /**
@@ -7905,11 +7908,14 @@ utopiasoftware.saveup.controller = {
             }).
             then(function(){
 
+                // set the flag to inform the app NOT to display Security Lock Modal
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
+
                 // display a toast message to let user know that file has been saved
                 window.plugins.toast.showWithOptions({
                     message: "Transaction details saved to file",
                     duration: 4000, // 2000 ms
-                    position: "bottom",
+                    position: "top",
                     styling: {
                         opacity: 1,
                         backgroundColor: '#808080',
@@ -7917,9 +7923,28 @@ utopiasoftware.saveup.controller = {
                         textSize: 14
                     }
                 });
+
+                // open the saved document/image
+                return new Promise(function(resolve, reject){
+                    cordova.plugins.fileOpener2.open(
+                        fileObj.toURL(),
+                        "image/png",
+                        {
+                            error : reject,
+                            success : resolve
+                        }
+                    );
+                });
             }).
-            catch(function(){
-                // empty the content of transaction-history-saver-container since file savingcould not complete
+            then(function(){
+                // do nothing here
+            }).
+            catch(function(err){
+
+                // set the flag to inform the app to display Security Lock Modal
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = true;
+
+                // empty the content of transaction-history-saver-container since file saving could not complete
                 $('#transaction-history-saver-container').html("");
 
                 $('#loader-modal').get(0).hide(); // hide loader
