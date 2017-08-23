@@ -242,6 +242,11 @@ utopiasoftware.saveup.controller = {
             $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);
             return null;
         }).
+        then(function(){ // setup the hockey plugin which is used to send transaction feedback
+            return new Promise(function(resolve, reject){
+                hockeyapp.start(resolve, reject, "340a9a672b8246058cf0711f00dec9c0");
+            });
+        }).
         then(function(){
             // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
             utopiasoftware.saveup.model.isAppReady = true;
@@ -7200,7 +7205,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7244,7 +7250,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7305,7 +7312,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7350,7 +7358,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7468,7 +7477,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7512,7 +7522,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7573,7 +7584,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7618,7 +7630,8 @@ utopiasoftware.saveup.controller = {
                                             Save Details
                                             </ons-button>
                                             <ons-button class="transaction-history-content-button"
-                                                onclick="">
+                                            data-transaction-id="${transactionHistoryArray[index].flutterChargeReference}"
+                                                onclick="utopiasoftware.saveup.controller.transactionHistoryPageViewModel.sendFeedbackButtonClicked(this)">
                                             Send Feedback
                                             </ons-button>
                                             </div></ons-col>`;
@@ -7911,19 +7924,6 @@ utopiasoftware.saveup.controller = {
                 // set the flag to inform the app NOT to display Security Lock Modal
                 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
 
-                // display a toast message to let user know that file has been saved
-                window.plugins.toast.showWithOptions({
-                    message: "Transaction details saved to file",
-                    duration: 4000, // 2000 ms
-                    position: "top",
-                    styling: {
-                        opacity: 1,
-                        backgroundColor: '#808080',
-                        textColor: '#FFFFFF',
-                        textSize: 14
-                    }
-                });
-
                 // open the saved document/image
                 return new Promise(function(resolve, reject){
                     cordova.plugins.fileOpener2.open(
@@ -7937,7 +7937,18 @@ utopiasoftware.saveup.controller = {
                 });
             }).
             then(function(){
-                // do nothing here
+                // display a toast message to let user know that file has been saved
+                window.plugins.toast.showWithOptions({
+                    message: "Transaction details saved to file",
+                    duration: 6000, // 6000 ms
+                    position: "top",
+                    styling: {
+                        opacity: 1,
+                        backgroundColor: '#808080',
+                        textColor: '#FFFFFF',
+                        textSize: 14
+                    }
+                });
             }).
             catch(function(err){
 
@@ -7958,6 +7969,77 @@ utopiasoftware.saveup.controller = {
             });
 
 
+        },
+
+        /**
+         * method is used to trigger the "Send Feedback" operations when the
+         * "Send Feedback" button is clicked
+         *
+         * @param buttonElem
+         */
+        sendFeedbackButtonClicked: function(buttonElem){
+
+            // inform the user that they are about to share transaction details with the support team
+            ons.notification.confirm({title: '<ons-icon icon="md-info" size="32px" ' +
+            'style="color: blue;"></ons-icon> Privacy Notice',
+                messageHTML: '<span>You are about to send details of your PostCash transaction to the PostCash support team. <br>' +
+                'Do you want to continue?</span>',
+                cancelable: false,
+                buttonLabels: ["No", "Yes"]
+            }).
+            then(function(buttonIndex){
+                if(buttonIndex === 1){ // user wants to continue sending feedback
+                    // display message to user
+                    $('#loader-modal-message').html("Preparing Feedback Form...");
+                    return $('#loader-modal').get(0).show(); // show loader
+                }
+                else{ // user terminated action
+                    throw null;
+                }
+            }).
+            then(function(){
+                // get the specific transaction history which is to be saved
+                var transactionRef = $(buttonElem).attr("data-transaction-id");
+                return utopiasoftware.saveup.transactionHistoryOperations.getTransactionHistoryById(transactionRef);
+            }).
+            then(function(transactionData){ // receive the requested transaction data
+                if(!transactionData){ // no transaction data was found
+                    throw {"message": "Transaction not found."};
+                }
+
+                return transactionData;
+            }).
+            then(function(transactionData){ // receive the transaction data
+
+                // set the flag to inform the app NOT to display Security Lock Modal
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
+
+                return new Promise(function(resolve, reject){
+                    // display the feedback form and attach the retrieved transaction data
+                    hockeyapp.composeFeedback(resolve, reject, false, transactionData);
+                });
+            }).
+            then(function(){
+                $('#loader-modal').get(0).hide(); // hide loader
+            }).
+            catch(function(err){
+
+                // set the flag to inform the app to display Security Lock Modal
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = true;
+
+                $('#loader-modal').get(0).hide(); // hide loader
+
+                if(!err){ // if error is null, user terminated action
+                    return;
+                }
+
+                ons.notification.alert({title: "Feedback Failed",
+                    messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
+                    'style="color: red;"></ons-icon> <span>Sorry, feedback containing the PostCash transaction details could not be sent. ' +
+                    '<br>You can try again </span>',
+                    cancelable: true
+                });
+            });
         }
 
     }

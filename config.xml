@@ -47,7 +47,7 @@
 <plugin name="com.verso.cordova.clipboard" spec="https://github.com/VersoSolutions/CordovaClipboard"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
 <plugin name="cordova-plugin-app-version" spec="0.1.9"/>
 <plugin name="cordova-plugin-sslcertificatechecker" spec="https://github.com/EddyVerbruggen/SSLCertificateChecker-PhoneGap-Plugin.git"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
-<plugin name="cordova-plugin-hockeyapp" spec="2.2.2"/>
+<plugin name="cordova-plugin-hockeyapp" spec="2.2.4"/>
 <plugin name="cordova-plugin-whitelist" spec="1.2.2"/>
 
 <preference name="AndroidPersistentFileLocation" value="Internal" />
