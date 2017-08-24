@@ -49,14 +49,12 @@
 <plugin name="cordova-plugin-sslcertificatechecker" spec="https://github.com/EddyVerbruggen/SSLCertificateChecker-PhoneGap-Plugin.git"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
 <plugin name="cordova-plugin-hockeyapp" spec="2.2.4"/>
 <plugin name="cordova-plugin-whitelist" spec="1.2.2"/>
-    <plugin name="cordova-plugin-googleplus">
-        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.23456"/>
-    </plugin>
 
 <preference name="AndroidPersistentFileLocation" value="Internal" />
 
 <config-file platform="android" target="AndroidManifest.xml" parent="/*">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 </config-file>
 
 <preference  name="AutoHideSplashScreen" value="true"/>

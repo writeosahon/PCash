@@ -82,7 +82,7 @@ return null;}return Promise.resolve(intel.security.secureData.getData(instanceId
 return null;}utopiasoftware.saveup.model.appUserDetails=JSON.parse(secureData);// transfer the collected user details to the app
 // update the first name being displayed in the side menu
 $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);return null;}).then(function(){// setup the hockey plugin which is used to send transaction feedback
-return new Promise(function(resolve,reject){hockeyapp.start(resolve,reject,"340a9a672b8246058cf0711f00dec9c0");});}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
+return new Promise(function(resolve,reject){hockeyapp.start(resolve,reject,"fcb296e2bce24c5a8e9eedcf079f9b47");});}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
 navigator.splashscreen.hide();}).catch(function(){// provide an empty device uuid
 utopiasoftware.saveup.model.deviceUUID="";// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
@@ -110,13 +110,20 @@ $('#pin-security-check').find('input').addClass("utopiasoftware-no-style");},/**
 window.sessionStorage.clear();// hide the app secondary popup menu
 $('#secondary-menu-options').get(0).hide().then(function(){// go back to the log in page
 $('ons-splitter').get(0).content.load("login-template");}).catch();return;}if(label=="share app"){// user clicked on the share app list item
-// hide the app secondary popup menu
-$('#secondary-menu-options').get(0).hide().then(function(){return new Promise(function(resolve,reject){window.plugins.googleplus.getSigningCertificateFingerprint(resolve,reject);});}).then(function(fingerprint){window.plugins.socialsharing.shareViaEmail(fingerprint,'fingerprint',null,// TO: must be null or an array
-null,// CC: must be null or an array
-null,// BCC: must be null or an array
-null,function(){},// called when sharing worked, but also when the user cancelled sharing via email. On iOS, the callbacks' boolean result parameter is true when sharing worked, false if cancelled. On Android, this parameter is always true so it can't be used). See section "Notes about the successCallback" below.
-function(){}// called when sh*t hits the fan
-);}).catch();return;}},/**
+//store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
+var security_lock_modal_flag=$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;// create the share options
+var shareOptions={message:"download PostCash app. A secure digital wallet for easy money transfer in Nigeria",files:null,subject:"download PostCash app",chooserTitle:"share PostCash with...",url:"https://jh8tj.app.goo.gl/rniX"};// hide the app secondary popup menu
+$('#secondary-menu-options').get(0).hide().then(function(){// set the status of alwaysShowSecurityLock modal to NOT display
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;// copy the share option message to the device clipboard
+return new Promise(function(resolve,reject){// inform the user that the share link has also been copied to device clipboard
+window.plugins.toast.showWithOptions({message:"share link was also copied to device memory, so you can paste easily!",duration:5000,position:"top",styling:{opacity:1,backgroundColor:'#808080',textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
+window.plugins.toast.hide();}});window.setTimeout(function(){cordova.plugins.clipboard.copy(shareOptions.message+"\n"+shareOptions.url,resolve,resolve);},3800);});}).then(function(){return new Promise(function(resolve,reject){// popup the share actionsheet widget
+window.plugins.socialsharing.shareWithOptions(shareOptions,resolve,reject);});}).then(function(){// revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=security_lock_modal_flag;// call method that determines if it should show the security lock modal based on just updated status
+utopiasoftware.saveup.controller.onShowSecurityLockModal();}).catch(function(){// inform the user that share link could not be created
+window.plugins.toast.showWithOptions({message:"app share link could not be created. Try again",duration:4000,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
+textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
+window.plugins.toast.hide();}});});return;}},/**
      * object is the view-model for the app side menu
      */sideMenuViewModel:{/**
          * method is used to listen for when the list
