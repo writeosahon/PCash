@@ -16,7 +16,7 @@ utopiasoftware.saveup.controller = {
 
     /**
      * method is used to handle the special event created by the intel xdk developer library. The special event (app.Ready)
-     * is triggered when ALL the hybrid app pluigins have been loaded/readied and also the document DOM content is ready
+     * is triggered when ALL the hybrid app plugins have been loaded/readied and also the document DOM content is ready
      */
     appReady: () => {
 
@@ -128,7 +128,7 @@ utopiasoftware.saveup.controller = {
         }, false);
 
         // add a listener for when the user pauses the device i.e when the app is taken from the foreground to background
-        document.addEventListener("pause", function(){ // function handles the display of the security-pin-lock-modal
+        document.addEventListener("pause", utopiasoftware.saveup.controller.onShowSecurityLockModal = function(){ // function handles the display of the security-pin-lock-modal
 
             if($('#login-tabbar').get(0) && $('#login-tabbar').get(0).visible){ // if the login-tab is visible
                 // don't display security-pin-lock-modal
@@ -308,6 +308,51 @@ utopiasoftware.saveup.controller = {
      * @param label {String} label represents clicked list item in the menu
      */
     appSecondaryMenuListClicked: function(label){
+
+        if(label == "sign out"){ // user clicked the sign out list item
+
+            // clear any session storage that may be held in the device
+            window.sessionStorage.clear();
+
+            // hide the app secondary popup menu
+            $('#secondary-menu-options').get(0).hide().
+            then(function(){
+                // go back to the log in page
+                $('ons-splitter').get(0).content.load("login-template");
+            }).
+            catch();
+
+            return;
+        }
+
+        if(label == "share app"){ // user clicked on the share app list item
+
+            // hide the app secondary popup menu
+            $('#secondary-menu-options').get(0).hide().
+            then(function(){
+
+                return new Promise(function(resolve, reject){
+                    window.plugins.googleplus.getSigningCertificateFingerprint(
+                        resolve, reject
+                    );
+                });
+            }).
+            then(function(fingerprint){
+                window.plugins.socialsharing.shareViaEmail(
+                    fingerprint,
+                    'fingerprint',
+                    null, // TO: must be null or an array
+                    null, // CC: must be null or an array
+                    null, // BCC: must be null or an array
+                    null,
+                    function(){}, // called when sharing worked, but also when the user cancelled sharing via email. On iOS, the callbacks' boolean result parameter is true when sharing worked, false if cancelled. On Android, this parameter is always true so it can't be used). See section "Notes about the successCallback" below.
+                    function(){} // called when sh*t hits the fan
+                );
+            }).
+            catch();
+
+            return;
+        }
     },
 
 
@@ -501,6 +546,58 @@ utopiasoftware.saveup.controller = {
 
                 return;
             }
+
+            if(label == "settings"){ // settings button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().
+                then(function(){
+                    ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
+                    'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
+                        messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
+                        "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
+                        cancelable: false
+                    });
+                }).
+                catch();
+
+                return;
+            }
+
+            if(label == "contact us"){ // contact us button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().
+                then(function(){
+                    ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
+                    'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
+                        messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
+                        "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
+                        cancelable: false
+                    });
+                }).
+                catch();
+
+                return;
+            }
+
+            if(label == "app info"){ // app info button was clicked
+
+                // close the side menu
+                $('ons-splitter').get(0).left.close().
+                then(function(){
+                    ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
+                    'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
+                        messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
+                        "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
+                        cancelable: false
+                    });
+                }).
+                catch();
+
+                return;
+            }
+
         }
     },
 
@@ -1339,7 +1436,45 @@ utopiasoftware.saveup.controller = {
 
                 return;
             }
+
+            if(label == "settings"){ // settings button was clicked
+
+                ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
+                'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
+                    messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
+                    "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
+                    cancelable: false
+                });
+
+                return;
+            }
+
+            if(label == "contact us"){ // contact us button was clicked
+
+                ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
+                'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
+                    messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
+                    "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
+                    cancelable: false
+                });
+
+                return;
+            }
+
+            if(label == "app info"){ // app info button was clicked
+
+                ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
+                'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
+                    messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
+                    "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
+                    cancelable: false
+                });
+
+                return;
+            }
         }
+
+
 
     },
 

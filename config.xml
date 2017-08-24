@@ -43,7 +43,7 @@
     <variable name="ANDROID_HOST" value=" "/>
     <variable name="ANDROID_PATHPREFIX" value="/"/>
 </plugin>
-<plugin name="cordova-plugin-x-socialsharing" spec="5.1.5"/>
+<plugin name="cordova-plugin-x-socialsharing" spec="5.2.0"/>
 <plugin name="com.verso.cordova.clipboard" spec="https://github.com/VersoSolutions/CordovaClipboard"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
 <plugin name="cordova-plugin-app-version" spec="0.1.9"/>
 <plugin name="cordova-plugin-sslcertificatechecker" spec="https://github.com/EddyVerbruggen/SSLCertificateChecker-PhoneGap-Plugin.git"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
