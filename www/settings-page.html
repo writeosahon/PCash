@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- settings page -->
+<ons-page id="settings-page">
+    <ons-toolbar class="toolbar--transparent">
+        <div class="left">
+            <ons-toolbar-button onclick="$('#app-main-navigator').get(0).popPage({data: {refresh: true}});">
+                <ons-icon icon="md-long-arrow-left" size="20px"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+            Settings
+        </div>
+        <div class="right">
+            <ons-toolbar-button class="page-options-button"
+                                onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#secondary-menu-options', this)"><ons-icon icon="md-more-vert"></ons-icon></ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <div style="background-image: url('css/app-images/settings-background.jpg'); background-position: center;
+    background-size: 100% 100%; background-repeat: no-repeat;
+    width: 100%; height: 140px; position: relative"><!-- div has background image -->
+
+        <ons-list style="position: absolute; bottom: 0;">
+            <ons-list-header style="z-index: 2; font-size: 1.3em; margin:0; text-align: center; background-color: #ede7f6; color: #b388ff">
+                Add New Account <span id="add-account-help-1" class="btn btn-floating deep-purple accent-1 pulse" style="box-shadow: none"
+                                      onclick="$('.tap-target', $('#add-account-page')).tapTarget('open');">
+                    <ons-icon icon="fa-question"></ons-icon>
+                </span>
+            </ons-list-header>
+        </ons-list>
+    </div>
+
+
+    <!-- tap target for feature discovery. This is not directly visible on the page -->
+    <div class="tap-target" data-activates="add-account-help-1" style="background-color: #82b1ff; color: #ffffff;">
+        <div class="tap-target-content">
+            <h5 style="padding-left: 1em;">Store Your Bank Account</h5>
+            <p style="width: 50%; margin-left: 3%;">
+                Add your bank account to your secure digital wallet</p>
+        </div>
+    </div>
+
+</ons-page>
+</body>
+</html>
