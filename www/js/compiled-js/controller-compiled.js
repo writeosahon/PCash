@@ -174,7 +174,8 @@ $('#app-main-navigator').get(0).bringPageTop("transaction-history-page.html",{})
 }else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="settings"){// settings button was clicked
 // close the side menu
-$('ons-splitter').get(0).left.close().then(function(){ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});}).catch();return;}if(label=="contact us"){// contact us button was clicked
+$('ons-splitter').get(0).left.close().then(function(){$('#app-main-navigator').get(0).bringPageTop("settings-page.html",{});// navigate to the settings page
+}).catch();return;}if(label=="contact us"){// contact us button was clicked
 // close the side menu
 $('ons-splitter').get(0).left.close().then(function(){ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});}).catch();return;}if(label=="app info"){// app info button was clicked
 // close the side menu
@@ -453,7 +454,8 @@ if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authenti
 $('#app-main-navigator').get(0).pushPage("transaction-history-page.html",{});// navigate to the transaction history pages
 }else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="settings"){// settings button was clicked
-ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});return;}if(label=="contact us"){// contact us button was clicked
+$('#app-main-navigator').get(0).pushPage("settings-page.html",{});// settings page
+return;}if(label=="contact us"){// contact us button was clicked
 ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});return;}if(label=="app info"){// app info button was clicked
 ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});return;}}},/**
      * object is view-model for verify-account page
@@ -2433,6 +2435,95 @@ hockeyapp.composeFeedback(resolve,reject,false,transactionData);});}).then(funct
 }).catch(function(err){// set the flag to inform the app to display Security Lock Modal
 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=true;$('#loader-modal').get(0).hide();// hide loader
 if(!err){// if error is null, user terminated action
-return;}ons.notification.alert({title:"Feedback Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>Sorry, feedback containing the PostCash transaction details could not be sent. '+'<br>You can try again </span>',cancelable:true});});}}),_utopiasoftware$saveu);
+return;}ons.notification.alert({title:"Feedback Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>Sorry, feedback containing the PostCash transaction details could not be sent. '+'<br>You can try again </span>',cancelable:true});});}}),_defineProperty(_utopiasoftware$saveu,'settingsPageViewModel',{/**
+         * property used to keep track of the immediate last scroll position of the
+         * page content
+         */previousScrollPosition:0,/**
+         * property used to keep track of the current scroll position of the
+         * page content
+         */currentScrollPosition:0,/**
+         * event is triggered when page is initialised
+         */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
+// find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+$('ons-input input',$thisPage).addClass('utopiasoftware-no-style');// disable the swipeable feature for the app splitter
+$('ons-splitter-side').removeAttr("swipeable",true);// reset the previous & current scroll positions of the page contents
+utopiasoftware.saveup.controller.settingsPageViewModel.previousScrollPosition=0;utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition=0;// call the function used to initialise the app page if the app is fully loaded
+loadPageOnAppReady();//function is used to initialise the page if the app is fully ready for execution
+function loadPageOnAppReady(){// check to see if onsen is ready and if all app loading has been completed
+if(!ons.isReady()||utopiasoftware.saveup.model.isAppReady===false){setTimeout(loadPageOnAppReady,500);// call this function again after half a second
+return;}// listen for the back button event
+$('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check if the side menu is open
+if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
+$('ons-splitter').get(0).left.close();return;// exit the method
+}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// listen for when the 'always lock screen' switch 'change' event
+$('#settings-page #settings-always-lock-screen-switch').on("change",function(switchEvent){// ask user for secure PIN before proceeding. secure pin MUST match
+ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+// save the user's lock screen settings
+if(!utopiasoftware.saveup.model.appUserDetails.settings){// settings object NOT created yet
+// create the settings object
+utopiasoftware.saveup.model.appUserDetails.settings={};}// update the 'alwaysShowSecurityLockModal' settings property to the state of the ons-switch component
+utopiasoftware.saveup.model.appUserDetails.settings.alwaysShowSecurityLockModal=$('#settings-page #settings-always-lock-screen-switch').get(0).checked;// save the user's updated settings
+Promise.resolve(intel.security.secureData.createFromData({"data":JSON.stringify(utopiasoftware.saveup.model.appUserDetails)})).then(function(instanceId){// store the cyphered data in secure persistent storage
+Promise.resolve(intel.security.secureStorage.write({"id":"postcash-user-details","instanceID":instanceId}));});}else{// user authentication failed
+if($('#settings-page #settings-always-lock-screen-switch').get(0).checked){// switch was 'on', reverse it
+$('#settings-page #settings-always-lock-screen-switch').removeAttr("checked");// turn switch 'off'
+}else{// switch was 'off', reverse it
+$('#settings-page #settings-always-lock-screen-switch').attr("checked",true);// turn switch 'on'
+}ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});});// listen for the scroll event of the page content
+$('#settings-page .page__content').on("scroll",utopiasoftware.saveup.controller.settingsPageViewModel.pageContentScrolled);// update the settings page display
+if(!utopiasoftware.saveup.model.appUserDetails.settings||utopiasoftware.saveup.model.appUserDetails.settings.alwaysShowSecurityLockModal!=false){// user want switch 'on'
+$('#settings-page #settings-always-lock-screen-switch').attr("checked",true);// turn switch 'on'
+}else{// user wants switch 'off'
+$('#settings-page #settings-always-lock-screen-switch').removeAttr("checked");// turn switch 'off'
+}// hide the preloader
+$('#settings-page .progress').css("visibility","hidden");// hide the loader
+$('#loader-modal').get(0).hide();}},/**
+         * method is triggered when page is shown
+         *
+         * @param event
+         */pageShow:function pageShow(event){var $thisPage=$(event.target);// get the current page shown
+// enable the swipeable feature for the app splitter
+$('ons-splitter-side').attr("swipeable",true);},/**
+         * method is used to listen for scroll event of the page content
+         *
+         * @param event
+         */pageContentScrolled:function pageContentScrolled(event){// set the current scrolltop position
+utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition=$(this).scrollTop();if(utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition>utopiasoftware.saveup.controller.settingsPageViewModel.previousScrollPosition){// user scrolled up
+// set the current position as previous position
+utopiasoftware.saveup.controller.settingsPageViewModel.previousScrollPosition=utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition;// check if the header image left after scrolling is <= height of page toolbar
+if(140-utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition<=56){// the header image left after scrolling is <= height of page toolbar
+// check if the toolbar for the page has already been made opaque
+if(this.isToolBarOpaque!=true){// toolbar has not been made opaque
+$('#settings-page ons-toolbar').removeClass("toolbar--transparent");// make the toolbar opaque
+// also pin the help header on the page just below the toolbar
+$('#settings-page ons-list-header').css({"display":"block","position":"fixed","top":"56px","width":"100%"});this.isToolBarOpaque=true;// flag that toolbar has been made opaque
+}}return;}if(utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition<utopiasoftware.saveup.controller.settingsPageViewModel.previousScrollPosition){// user scrolled down
+// set the current position as previous position
+utopiasoftware.saveup.controller.settingsPageViewModel.previousScrollPosition=utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition;// check if the header image left after scrolling is > height of page toolbar
+if(140-utopiasoftware.saveup.controller.settingsPageViewModel.currentScrollPosition>56){// the header image left after scrolling is > height of page toolbar
+// check if the toolbar for the page has already been made transparent
+if(this.isToolBarOpaque==true){// toolbar has NOT been made transparent
+$('#settings-page ons-toolbar').addClass("toolbar--transparent");// make the toolbar transparent
+// also unpin the help header on the page from just below the toolbar
+$('#settings-page ons-list-header').css({"display":"block","position":"static","top":"56px"});this.isToolBarOpaque=false;// flag that toolbar has been made transparent
+}}return;}},/**
+         * method is used to listen for when the list
+         * items in the settings menu is clicked
+         *
+         * @param label {String} label represents clicked list item in the settings menu
+         * @param event {Event} event object for the click action
+         */settingsMenuListClicked:function settingsMenuListClicked(label,event){if(label=="update profile"){// 'update profile' list item was clicked
+$('#app-main-navigator').get(0).pushPage("update-profile-page.html",{animation:"slide-md"});return;}if(label=="change secure pin"){// 'change secure pin' list item was clicked
+return;}if(label=="always lock screen"){// 'always lock screen' list item was clicked
+if($(event.target).closest('ons-switch').is('#settings-always-lock-screen-switch')){// check if the user tapped directly on the switch component
+// user clicked directly on the switch component, so just exit and let the the switch component 'change' event handler take care of it
+return;}// check the current state of the switch component and reverse the state
+if($('#settings-page #settings-always-lock-screen-switch').get(0).checked){// switch is 'on'
+$('#settings-page #settings-always-lock-screen-switch').removeAttr("checked");// turn switch 'off'
+}else{// switch is 'off'
+$('#settings-page #settings-always-lock-screen-switch').attr("checked",true);// turn switch 'on'
+}// manually trigger the 'change' event for the switch component
+$('#settings-page #settings-always-lock-screen-switch').trigger("change");return;}}}),_utopiasoftware$saveu);
 
 //# sourceMappingURL=controller-compiled.js.map

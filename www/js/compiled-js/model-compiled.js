@@ -164,4 +164,10 @@ $(document).on("init", "#transaction-history-page", utopiasoftware.saveup.contro
 // listen for when the Transaction History page is shown
 $(document).on("show", "#transaction-history-page", utopiasoftware.saveup.controller.transactionHistoryPageViewModel.pageShow);
 
+// listen for the initialisation of the Settings page
+$(document).on("init", "#settings-page", utopiasoftware.saveup.controller.settingsPageViewModel.pageInit);
+
+// listen for when the Settings page is shown
+$(document).on("show", "#settings-page", utopiasoftware.saveup.controller.settingsPageViewModel.pageShow);
+
 //# sourceMappingURL=model-compiled.js.map

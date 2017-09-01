@@ -811,3 +811,12 @@ label[data-hint]:after {
     margin-top: 0.5em
 }
 /** STYLE FOR TRANSACTION HISTORY PAGE ENDS **/
+
+/** STYLE FOR SETTINGS PAGE BEGINS **/
+#settings-page .page--material__content {
+    position: absolute;
+    top: 0;
+}
+#settings-page ons-list {
+    background-color: transparent;
+}
