@@ -22,6 +22,10 @@
         </div>
     </ons-toolbar>
 
+    <div class="progress" style="visibility: visible">
+        <div class="indeterminate"></div>
+    </div>
+
     <form id="update-profile-form" autocomplete="off" data-parsley-inputs="input,textarea,select"
           data-parsley-excluded="input[type=button], input[type=submit],
                               input[type=reset], input[type=hidden], [disabled], :hidden">
@@ -33,10 +37,10 @@
                     <ons-icon icon="md-account-box" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s8 input-field">
-                    <input id="create-first-name" type="text" pattern="[a-zA-Z]{1}[\w\s\-\.]*[a-zA-Z]{1}" required float
+                    <input id="update-profile-first-name" type="text" pattern="[a-zA-Z]{1}[\w\s\-\.]*[a-zA-Z]{1}" required float
                            data-parsley-required-message="your first name is required"
                            data-parsley-pattern-message="incorrect first name format. please check your spelling">
-                    <label for="create-first-name" class="hint--top">First Name</label>
+                    <label for="update-profile-first-name" class="hint--top">First Name</label>
                 </div>
             </div>
 
@@ -45,11 +49,22 @@
                     <ons-icon icon="md-assignment-account" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s8 input-field">
-                    <input id="create-last-name" type="text" modifier="underbar"
+                    <input id="update-profile-last-name" type="text" modifier="underbar"
                            pattern="[a-zA-Z]{1}[\w\s\-\.]*[a-zA-Z]{1}" required float
                            data-parsley-required-message="your last name is required"
                            data-parsley-pattern-message="incorrect last name format. please check your spelling">
-                    <label for="create-last-name" class="hint--top">Last Name</label>
+                    <label for="update-profile-last-name" class="hint--top">Last Name</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s2" style="text-align: center;">
+                    <ons-icon icon="md-account-box-mail" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                </div>
+                <div class="col s8 input-field">
+                    <input id="update-profile-email" type="email" modifier="underbar" placeholder="(Optional)"
+                           data-parsley-type-message="incorrect email format. please check your spelling">
+                    <label for="update-profile-email" class="hint--top active">Your Email</label>
                 </div>
             </div>
 
@@ -59,7 +74,7 @@
     <ons-bottom-toolbar>
         <ons-row>
             <ons-col width="100%" style="text-align: center;">
-                <ons-button id="create-account-button" modifier="quiet">Sign Up</ons-button>
+                <ons-button id="update-profile-button" modifier="quiet" disabled>Update Profile</ons-button>
             </ons-col>
         </ons-row>
     </ons-bottom-toolbar>
