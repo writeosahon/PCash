@@ -2514,7 +2514,12 @@ $('#settings-page ons-list-header').css({"display":"block","position":"static","
          * @param label {String} label represents clicked list item in the settings menu
          * @param event {Event} event object for the click action
          */settingsMenuListClicked:function settingsMenuListClicked(label,event){if(label=="update profile"){// 'update profile' list item was clicked
-$('#app-main-navigator').get(0).pushPage("update-profile-page.html",{animation:"slide-md"});return;}if(label=="change secure pin"){// 'change secure pin' list item was clicked
+// ask user for secure PIN before proceeding. secure pin MUST match
+ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+$('#app-main-navigator').get(0).pushPage("update-profile-page.html",{animation:"slide-md"});// navigate
+}else{// inform user that security check failed/user authentication failed
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="change secure pin"){// 'change secure pin' list item was clicked
 return;}if(label=="always lock screen"){// 'always lock screen' list item was clicked
 if($(event.target).closest('ons-switch').is('#settings-always-lock-screen-switch')){// check if the user tapped directly on the switch component
 // user clicked directly on the switch component, so just exit and let the the switch component 'change' event handler take care of it
