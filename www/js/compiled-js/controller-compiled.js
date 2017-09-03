@@ -2550,7 +2550,9 @@ utopiasoftware.saveup.controller.updateProfilePageViewModel.formValidator.on('fi
 $(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint",fieldInstance.getErrorsMessages()[0]);});// listen for form field validation success event
 utopiasoftware.saveup.controller.updateProfilePageViewModel.formValidator.on('field:success',function(fieldInstance){// remove tooltip from element
 $(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");});// listen for form validation success
-utopiasoftware.saveup.controller.updateProfilePageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.updateProfilePageViewModel.updateProfileFormValidated);// hide the preloader
+utopiasoftware.saveup.controller.updateProfilePageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.updateProfilePageViewModel.updateProfileFormValidated);// update the contents of the update form with the available user details
+$('#update-profile-first-name',$thisPage).val(utopiasoftware.saveup.model.appUserDetails.firstName);$('#update-profile-last-name',$thisPage).val(utopiasoftware.saveup.model.appUserDetails.lastName);if(utopiasoftware.saveup.model.appUserDetails.email&&utopiasoftware.saveup.model.appUserDetails.email!=""){$('#update-profile-email',$thisPage).val(utopiasoftware.saveup.model.appUserDetails.email);}// update the input field display for the form
+Materialize.updateTextFields();// hide the preloader
 $('.progress',$thisPage).remove();// enable the 'update profile' button
 $('#update-profile-button',$thisPage).removeAttr("disabled");// hide the loader
 $('#loader-modal').get(0).hide();}},/**

@@ -8545,6 +8545,16 @@ utopiasoftware.saveup.controller = {
                 utopiasoftware.saveup.controller.updateProfilePageViewModel.formValidator.on('form:success',
                     utopiasoftware.saveup.controller.updateProfilePageViewModel.updateProfileFormValidated);
 
+                // update the contents of the update form with the available user details
+                $('#update-profile-first-name', $thisPage).val(utopiasoftware.saveup.model.appUserDetails.firstName);
+                $('#update-profile-last-name', $thisPage).val(utopiasoftware.saveup.model.appUserDetails.lastName);
+                if(utopiasoftware.saveup.model.appUserDetails.email && utopiasoftware.saveup.model.appUserDetails.email != ""){
+                    $('#update-profile-email', $thisPage).val(utopiasoftware.saveup.model.appUserDetails.email);
+                }
+
+                // update the input field display for the form
+                Materialize.updateTextFields();
+
                 // hide the preloader
                 $('.progress', $thisPage).remove();
                 // enable the 'update profile' button

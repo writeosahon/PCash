@@ -168,3 +168,12 @@ $(document).on("init", "#settings-page", utopiasoftware.saveup.controller.settin
 
 // listen for when the Settings page is shown
 $(document).on("show", "#settings-page", utopiasoftware.saveup.controller.settingsPageViewModel.pageShow);
+
+// listen for the initialisation of the Update Profile page
+$(document).on("init", "#update-profile-page", utopiasoftware.saveup.controller.updateProfilePageViewModel.pageInit);
+
+// listen for the hide event of the Update Profile page
+$(document).on("hide", "#update-profile-page", utopiasoftware.saveup.controller.updateProfilePageViewModel.pageHide);
+
+// listen for the destroy event of the Update Profile page
+$(document).on("destroy", "#update-profile-page", utopiasoftware.saveup.controller.updateProfilePageViewModel.pageDestroy);
