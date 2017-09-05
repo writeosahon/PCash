@@ -179,4 +179,13 @@ $(document).on("hide", "#update-profile-page", utopiasoftware.saveup.controller.
 // listen for the destroy event of the Update Profile page
 $(document).on("destroy", "#update-profile-page", utopiasoftware.saveup.controller.updateProfilePageViewModel.pageDestroy);
 
+// listen for the initialisation of the Change PIN page
+$(document).on("init", "#change-pin-page", utopiasoftware.saveup.controller.changePinPageViewModel.pageInit);
+
+// listen for the hide event of the Change PIN page
+$(document).on("hide", "#change-pin-page", utopiasoftware.saveup.controller.changePinPageViewModel.pageHide);
+
+// listen for the destroy event of the Change PIN page
+$(document).on("destroy", "#change-pin-page", utopiasoftware.saveup.controller.changePinPageViewModel.pageDestroy);
+
 //# sourceMappingURL=model-compiled.js.map

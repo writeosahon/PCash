@@ -8742,7 +8742,7 @@ utopiasoftware.saveup.controller = {
                 // hide the preloader
                 $('.progress', $thisPage).remove();
                 // enable the 'change pin' button
-                $('#change-pin-confirm-pin', $thisPage).removeAttr("disabled");
+                $('#change-pin-button', $thisPage).removeAttr("disabled");
                 // hide the loader
                 $('#loader-modal').get(0).hide();
 
@@ -8783,12 +8783,12 @@ utopiasoftware.saveup.controller = {
         /**
          * method is triggered when the form is successfully validated
          */
-        updateProfileFormValidated: function(){
+        changePinFormValidated: function(){
 
             // display the loader message
             $('#loader-modal-message').html("Changing Secure PIN...");
             Promise.resolve($('#loader-modal').get(0).show()). // show loader.
-            then(function(){//todo
+            then(function(){
 
                 // update the app user secure pin and persist it
                 utopiasoftware.saveup.model.appUserDetails.securePin =
@@ -8808,20 +8808,20 @@ utopiasoftware.saveup.controller = {
                 );
             }).
             then(function(){
-                $('#loader-modal').get(0).hide(); // hide loader
-                // set app-status local storage (as user phone number)
-                window.localStorage.setItem("app-status", utopiasoftware.saveup.model.appUserDetails.phoneNumber);
-                // update the first name being displayed in the side menu
-                $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);
-                // show a toast informing user that account has been created
-                Materialize.toast('Profile updated', 4000);
+                return $('#loader-modal').get(0).hide(); // hide loader
+            }).
+            then(function(){
+                $('#app-main-navigator').get(0).popPage({}); // go back to th previous page
+                // show a toast informing user of PIN change
+                Materialize.toast('Secure PIN changed', 4000);
+
             }).
             catch(function(err){
 
                 $('#loader-modal').get(0).hide(); // hide loader
-                ons.notification.alert({title: "Profile Update Failed",
+                ons.notification.alert({title: "PIN Change Failed",
                     messageHTML: '<ons-icon icon="md-close-circle-o" size="30px" ' +
-                    'style="color: red;"></ons-icon> <span>sorry, your profile could not be updated.<br> You can try again</span>',
+                    'style="color: red;"></ons-icon> <span>sorry, your secure PIN could not be changed.<br> You can try again</span>',
                     cancelable: false
                 });
             });
