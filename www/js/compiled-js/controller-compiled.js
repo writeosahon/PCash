@@ -2630,6 +2630,32 @@ return Promise.resolve(intel.security.secureStorage.write({"id":"postcash-user-d
 }).then(function(){$('#app-main-navigator').get(0).popPage({});// go back to th previous page
 // show a toast informing user of PIN change
 Materialize.toast('Secure PIN changed',4000);}).catch(function(err){$('#loader-modal').get(0).hide();// hide loader
-ons.notification.alert({title:"PIN Change Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>sorry, your secure PIN could not be changed.<br> You can try again</span>',cancelable:false});});}}),_utopiasoftware$saveu);
+ons.notification.alert({title:"PIN Change Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>sorry, your secure PIN could not be changed.<br> You can try again</span>',cancelable:false});});},/**
+         * method is triggered when the New PIN visibility button is clicked.
+         * It toggles pin visibility
+         *
+         * @param buttonElement
+         */newPinVisibilityButtonClicked:function newPinVisibilityButtonClicked(buttonElement){if($(buttonElement).attr("data-saveup-visible")==="no"){// pin is not visible, make it visible
+$('#change-pin-new-pin').css("-webkit-text-security","none");// change the text-security for the input field
+$(buttonElement).find('ons-icon').attr("icon","md-eye-off");// change the icon associated with the input
+$(buttonElement).attr("data-saveup-visible","yes");// flag the pin is now visible
+}else{// make the pin not visible
+$('#change-pin-new-pin').css("-webkit-text-security","disc");// change the text-security for the input field
+$(buttonElement).find('ons-icon').attr("icon","md-eye");// change the icon associated with the input
+$(buttonElement).attr("data-saveup-visible","no");// flag the pin is now invisible
+}},/**
+         * method is triggered when the Confirm PIN visibility button is clicked.
+         * It toggles pin visibility
+         *
+         * @param buttonElement
+         */confirmPinVisibilityButtonClicked:function confirmPinVisibilityButtonClicked(buttonElement){if($(buttonElement).attr("data-saveup-visible")==="no"){// pin is not visible, make it visible
+$('#change-pin-confirm-pin').css("-webkit-text-security","none");// change the text-security for the input field
+$(buttonElement).find('ons-icon').attr("icon","md-eye-off");// change the icon associated with the input
+$(buttonElement).attr("data-saveup-visible","yes");// flag the pin is now visible
+}else{// make the pin not visible
+$('#change-pin-confirm-pin').css("-webkit-text-security","disc");// change the text-security for the input field
+$(buttonElement).find('ons-icon').attr("icon","md-eye");// change the icon associated with the input
+$(buttonElement).attr("data-saveup-visible","no");// flag the pin is now invisible
+}}}),_utopiasoftware$saveu);
 
 //# sourceMappingURL=controller-compiled.js.map

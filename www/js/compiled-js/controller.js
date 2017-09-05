@@ -8825,6 +8825,45 @@ utopiasoftware.saveup.controller = {
                     cancelable: false
                 });
             });
+        },
+
+        /**
+         * method is triggered when the New PIN visibility button is clicked.
+         * It toggles pin visibility
+         *
+         * @param buttonElement
+         */
+        newPinVisibilityButtonClicked: function(buttonElement){
+            if($(buttonElement).attr("data-saveup-visible") === "no"){ // pin is not visible, make it visible
+                $('#change-pin-new-pin').css("-webkit-text-security", "none"); // change the text-security for the input field
+                $(buttonElement).find('ons-icon').attr("icon", "md-eye-off"); // change the icon associated with the input
+                $(buttonElement).attr("data-saveup-visible", "yes"); // flag the pin is now visible
+            }
+            else{ // make the pin not visible
+                $('#change-pin-new-pin').css("-webkit-text-security", "disc"); // change the text-security for the input field
+                $(buttonElement).find('ons-icon').attr("icon", "md-eye"); // change the icon associated with the input
+                $(buttonElement).attr("data-saveup-visible", "no"); // flag the pin is now invisible
+            }
+        },
+
+
+        /**
+         * method is triggered when the Confirm PIN visibility button is clicked.
+         * It toggles pin visibility
+         *
+         * @param buttonElement
+         */
+        confirmPinVisibilityButtonClicked: function(buttonElement){
+            if($(buttonElement).attr("data-saveup-visible") === "no"){ // pin is not visible, make it visible
+                $('#change-pin-confirm-pin').css("-webkit-text-security", "none"); // change the text-security for the input field
+                $(buttonElement).find('ons-icon').attr("icon", "md-eye-off"); // change the icon associated with the input
+                $(buttonElement).attr("data-saveup-visible", "yes"); // flag the pin is now visible
+            }
+            else{ // make the pin not visible
+                $('#change-pin-confirm-pin').css("-webkit-text-security", "disc"); // change the text-security for the input field
+                $(buttonElement).find('ons-icon').attr("icon", "md-eye"); // change the icon associated with the input
+                $(buttonElement).attr("data-saveup-visible", "no"); // flag the pin is now invisible
+            }
         }
 
     }
