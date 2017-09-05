@@ -177,7 +177,8 @@ ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-c
 $('ons-splitter').get(0).left.close().then(function(){$('#app-main-navigator').get(0).bringPageTop("settings-page.html",{});// navigate to the settings page
 }).catch();return;}if(label=="contact us"){// contact us button was clicked
 // close the side menu
-$('ons-splitter').get(0).left.close().then(function(){ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});}).catch();return;}if(label=="app info"){// app info button was clicked
+$('ons-splitter').get(0).left.close().then(function(){$('#app-main-navigator').get(0).bringPageTop("contact-us-page.html",{});// navigate to the settings page
+}).catch();return;}if(label=="app info"){// app info button was clicked
 // close the side menu
 $('ons-splitter').get(0).left.close().then(function(){ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});}).catch();return;}}},/**
      * object is the view-model for the app security-pin-lock-modal
@@ -456,7 +457,8 @@ $('#app-main-navigator').get(0).pushPage("transaction-history-page.html",{});// 
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="settings"){// settings button was clicked
 $('#app-main-navigator').get(0).pushPage("settings-page.html",{});// settings page
 return;}if(label=="contact us"){// contact us button was clicked
-ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});return;}if(label=="app info"){// app info button was clicked
+$('#app-main-navigator').get(0).pushPage("contact-us-page.html",{});// navigate to contact us page
+return;}if(label=="app info"){// app info button was clicked
 ons.notification.alert({title:'<ons-icon icon="md-brush" size="32px" rotate="270" '+'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',messageHTML:'<span style="font-weight: bold">Thank you for using PostCash.<br> '+"PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",cancelable:false});return;}}},/**
      * object is view-model for verify-account page
      */verifyAccountPageViewModel:{/**
