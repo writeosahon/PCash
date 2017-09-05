@@ -410,3 +410,13 @@
 
   content: '\e917';
 }
+.zmdi-saveup-icon-saveup-padlock-confirm:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 'saveup-font-icons';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: '\e918';
+}
