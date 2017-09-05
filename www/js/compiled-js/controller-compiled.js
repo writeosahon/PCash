@@ -2520,7 +2520,12 @@ if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authenti
 $('#app-main-navigator').get(0).pushPage("update-profile-page.html",{animation:"slide-md"});// navigate
 }else{// inform user that security check failed/user authentication failed
 ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="change secure pin"){// 'change secure pin' list item was clicked
-return;}if(label=="always lock screen"){// 'always lock screen' list item was clicked
+// ask user for secure PIN before proceeding. secure pin MUST match
+ons.notification.prompt({title:"Security Check",id:"pin-security-check",class:"utopiasoftware-no-style",messageHTML:'<div><ons-icon icon="ion-lock-combination" size="24px" '+'style="color: #b388ff; float: left; width: 26px;"></ons-icon> <span style="float: right; width: calc(100% - 26px);">'+'Please enter your PostCash Secure PIN to proceed</span></div>',cancelable:true,placeholder:"Secure PIN",inputType:"number",defaultValue:"",autofocus:true,submitOnEnter:true}).then(function(userInput){// user has provided a secured PIN , now authenticate it
+if(userInput===utopiasoftware.saveup.model.appUserDetails.securePin){// authentication successful
+$('#app-main-navigator').get(0).pushPage("change-pin-page.html",{animation:"slide-md"});// navigate
+}else{// inform user that security check failed/user authentication failed
+ons.notification.alert({title:"Security Check",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>'+'Security check failed. Invalid credentials'+'</span>',cancelable:true});}}).catch(function(){});return;}if(label=="always lock screen"){// 'always lock screen' list item was clicked
 if($(event.target).closest('ons-switch').is('#settings-always-lock-screen-switch')){// check if the user tapped directly on the switch component
 // user clicked directly on the switch component, so just exit and let the the switch component 'change' event handler take care of it
 return;}// check the current state of the switch component and reverse the state
@@ -2572,6 +2577,54 @@ $('#loader-modal-message').html("Updating User Profile...");Promise.resolve($('#
 then(function(){// update the app user details object and persist it
 utopiasoftware.saveup.model.appUserDetails.firstName=$('#update-profile-form #update-profile-first-name').val();utopiasoftware.saveup.model.appUserDetails.lastName=$('#update-profile-form #update-profile-last-name').val();if($('#update-profile-form #update-profile-email').val()!=""){// check if user has entered an email
 utopiasoftware.saveup.model.appUserDetails.email=$('#update-profile-form #update-profile-email').val();}return utopiasoftware.saveup.model.appUserDetails;// return the updated profile details, so it can be persisted
+}).then(function(appUserDetails){// create a cypher data of the user details
+return Promise.resolve(intel.security.secureData.createFromData({"data":JSON.stringify(appUserDetails)}));}).then(function(instanceId){// store the cyphered data in secure persistent storage
+return Promise.resolve(intel.security.secureStorage.write({"id":"postcash-user-details","instanceID":instanceId}));}).then(function(){$('#loader-modal').get(0).hide();// hide loader
+// set app-status local storage (as user phone number)
+window.localStorage.setItem("app-status",utopiasoftware.saveup.model.appUserDetails.phoneNumber);// update the first name being displayed in the side menu
+$('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);// show a toast informing user that account has been created
+Materialize.toast('Profile updated',4000);}).catch(function(err){$('#loader-modal').get(0).hide();// hide loader
+ons.notification.alert({title:"Profile Update Failed",messageHTML:'<ons-icon icon="md-close-circle-o" size="30px" '+'style="color: red;"></ons-icon> <span>sorry, your profile could not be updated.<br> You can try again</span>',cancelable:false});});}}),_defineProperty(_utopiasoftware$saveu,'changePinPageViewModel',{/**
+         * used to hold the parsley form validation object for the form
+         */formValidator:null,/**
+         * event is triggered when page is initialised
+         */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
+// find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+$('ons-input input',$thisPage).addClass('utopiasoftware-no-style');// call the function used to initialise the app page if the app is fully loaded
+loadPageOnAppReady();//function is used to initialise the page if the app is fully ready for execution
+function loadPageOnAppReady(){// check to see if onsen is ready and if all app loading has been completed
+if(!ons.isReady()||utopiasoftware.saveup.model.isAppReady===false){setTimeout(loadPageOnAppReady,500);// call this function again after half a second
+return;}// listen for the back button event
+$('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// move to the previous page on the stack
+$('#app-main-navigator').get(0).popPage({});};// initialise the change-pin form validation
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator=$('#change-pin-form').parsley();// attach listener for the change pin button on the page
+$('#change-pin-button').get(0).onclick=function(){// run the validation method for the change pin form
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator.whenValidate();};// listen for log in form field validation failure event
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator.on('field:error',function(fieldInstance){// get the element that triggered the field validation error and use it to display tooltip
+// display tooltip
+$(fieldInstance.$element).parent().find('label:eq(0)').addClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').attr("data-hint",fieldInstance.getErrorsMessages()[0]);});// listen for form field validation success event
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator.on('field:success',function(fieldInstance){// remove tooltip from element
+$(fieldInstance.$element).parent().find('label:eq(0)').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$(fieldInstance.$element).parent().find('label:eq(0)').removeAttr("data-hint");});// listen for form validation success
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator.on('form:success',utopiasoftware.saveup.controller.changePinPageViewModel.changePinFormValidated);// hide the preloader
+$('.progress',$thisPage).remove();// enable the 'change pin' button
+$('#change-pin-confirm-pin',$thisPage).removeAttr("disabled");// hide the loader
+$('#loader-modal').get(0).hide();}},/**
+         * method is triggered when the page is hidden
+         * @param event
+         */pageHide:function pageHide(event){try{// remove any tooltip being displayed on all forms on the page
+$('#change-pin-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#change-pin-page [data-hint]').removeAttr("data-hint");// reset the form validator object on the page
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator.reset();}catch(err){}},/**
+         * method is triggered when the page is destroyed
+         * @param event
+         */pageDestroy:function pageDestroy(event){try{// remove any tooltip being displayed on all forms on the page
+$('#change-pin-page [data-hint]').removeClass("hint--always hint--info hint--medium hint--rounded hint--no-animate");$('#change-pin-page [data-hint]').removeAttr("data-hint");// destroy the form validator objects on the page
+utopiasoftware.saveup.controller.changePinPageViewModel.formValidator.destroy();}catch(err){}},/**
+         * method is triggered when the form is successfully validated
+         */updateProfileFormValidated:function updateProfileFormValidated(){// display the loader message
+$('#loader-modal-message').html("Changing Secure PIN...");Promise.resolve($('#loader-modal').get(0).show()).// show loader.
+then(function(){//todo
+// update the app user secure pin and persist it
+utopiasoftware.saveup.model.appUserDetails.securePin=$('#change-pin-form #change-pin-new-pin').val();return utopiasoftware.saveup.model.appUserDetails;// return the updated profile details, so it can be persisted
 }).then(function(appUserDetails){// create a cypher data of the user details
 return Promise.resolve(intel.security.secureData.createFromData({"data":JSON.stringify(appUserDetails)}));}).then(function(instanceId){// store the cyphered data in secure persistent storage
 return Promise.resolve(intel.security.secureStorage.write({"id":"postcash-user-details","instanceID":instanceId}));}).then(function(){$('#loader-modal').get(0).hide();// hide loader

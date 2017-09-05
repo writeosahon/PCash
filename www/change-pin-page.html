@@ -34,21 +34,20 @@
 
             <div class="row">
                 <div class="col s2" style="text-align: center;">
-                    <ons-icon icon="md-lock" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
+                    <ons-icon icon="ion-locked" size="28px" style="color: #b388ff; padding-top: 1em;"></ons-icon>
                 </div>
                 <div class="col s7 input-field">
                     <input id="change-pin-new-pin" type="number" required
                            data-parsley-type="digits"
                            data-parsley-minlength="4"
                            data-parsley-maxlength="8"
-                           placeholder="For secure login"
-                           data-parsley-required-message="create your PIN"
+                           data-parsley-required-message="enter new PIN"
                            data-parsley-type-message="your PIN must contain only numbers"
                            data-parsley-minlength-message="your PIN must be at least 4 numbers"
                            data-parsley-maxlength-message="your PIN cannot be more than 8 numbers">
-                    <label for="change-pin-new-pin">Create Secure PIN</label>
+                    <label for="change-pin-new-pin">New Secure PIN</label>
                 </div>
-                <div class="col s3" style="padding-top: 0.2em;">
+                <div class="col s3" style="padding-top: 1em;">
                     <ons-button modifier="quiet" data-saveup-visible="no" style="font-size: 1.2em"
                                 onclick="utopiasoftware.saveup.controller.createAccountPageViewModel.pinVisibilityButtonClicked(this);">
                         <ons-icon icon="md-eye"></ons-icon></ons-button>
@@ -64,13 +63,15 @@
                            data-parsley-type="digits"
                            data-parsley-minlength="4"
                            data-parsley-maxlength="8"
-                           data-parsley-required-message="create your PIN"
+                           data-parsley-equalto="#change-pin-new-pin"
+                           data-parsley-required-message="confirm new PIN"
                            data-parsley-type-message="your PIN must contain only numbers"
                            data-parsley-minlength-message="your PIN must be at least 4 numbers"
-                           data-parsley-maxlength-message="your PIN cannot be more than 8 numbers">
+                           data-parsley-maxlength-message="your PIN cannot be more than 8 numbers"
+                           data-parsley-equalto-message="secure PINs do not match">
                     <label for="change-pin-confirm-pin" class="hint--top">Confirm Secure PIN</label>
                 </div>
-                <div class="col s3" style="padding-top: 0.2em;">
+                <div class="col s3" style="padding-top: 1em;">
                     <ons-button modifier="quiet" data-saveup-visible="no" style="font-size: 1.2em"
                                 onclick="utopiasoftware.saveup.controller.createAccountPageViewModel.pinVisibilityButtonClicked(this);">
                         <ons-icon icon="md-eye"></ons-icon></ons-button>
@@ -83,7 +84,7 @@
     <ons-bottom-toolbar>
         <ons-row>
             <ons-col width="100%" style="text-align: center;">
-                <ons-button id="update-profile-button" modifier="quiet" disabled>Update Profile</ons-button>
+                <ons-button id="change-pin-button" modifier="quiet" disabled>Change PIN</ons-button>
             </ons-col>
         </ons-row>
     </ons-bottom-toolbar>

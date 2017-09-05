@@ -825,6 +825,6 @@ label[data-hint]:after {
 
 
 /** STYLE FOR CHANGE PIN PAGE BEGINS **/
-#change-pin-page #change-pin-new-pin {
+#change-pin-page #change-pin-new-pin, #change-pin-page #change-pin-confirm-pin {
     -webkit-text-security: disc;
 }
