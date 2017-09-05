@@ -812,6 +812,7 @@ label[data-hint]:after {
 }
 /** STYLE FOR TRANSACTION HISTORY PAGE ENDS **/
 
+
 /** STYLE FOR SETTINGS PAGE BEGINS **/
 #settings-page .page--material__content {
     position: absolute;
@@ -819,4 +820,11 @@ label[data-hint]:after {
 }
 #settings-page ons-list {
     background-color: transparent;
+}
+/** STYLE FOR SETTINGS PAGE ENDS **/
+
+
+/** STYLE FOR CHANGE PIN PAGE BEGINS **/
+#change-pin-page #change-pin-new-pin {
+    -webkit-text-security: disc;
 }
