@@ -828,3 +828,10 @@ label[data-hint]:after {
 #change-pin-page #change-pin-new-pin, #change-pin-page #change-pin-confirm-pin {
     -webkit-text-security: disc;
 }
+/** STYLE FOR CHANGE PIN PAGE ENDS **/
+
+/** STYLE FOR CONTACT US PAGE BEGINS **/
+#contact-us-page .page--material__content {
+    position: absolute;
+    top: 0;
+}

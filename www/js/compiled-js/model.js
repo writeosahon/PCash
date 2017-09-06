@@ -186,3 +186,9 @@ $(document).on("hide", "#change-pin-page", utopiasoftware.saveup.controller.chan
 
 // listen for the destroy event of the Change PIN page
 $(document).on("destroy", "#change-pin-page", utopiasoftware.saveup.controller.changePinPageViewModel.pageDestroy);
+
+// listen for the initialisation of the Contact Us page
+$(document).on("init", "#contact-us-page", utopiasoftware.saveup.controller.contactUsPageViewModel.pageInit);
+
+// listen for when the Contact Us page is shown
+$(document).on("show", "#contact-us-page", utopiasoftware.saveup.controller.contactUsPageViewModel.pageShow);

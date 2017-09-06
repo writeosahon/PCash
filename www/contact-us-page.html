@@ -5,6 +5,74 @@
     <title>Title</title>
 </head>
 <body>
+<!-- contact-us page -->
+<ons-page id="contact-us-page">
+    <ons-toolbar class="toolbar--transparent">
+        <div class="left">
+            <ons-toolbar-button onclick="$('#side-menu').get(0).toggle()">
+                <ons-icon icon="md-saveup-icon-saveup-square-menu" size="14px"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+            Contact Us
+        </div>
+        <div class="right">
+            <ons-toolbar-button class="page-options-button"
+                                onclick="utopiasoftware.saveup.controller.createAppSecondaryMenus('#secondary-menu-options', this)"><ons-icon icon="md-more-vert"></ons-icon></ons-toolbar-button>
+        </div>
+    </ons-toolbar>
 
+    <div style="width: 100%; height: 140px; background-color: #b388ff; position: fixed; top: 0; z-index: 1;"><!-- div with color background -->
+    </div>
+
+    <div class="z-depth-3" style="width: 80%; margin-left: 10%; margin-right: 10%; margin-top: 4em; z-index: 3 !important;
+    overflow-y: visible; position: fixed;">
+        <img src="css/app-images/contact-us-background.png" style="width: 100%">
+    </div>
+
+    <ons-list style="position: fixed; bottom: 0; width: 100%;
+    min-height: calc(100vh - 12em); max-height: calc(100vh - 12em); overflow-y: scroll">
+        <ons-list-item tappable modifier="nodivider"
+                       style="border-bottom: 1px lightgray solid"
+                       onclick="utopiasoftware.saveup.controller.contactUsPageViewModel.contactUsMenuListClicked('email');">
+            <div class="left">
+                <ons-icon icon="md-email"
+                          size="28px" class="list-item__icon" style="border-radius: 50%;
+                          background-color: #3686d3; color: white; height: 32px; width: 32px;"></ons-icon>
+            </div>
+            <div class="center" style="color: #3686d3;">
+                Email
+            </div>
+        </ons-list-item>
+
+        <ons-list-item tappable modifier="nodivider"
+                       style="border-bottom: 1px lightgray solid"
+                       onclick="utopiasoftware.saveup.controller.contactUsPageViewModel.contactUsMenuListClicked('direct feedback');">
+            <div class="left">
+                <ons-icon icon="md-comments"
+                          size="28px" class="list-item__icon" style="border-radius: 50%;
+                          background-color: darkviolet; color: white; height: 36px; width: 36px; padding-top: 3px;"></ons-icon>
+            </div>
+            <div class="center" style="color: darkviolet;">
+                Direct Feedback
+            </div>
+        </ons-list-item>
+
+        <ons-list-item tappable modifier="nodivider"
+                       style="border-bottom: 1px lightgray solid"
+                       onclick="utopiasoftware.saveup.controller.contactUsPageViewModel.contactUsMenuListClicked('twitter');">
+            <div class="left">
+                <ons-icon icon="md-twitter"
+                          size="22px" class="list-item__icon" style="border-radius: 50%;
+                          background-color: darkblue; color: white; height: 33px; width: 33px; padding-top: 4px; padding-left: 7px;"></ons-icon>
+            </div>
+            <div class="center" style="text-align: left; color: darkblue">
+                Twitter
+            </div>
+        </ons-list-item>
+
+    </ons-list>
+
+</ons-page>
 </body>
 </html>

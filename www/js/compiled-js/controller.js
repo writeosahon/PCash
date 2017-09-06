@@ -8210,7 +8210,7 @@ utopiasoftware.saveup.controller = {
     },
 
     /**
-     * object is view-model for settigs page
+     * object is view-model for settings page
      */
     settingsPageViewModel: {
 
@@ -8856,5 +8856,91 @@ utopiasoftware.saveup.controller = {
             }
         }
 
+    },
+
+
+    /**
+     * object is view-model for contact us page
+     */
+    contactUsPageViewModel: {
+
+        /**
+         * event is triggered when page is initialised
+         */
+        pageInit: function(event){
+
+            var $thisPage = $(event.target); // get the current page shown
+            // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+            $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
+            // disable the swipeable feature for the app splitter
+            $('ons-splitter-side').removeAttr("swipeable", true);
+
+            // call the function used to initialise the app page if the app is fully loaded
+            loadPageOnAppReady();
+
+            //function is used to initialise the page if the app is fully ready for execution
+            function loadPageOnAppReady(){
+                // check to see if onsen is ready and if all app loading has been completed
+                if(!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false){
+                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
+                    return;
+                }
+
+                // listen for the back button event
+                $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
+
+                    // check if the side menu is open
+                    if($('ons-splitter').get(0).left.isOpen){ // side menu open, so close it
+                        $('ons-splitter').get(0).left.close();
+                        return; // exit the method
+                    }
+
+                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                };
+
+                // hide the loader
+                $('#loader-modal').get(0).hide();
+            }
+
+        },
+
+        /**
+         * method is triggered when page is shown
+         *
+         * @param event
+         */
+        pageShow: function(event){
+            var $thisPage = $(event.target); // get the current page shown
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
+        },
+
+        /**
+         * method is used to listen for when the list
+         * items in the contact us menu is clicked
+         *
+         * @param label {String} label represents clicked list item in the contact us menu
+         */
+        contactUsMenuListClicked: function(label) {
+
+            if(label == "email"){ // 'update profile' list item was clicked
+
+                // open up a pre-populated email on the user's device
+                cordova.InAppBrowser.open(window.encodeURI('mailto:support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net'),
+                    '_system');
+                return;
+            }
+
+            if(label == "change secure pin"){ // 'change secure pin' list item was clicked
+
+                return;
+            }
+
+            if(label == "always lock screen"){ // 'always lock screen' list item was clicked
+
+                return;
+            }
+
+        }
     }
 };
