@@ -614,7 +614,7 @@ utopiasoftware.saveup.controller = {
                 // close the side menu
                 $('ons-splitter').get(0).left.close().
                 then(function(){
-                    $('#app-main-navigator').get(0).bringPageTop("contact-us-page.html", {}); // navigate to the settings page
+                    $('#app-main-navigator').get(0).bringPageTop("contact-us-page.html", {}); // navigate to the contact us page
                 }).
                 catch();
 
@@ -626,12 +626,7 @@ utopiasoftware.saveup.controller = {
                 // close the side menu
                 $('ons-splitter').get(0).left.close().
                 then(function(){
-                    ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
-                    'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
-                        messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
-                        "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
-                        cancelable: false
-                    });
+                    $('#app-main-navigator').get(0).bringPageTop("app-info-page.html", {}); // navigate to the app info page
                 }).
                 catch();
 
@@ -1493,12 +1488,7 @@ utopiasoftware.saveup.controller = {
 
             if(label == "app info"){ // app info button was clicked
 
-                ons.notification.alert({title: '<ons-icon icon="md-brush" size="32px" rotate="270" ' +
-                'style="color: green;"></ons-icon><span style="color: green;">PostCash Beta</span>',
-                    messageHTML: '<span style="font-weight: bold">Thank you for using PostCash.<br> ' +
-                    "PostCash is currently in beta and this feature isn't available yet. Expect an update soon!</span>",
-                    cancelable: false
-                });
+                $('#app-main-navigator').get(0).pushPage("app-info-page.html", {}); // navigate to contact us page
 
                 return;
             }
@@ -8871,6 +8861,160 @@ utopiasoftware.saveup.controller = {
      * object is view-model for contact us page
      */
     contactUsPageViewModel: {
+
+        /**
+         * event is triggered when page is initialised
+         */
+        pageInit: function(event){
+
+            var $thisPage = $(event.target); // get the current page shown
+            // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles
+            $('ons-input input', $thisPage).addClass('utopiasoftware-no-style');
+            // disable the swipeable feature for the app splitter
+            $('ons-splitter-side').removeAttr("swipeable", true);
+
+            // call the function used to initialise the app page if the app is fully loaded
+            loadPageOnAppReady();
+
+            //function is used to initialise the page if the app is fully ready for execution
+            function loadPageOnAppReady(){
+                // check to see if onsen is ready and if all app loading has been completed
+                if(!ons.isReady() || utopiasoftware.saveup.model.isAppReady === false){
+                    setTimeout(loadPageOnAppReady, 500); // call this function again after half a second
+                    return;
+                }
+
+                // listen for the back button event
+                $('#app-main-navigator').get(0).topPage.onDeviceBackButton = function(){
+
+                    // check if the side menu is open
+                    if($('ons-splitter').get(0).left.isOpen){ // side menu open, so close it
+                        $('ons-splitter').get(0).left.close();
+                        return; // exit the method
+                    }
+
+                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                };
+
+                // hide the loader
+                $('#loader-modal').get(0).hide();
+            }
+
+        },
+
+        /**
+         * method is triggered when page is shown
+         *
+         * @param event
+         */
+        pageShow: function(event){
+            var $thisPage = $(event.target); // get the current page shown
+            // enable the swipeable feature for the app splitter
+            $('ons-splitter-side').attr("swipeable", true);
+        },
+
+        /**
+         * method is used to listen for when the list
+         * items in the contact us menu is clicked
+         *
+         * @param label {String} label represents clicked list item in the contact us menu
+         */
+        contactUsMenuListClicked: function(label) {
+
+            if(label == "email"){ // 'update profile' list item was clicked
+
+                //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
+                var security_lock_modal_flag = $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;
+
+                // set the status of alwaysShowSecurityLock modal to NOT display
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
+
+                new Promise(function(resolve, reject){
+                    // open the email app on the user's device already populated with the suppoert email
+                    cordova.plugins.email.open({
+                        to:      ['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']
+                    }, resolve);
+                }).
+                then(function(){ // after email app has been opened
+
+                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
+
+                    // call method that determines if it should show the security lock modal based on just updated status
+                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
+
+                }).
+                catch();
+
+                return;
+            }
+
+            if(label == "direct feedback"){ // 'direct feedback' list item was clicked
+
+                //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
+                var security_lock_modal_flag = $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;
+
+                // set the status of alwaysShowSecurityLock modal to NOT display
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
+
+                new new Promise(function(resolve, reject){
+                    // display the feedback form and attach the retrieved transaction data
+                    hockeyapp.composeFeedback(resolve, reject, false);
+                }).
+                then(function(){ // after email app has been opened
+
+                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
+
+                    // call method that determines if it should show the security lock modal based on just updated status
+                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
+
+                }).
+                catch(function(){ // email app could NOT be opened
+                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
+
+                    // call method that determines if it should show the security lock modal based on just updated status
+                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
+                });
+
+                return;
+            }
+
+            if(label == "twitter"){ // 'twitter' list item was clicked
+
+                // check if the user's device has twitter app installed
+                new Promise(function(resolve, reject){
+                    // call the plugin to do the Twitter App Availability check
+                    appAvailability.check(
+                        'com.twitter.android', // Package Name for Twitter Client on Android
+                        resolve,
+                        reject
+                    );
+                }).
+                then(function(){ // twitter app is available, so launch the twitter app with the specified profile page
+                    startApp.set({ /* params */
+                        "action": "ACTION_VIEW",
+                        "uri": "twitter://user?screen_name=theODCapp"
+                    }).start();
+                }).
+                catch(function(){ // open the twitter page in the native web browser
+
+                    cordova.InAppBrowser.open("https://twitter.com/theODCapp?apptimestamp=" +
+                        Date.now(), '_system');
+                });
+
+                return;
+            }
+
+        }
+    },
+
+
+    /**
+     * object is view-model for app info page
+     */
+    appInfoPageViewModel: {
 
         /**
          * event is triggered when page is initialised

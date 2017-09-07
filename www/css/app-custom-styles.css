@@ -835,3 +835,11 @@ label[data-hint]:after {
     position: absolute;
     top: 0;
 }
+/** STYLE FOR CONTACT US PAGE ENDS **/
+
+/** STYLE FOR APP INFO PAGE BEGINS **/
+#app-info-page .page--material__content {
+    position: absolute;
+    top: 0;
+}
+/** STYLE FOR APP INFO PAGE ENDS **/
