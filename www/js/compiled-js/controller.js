@@ -8313,7 +8313,15 @@ utopiasoftware.saveup.controller = {
                             });
                         }
                     }).
-                    catch(function(){});
+                    catch(function(){
+
+                        if($('#settings-page #settings-always-lock-screen-switch').get(0).checked){ // switch was 'on', reverse it
+                            $('#settings-page #settings-always-lock-screen-switch').removeAttr("checked"); // turn switch 'off'
+                        }
+                        else{ // switch was 'off', reverse it
+                            $('#settings-page #settings-always-lock-screen-switch').attr("checked", true); // turn switch 'on'
+                        }
+                    });
                 });
 
                 // listen for the scroll event of the page content
@@ -8925,9 +8933,29 @@ utopiasoftware.saveup.controller = {
 
             if(label == "email"){ // 'update profile' list item was clicked
 
-                // open up a pre-populated email on the user's device
-                cordova.InAppBrowser.open(window.encodeURI('mailto:support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net'),
-                    '_system');
+                //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
+                var security_lock_modal_flag = $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;
+
+                // set the status of alwaysShowSecurityLock modal to NOT display
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
+
+                new Promise(function(resolve, reject){
+                    // open the email app on the user's device already populated with the suppoert email
+                    cordova.plugins.email.open({
+                        to:      ['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']
+                    }, resolve);
+                }).
+                then(function(){ // after email app has been opened
+
+                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
+
+                    // call method that determines if it should show the security lock modal based on just updated status
+                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
+
+                }).
+                catch();
+
                 return;
             }
 
