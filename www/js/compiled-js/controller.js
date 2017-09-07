@@ -8991,7 +8991,28 @@ utopiasoftware.saveup.controller = {
                 return;
             }
 
-            if(label == "always lock screen"){ // 'always lock screen' list item was clicked
+            if(label == "twitter"){ // 'twitter' list item was clicked
+
+                // check if the user's device has twitter app installed
+                new Promise(function(resolve, reject){
+                    // call the plugin to do the Twitter App Availability check
+                    appAvailability.check(
+                        'com.twitter.android', // Package Name for Twitter Client on Android
+                        resolve,
+                        reject
+                    );
+                }).
+                then(function(){ // twitter app is available, so launch the twitter app with the specified profile page
+                    startApp.set({ /* params */
+                        "action": "ACTION_VIEW",
+                        "uri": "twitter://user?screen_name=theODCapp"
+                    }).start();
+                }).
+                catch(function(){ // open the twitter page in the native web browser
+
+                    cordova.InAppBrowser.open("https://twitter.com/theODCapp?apptimestamp=" +
+                        Date.now(), '_system');
+                });
 
                 return;
             }

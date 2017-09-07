@@ -2704,7 +2704,12 @@ $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=security_loc
 utopiasoftware.saveup.controller.onShowSecurityLockModal();}).catch(function(){// email app could NOT be opened
 // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=security_lock_modal_flag;// call method that determines if it should show the security lock modal based on just updated status
-utopiasoftware.saveup.controller.onShowSecurityLockModal();});return;}if(label=="always lock screen"){// 'always lock screen' list item was clicked
-return;}}}),_utopiasoftware$saveu);
+utopiasoftware.saveup.controller.onShowSecurityLockModal();});return;}if(label=="twitter"){// 'twitter' list item was clicked
+// check if the user's device has twitter app installed
+new Promise(function(resolve,reject){// call the plugin to do the Twitter App Availability check
+appAvailability.check('com.twitter.android',// Package Name for Twitter Client on Android
+resolve,reject);}).then(function(){// twitter app is available, so launch the twitter app with the specified profile page
+startApp.set({/* params */"action":"ACTION_VIEW","uri":"twitter://user?screen_name=theODCapp"}).start();}).catch(function(){// open the twitter page in the native web browser
+cordova.InAppBrowser.open("https://twitter.com/theODCapp?apptimestamp="+Date.now(),'_system');});return;}}}),_utopiasoftware$saveu);
 
 //# sourceMappingURL=controller-compiled.js.map
