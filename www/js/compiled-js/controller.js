@@ -8959,7 +8959,34 @@ utopiasoftware.saveup.controller = {
                 return;
             }
 
-            if(label == "change secure pin"){ // 'change secure pin' list item was clicked
+            if(label == "direct feedback"){ // 'direct feedback' list item was clicked
+
+                //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
+                var security_lock_modal_flag = $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;
+
+                // set the status of alwaysShowSecurityLock modal to NOT display
+                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
+
+                new new Promise(function(resolve, reject){
+                    // display the feedback form and attach the retrieved transaction data
+                    hockeyapp.composeFeedback(resolve, reject, false);
+                }).
+                then(function(){ // after email app has been opened
+
+                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
+
+                    // call method that determines if it should show the security lock modal based on just updated status
+                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
+
+                }).
+                catch(function(){ // email app could NOT be opened
+                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
+                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
+
+                    // call method that determines if it should show the security lock modal based on just updated status
+                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
+                });
 
                 return;
             }
