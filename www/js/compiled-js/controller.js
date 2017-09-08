@@ -8931,7 +8931,7 @@ utopiasoftware.saveup.controller = {
 
                 new Promise(function(resolve, reject){
                     // open the email app on the user's device already populated with the suppoert email
-                    plugin.email.open({
+                    cordova.plugins.email.open({
                         to:      ['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']
                     }, resolve);
                 }).

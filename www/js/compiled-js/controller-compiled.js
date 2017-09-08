@@ -2693,7 +2693,7 @@ $('ons-splitter-side').attr("swipeable",true);},/**
 //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
 var security_lock_modal_flag=$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;// set the status of alwaysShowSecurityLock modal to NOT display
 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;new Promise(function(resolve,reject){// open the email app on the user's device already populated with the suppoert email
-plugin.email.open({to:['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']},resolve);}).then(function(){// after email app has been opened
+cordova.plugins.email.open({to:['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']},resolve);}).then(function(){// after email app has been opened
 // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=security_lock_modal_flag;// call method that determines if it should show the security lock modal based on just updated status
 utopiasoftware.saveup.controller.onShowSecurityLockModal();}).catch();return;}if(label=="direct feedback"){// 'direct feedback' list item was clicked
