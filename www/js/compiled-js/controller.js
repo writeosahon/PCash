@@ -9050,6 +9050,14 @@ utopiasoftware.saveup.controller = {
                     $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
                 };
 
+                // get the app version for the app dynamically
+                cordova.getAppVersion.getVersionNumber().then(function (versionNumber) {
+                    $('#app-info-app-version', $thisPage).html(versionNumber);
+                });
+
+                // get the copyright year dynamically
+                $('#app-info-copyright', $thisPage).html((new Date()).getFullYear());
+
                 // hide the loader
                 $('#loader-modal').get(0).hide();
             }
@@ -9069,11 +9077,11 @@ utopiasoftware.saveup.controller = {
 
         /**
          * method is used to listen for when the list
-         * items in the contact us menu is clicked
+         * items in the app info menu is clicked
          *
-         * @param label {String} label represents clicked list item in the contact us menu
+         * @param label {String} label represents clicked list item in the app info menu
          */
-        contactUsMenuListClicked: function(label) {
+        appInfoMenuListClicked: function(label) {
 
             if(label == "email"){ // 'update profile' list item was clicked
 

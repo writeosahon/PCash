@@ -194,4 +194,10 @@ $(document).on("init", "#contact-us-page", utopiasoftware.saveup.controller.cont
 // listen for when the Contact Us page is shown
 $(document).on("show", "#contact-us-page", utopiasoftware.saveup.controller.contactUsPageViewModel.pageShow);
 
+// listen for the initialisation of the App Info page
+$(document).on("init", "#app-info-page", utopiasoftware.saveup.controller.appInfoPageViewModel.pageInit);
+
+// listen for when the App Info page is shown
+$(document).on("show", "#app-info-page", utopiasoftware.saveup.controller.appInfoPageViewModel.pageShow);
+
 //# sourceMappingURL=model-compiled.js.map

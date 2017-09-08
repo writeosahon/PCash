@@ -2725,7 +2725,9 @@ return;}// listen for the back button event
 $('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check if the side menu is open
 if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
 $('ons-splitter').get(0).left.close();return;// exit the method
-}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// hide the loader
+}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// get the app version for the app dynamically
+cordova.getAppVersion.getVersionNumber().then(function(versionNumber){$('#app-info-app-version',$thisPage).html(versionNumber);});// get the copyright year dynamically
+$('#app-info-copyright',$thisPage).html(new Date().getFullYear());// hide the loader
 $('#loader-modal').get(0).hide();}},/**
          * method is triggered when page is shown
          *
@@ -2734,10 +2736,10 @@ $('#loader-modal').get(0).hide();}},/**
 // enable the swipeable feature for the app splitter
 $('ons-splitter-side').attr("swipeable",true);},/**
          * method is used to listen for when the list
-         * items in the contact us menu is clicked
+         * items in the app info menu is clicked
          *
-         * @param label {String} label represents clicked list item in the contact us menu
-         */contactUsMenuListClicked:function contactUsMenuListClicked(label){if(label=="email"){// 'update profile' list item was clicked
+         * @param label {String} label represents clicked list item in the app info menu
+         */appInfoMenuListClicked:function appInfoMenuListClicked(label){if(label=="email"){// 'update profile' list item was clicked
 //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
 var security_lock_modal_flag=$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;// set the status of alwaysShowSecurityLock modal to NOT display
 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;new Promise(function(resolve,reject){// open the email app on the user's device already populated with the suppoert email
