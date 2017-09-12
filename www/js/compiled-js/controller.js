@@ -75,12 +75,24 @@ utopiasoftware.saveup.controller = {
             // initialise privacy-policy-fixed-modal plugin
             $('#privacy-policy-fixed-modal').modal({
                 ready: function(){ // callback for when fixed-modal is opened
-                    // flag a state that indicates the bottom sheet is currently open
+                    // flag a state that indicates the modal is currently open
                     $('#privacy-policy-fixed-modal').data("fixedModalState", "open");
                 },
                 complete: function(){ // callback for when fixed-modal is closed
                     // flag a state that indicates the fixed-modal is currently closed
                     $('#privacy-policy-fixed-modal').data("fixedModalState", "closed");
+                }
+            });
+
+            // initialise terms-of-use-fixed-modal plugin
+            $('#terms-of-use-fixed-modal').modal({
+                ready: function(){ // callback for when fixed-modal is opened
+                    // flag a state that indicates the modal is currently open
+                    $('#terms-of-use-fixed-modal').data("fixedModalState", "open");
+                },
+                complete: function(){ // callback for when fixed-modal is closed
+                    // flag a state that indicates the fixed-modal is currently closed
+                    $('#terms-of-use-fixed-modal').data("fixedModalState", "closed");
                 }
             });
 
@@ -9063,12 +9075,21 @@ utopiasoftware.saveup.controller = {
                     if($('#privacy-policy-fixed-modal').data("fixedModalState") === "open"){ // privacy-policy modal is open
 
                         $('#privacy-policy-fixed-modal .modal-content').scrollTop(0);
-                        $('#privacy-policy-fixed-modal').modal("close"); // close the bottom sheet
+                        $('#privacy-policy-fixed-modal').modal("close"); // close the modal
 
                         return;
                     }
 
-                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html"); //todo
+                    // check if the terms-of-use-fixed-modal is open
+                    if($('#terms-of-use-fixed-modal').data("fixedModalState") === "open"){ // terms-of-use is open
+
+                        $('#terms-of-use-fixed-modal .modal-content').scrollTop(0);
+                        $('#terms-of-use-fixed-modal').modal("close"); // close the modal
+
+                        return;
+                    }
+
+                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
                 };
 
                 // get the app version for the app dynamically
@@ -9110,61 +9131,9 @@ utopiasoftware.saveup.controller = {
                 return;
             }
 
-            if(label == "direct feedback"){ // 'direct feedback' list item was clicked
+            if(label == "terms of use"){ // 'terms of use' list item was clicked
 
-                //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
-                var security_lock_modal_flag = $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;
-
-                // set the status of alwaysShowSecurityLock modal to NOT display
-                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
-
-                new new Promise(function(resolve, reject){
-                    // display the feedback form and attach the retrieved transaction data
-                    hockeyapp.composeFeedback(resolve, reject, false);
-                }).
-                then(function(){ // after email app has been opened
-
-                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
-                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
-
-                    // call method that determines if it should show the security lock modal based on just updated status
-                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
-
-                }).
-                catch(function(){ // email app could NOT be opened
-                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
-                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
-
-                    // call method that determines if it should show the security lock modal based on just updated status
-                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
-                });
-
-                return;
-            }
-
-            if(label == "twitter"){ // 'twitter' list item was clicked
-
-                // check if the user's device has twitter app installed
-                new Promise(function(resolve, reject){
-                    // call the plugin to do the Twitter App Availability check
-                    appAvailability.check(
-                        'com.twitter.android', // Package Name for Twitter Client on Android
-                        resolve,
-                        reject
-                    );
-                }).
-                then(function(){ // twitter app is available, so launch the twitter app with the specified profile page
-                    startApp.set({ /* params */
-                        "action": "ACTION_VIEW",
-                        "uri": "twitter://user?screen_name=theODCapp"
-                    }).start();
-                }).
-                catch(function(){ // open the twitter page in the native web browser
-
-                    cordova.InAppBrowser.open("https://twitter.com/theODCapp?apptimestamp=" +
-                        Date.now(), '_system');
-                });
-
+                $('#terms-of-use-fixed-modal').modal('open'); // open the privacy policy fixed modal
                 return;
             }
 
