@@ -30,7 +30,12 @@ $('#verify-account-bottom-sheet').modal({ready:function ready(){// callback for 
 // flag a state that indicates the bottom sheet is currently open
 $('#verify-account-bottom-sheet').data("saveupSheetState","open");},complete:function complete(){// callback for when bottom sheet is closed
 // flag a state that indicates the bottom sheet is currently closed
-$('#verify-account-bottom-sheet').data("saveupSheetState","closed");}});// add back button listener for the SECURE PIN LOCK MODAL
+$('#verify-account-bottom-sheet').data("saveupSheetState","closed");}});// initialise privacy-policy-fixed-modal plugin
+$('#privacy-policy-fixed-modal').modal({ready:function ready(){// callback for when fixed-modal is opened
+// flag a state that indicates the bottom sheet is currently open
+$('#privacy-policy-fixed-modal').data("fixedModalState","open");},complete:function complete(){// callback for when fixed-modal is closed
+// flag a state that indicates the fixed-modal is currently closed
+$('#privacy-policy-fixed-modal').data("fixedModalState","closed");}});// add back button listener for the SECURE PIN LOCK MODAL
 $('#security-pin-lock-modal').get(0).onDeviceBackButton=utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked;// add back button listener for the transfer-cash-card-authorise MODAL
 $('#transfer-cash-card-authorise-modal').get(0).onDeviceBackButton=function(){// hide the transfer-cash-card-authorise-modal
 $('#transfer-cash-card-authorise-modal').get(0).hide();// change the src for transfer-cash-card-authorise-iframe to reset
@@ -2725,7 +2730,11 @@ return;}// listen for the back button event
 $('#app-main-navigator').get(0).topPage.onDeviceBackButton=function(){// check if the side menu is open
 if($('ons-splitter').get(0).left.isOpen){// side menu open, so close it
 $('ons-splitter').get(0).left.close();return;// exit the method
-}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");};// get the app version for the app dynamically
+}// check if the privacy-policy-fixed-modal is open
+if($('#privacy-policy-fixed-modal').data("fixedModalState")==="open"){// privacy-policy modal is open
+$('#privacy-policy-fixed-modal .modal-content').scrollTop(0);$('#privacy-policy-fixed-modal').modal("close");// close the bottom sheet
+return;}$('#app-main-navigator').get(0).resetToPage("main-menu-page.html");//todo
+};// get the app version for the app dynamically
 cordova.getAppVersion.getVersionNumber().then(function(versionNumber){$('#app-info-app-version',$thisPage).html(versionNumber);});// get the copyright year dynamically
 $('#app-info-copyright',$thisPage).html(new Date().getFullYear());// hide the loader
 $('#loader-modal').get(0).hide();}},/**
@@ -2739,14 +2748,9 @@ $('ons-splitter-side').attr("swipeable",true);},/**
          * items in the app info menu is clicked
          *
          * @param label {String} label represents clicked list item in the app info menu
-         */appInfoMenuListClicked:function appInfoMenuListClicked(label){if(label=="email"){// 'update profile' list item was clicked
-//store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
-var security_lock_modal_flag=$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;// set the status of alwaysShowSecurityLock modal to NOT display
-$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;new Promise(function(resolve,reject){// open the email app on the user's device already populated with the suppoert email
-cordova.plugins.email.open({to:['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']},resolve);}).then(function(){// after email app has been opened
-// revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
-$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=security_lock_modal_flag;// call method that determines if it should show the security lock modal based on just updated status
-utopiasoftware.saveup.controller.onShowSecurityLockModal();}).catch();return;}if(label=="direct feedback"){// 'direct feedback' list item was clicked
+         */appInfoMenuListClicked:function appInfoMenuListClicked(label){if(label=="privacy policy"){// 'privacy policy' list item was clicked
+$('#privacy-policy-fixed-modal').modal('open');// open the privacy policy fixed modal
+return;}if(label=="direct feedback"){// 'direct feedback' list item was clicked
 //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
 var security_lock_modal_flag=$('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;// set the status of alwaysShowSecurityLock modal to NOT display
 $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=false;new new Promise(function(resolve,reject){// display the feedback form and attach the retrieved transaction data

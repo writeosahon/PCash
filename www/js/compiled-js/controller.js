@@ -72,6 +72,18 @@ utopiasoftware.saveup.controller = {
                 }
             });
 
+            // initialise privacy-policy-fixed-modal plugin
+            $('#privacy-policy-fixed-modal').modal({
+                ready: function(){ // callback for when fixed-modal is opened
+                    // flag a state that indicates the bottom sheet is currently open
+                    $('#privacy-policy-fixed-modal').data("fixedModalState", "open");
+                },
+                complete: function(){ // callback for when fixed-modal is closed
+                    // flag a state that indicates the fixed-modal is currently closed
+                    $('#privacy-policy-fixed-modal').data("fixedModalState", "closed");
+                }
+            });
+
             // add back button listener for the SECURE PIN LOCK MODAL
             $('#security-pin-lock-modal').get(0).onDeviceBackButton =
                 utopiasoftware.saveup.controller.securityPinLockModalViewModel.exitButtonClicked;
@@ -9047,7 +9059,16 @@ utopiasoftware.saveup.controller = {
                         return; // exit the method
                     }
 
-                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html");
+                    // check if the privacy-policy-fixed-modal is open
+                    if($('#privacy-policy-fixed-modal').data("fixedModalState") === "open"){ // privacy-policy modal is open
+
+                        $('#privacy-policy-fixed-modal .modal-content').scrollTop(0);
+                        $('#privacy-policy-fixed-modal').modal("close"); // close the bottom sheet
+
+                        return;
+                    }
+
+                    $('#app-main-navigator').get(0).resetToPage("main-menu-page.html"); //todo
                 };
 
                 // get the app version for the app dynamically
@@ -9083,31 +9104,9 @@ utopiasoftware.saveup.controller = {
          */
         appInfoMenuListClicked: function(label) {
 
-            if(label == "email"){ // 'update profile' list item was clicked
+            if(label == "privacy policy"){ // 'privacy policy' list item was clicked
 
-                //store the alwaysShowSecurityLockModal status/flag for the current page at the top of the page navigation stack
-                var security_lock_modal_flag = $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal;
-
-                // set the status of alwaysShowSecurityLock modal to NOT display
-                $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = false;
-
-                new Promise(function(resolve, reject){
-                    // open the email app on the user's device already populated with the suppoert email
-                    cordova.plugins.email.open({
-                        to:      ['support+7ee364178e62478c8e60933dd5d594d0@feedback.hockeyapp.net']
-                    }, resolve);
-                }).
-                then(function(){ // after email app has been opened
-
-                    // revert the alwaysShowSecurityLockModal status/flag for the current page to its original state
-                    $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal = security_lock_modal_flag;
-
-                    // call method that determines if it should show the security lock modal based on just updated status
-                    utopiasoftware.saveup.controller.onShowSecurityLockModal();
-
-                }).
-                catch();
-
+                $('#privacy-policy-fixed-modal').modal('open'); // open the privacy policy fixed modal
                 return;
             }
 
