@@ -133,7 +133,10 @@ $('#app-main-navigator').get(0).topPage.alwaysShowSecurityLockModal=security_loc
 utopiasoftware.saveup.controller.onShowSecurityLockModal();}).catch(function(){// inform the user that share link could not be created
 window.plugins.toast.showWithOptions({message:"app share link could not be created. Try again",duration:4000,position:"top",styling:{opacity:1,backgroundColor:'#ff0000',//red
 textColor:'#FFFFFF',textSize:14}},function(toastEvent){if(toastEvent&&toastEvent.event=="touch"){// user tapped the toast, so hide toast immediately
-window.plugins.toast.hide();}});});return;}},/**
+window.plugins.toast.hide();}});});return;}if(label=="rate app"){// user clicked on the "Rate App" list item
+// hide the app secondary popup menu
+$('#secondary-menu-options').get(0).hide().then(function(){// open the app profile on the google play store, so user can rate the app
+cordova.InAppBrowser.open("market://details?id=utopiasoftware.writeosahon.postcash",'_system');}).catch();return;}},/**
      * object is the view-model for the app side menu
      */sideMenuViewModel:{/**
          * method is used to listen for when the list

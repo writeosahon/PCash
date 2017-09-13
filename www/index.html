@@ -281,6 +281,16 @@
         </ons-list-item>
 
         <ons-list-item modifier="longdivider" tappable style="color: #311b92"
+                       onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('rate app');">
+            <div class="left">
+                <ons-icon icon="md-share" class="list-item__icon"></ons-icon>
+            </div>
+            <div class="center">
+                Rate App
+            </div>
+        </ons-list-item>
+
+        <ons-list-item modifier="longdivider" tappable style="color: #311b92"
                        onclick="utopiasoftware.saveup.controller.appSecondaryMenuListClicked('sign out');">
             <div class="left">
                 <ons-icon icon="md-saveup-icon-saveup-signout" class="list-item__icon"></ons-icon>
@@ -615,10 +625,11 @@
                 </ons-fab>
             </div>
             <div class="col s4" style="text-align: center">
-                <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"
+                <span class="btn btn-floating btn-large waves-effect waves-light"
+                      style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center; font-size: 1.5em"
                          onclick="utopiasoftware.saveup.controller.securityPinLockModalViewModel.numberButtonClicked('5');">
                     5
-                </ons-fab>
+                </span>
             </div>
             <div class="col s4" style="text-align: center">
                 <ons-fab style="box-shadow: none; background-color: #311B92; color: #ffffff; text-align: center"

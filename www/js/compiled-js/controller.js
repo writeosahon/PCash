@@ -427,6 +427,19 @@ utopiasoftware.saveup.controller = {
 
             return;
         }
+
+        if(label == "rate app"){ // user clicked on the "Rate App" list item
+
+            // hide the app secondary popup menu
+            $('#secondary-menu-options').get(0).hide().
+            then(function(){
+                // open the app profile on the google play store, so user can rate the app
+                cordova.InAppBrowser.open("market://details?id=utopiasoftware.writeosahon.postcash", '_system');
+            }).
+            catch();
+
+            return;
+        }
     },
 
 
