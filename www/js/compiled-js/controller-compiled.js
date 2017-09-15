@@ -92,7 +92,13 @@ return null;}return Promise.resolve(intel.security.secureData.getData(instanceId
 return null;}utopiasoftware.saveup.model.appUserDetails=JSON.parse(secureData);// transfer the collected user details to the app
 // update the first name being displayed in the side menu
 $('#side-menu-username').html(utopiasoftware.saveup.model.appUserDetails.firstName);return null;}).then(function(){// setup the hockey plugin which is used to send transaction feedback
-return new Promise(function(resolve,reject){hockeyapp.start(resolve,reject,"fcb296e2bce24c5a8e9eedcf079f9b47");});}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
+return new Promise(function(resolve,reject){hockeyapp.start(resolve,reject,"fcb296e2bce24c5a8e9eedcf079f9b47");});}).then(function(){// check identity of ssl certificates from critical servers used in the app
+return new Promise(function(resolve,reject){// create an array containing the promises for checking server
+var promisesArray=[];promisesArray.push(new Promise(function(resolve2,reject2){window.plugins.sslCertificateChecker.check(// check ssl certificate for cedr
+resolve2,function(message){if(message.indexOf("CONNECTION_FAILED")>-1){resolve2();}else{reject2();}},"https://live.moneywaveapi.co","c2 b1 e6 b9 64 3c 12 d7 1b 57 8e 2c 81 63 5c 7f 8a 78 8e 60");}));promisesArray.push(new Promise(function(resolve2,reject2){window.plugins.sslCertificateChecker.check(// check ssl certificate for paystack
+resolve2,function(message){if(message.indexOf("CONNECTION_FAILED")>-1){resolve2();}else{reject2();}},"https://api.paystack.co","36 7f e8 f1 48 97 87 81 9c 4f c7 d4 96 55 3e 1b 37 45 1e a7");}));// wait till all th ssl certificates have been verified
+Promise.all(promisesArray).then(function(){resolve();}).catch(function(){reject();});});}).then(function(){// set up push notification for the app
+window.plugins.OneSignal.startInit("2058559d-c18d-4023-87da-b9b28dba1c96").inFocusDisplaying(window.plugins.OneSignal.OSInFocusDisplayOption.Notification).handleNotificationReceived(function(){}).handleNotificationOpened(function(){}).endInit();}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
 navigator.splashscreen.hide();}).catch(function(){// provide an empty device uuid
 utopiasoftware.saveup.model.deviceUUID="";// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
