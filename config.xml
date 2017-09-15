@@ -102,4 +102,8 @@
 <config-file platform="android" parent="/manifest/application" mode="merge"> 
     <activity android:launchMode="singleTop" />
 </config-file>
+    <!-- used to change the background color of the small icon in ONE-SIGNAL push notification -->
+    <config-file platform="android" parent="/manifest/application" mode="add">
+        <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="FF311B92" />
+    </config-file>
 </widget>
