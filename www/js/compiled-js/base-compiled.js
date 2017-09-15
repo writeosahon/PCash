@@ -304,7 +304,7 @@ var utopiasoftware = {
             /**
              * public object holds the keys for the gateway
              */
-            key: { "secret": "sk_test_91815f725eeca4db7d43a08e46bd682d4d669a72" }
+            key: { "secret": "sk_live_b4d08cde715473ea7b0cacb005f09e95bc1a87e8" }
         },
 
         /**
