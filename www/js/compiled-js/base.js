@@ -1341,3 +1341,4 @@ var utopiasoftware = {
     }
 };
 
+window;
