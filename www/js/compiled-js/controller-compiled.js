@@ -2730,8 +2730,8 @@ utopiasoftware.saveup.controller.onShowSecurityLockModal();});return;}if(label==
 new Promise(function(resolve,reject){// call the plugin to do the Twitter App Availability check
 appAvailability.check('com.twitter.android',// Package Name for Twitter Client on Android
 resolve,reject);}).then(function(){// twitter app is available, so launch the twitter app with the specified profile page
-startApp.set({/* params */"action":"ACTION_VIEW","uri":"twitter://user?screen_name=theODCapp"}).start();}).catch(function(){// open the twitter page in the native web browser
-cordova.InAppBrowser.open("https://twitter.com/theODCapp?apptimestamp="+Date.now(),'_system');});return;}}}),_defineProperty(_utopiasoftware$saveu,'appInfoPageViewModel',{/**
+startApp.set({/* params */"action":"ACTION_VIEW","uri":"twitter://user?screen_name=postcash_ng"}).start();}).catch(function(){// open the twitter page in the native web browser
+cordova.InAppBrowser.open("https://twitter.com/postcash_ng?apptimestamp="+Date.now(),'_system');});return;}}}),_defineProperty(_utopiasoftware$saveu,'appInfoPageViewModel',{/**
          * event is triggered when page is initialised
          */pageInit:function pageInit(event){var $thisPage=$(event.target);// get the current page shown
 // find all onsen-ui input targets and insert a special class to prevent materialize-css from updating the styles

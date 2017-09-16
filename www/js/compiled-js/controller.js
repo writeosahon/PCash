@@ -9081,12 +9081,12 @@ utopiasoftware.saveup.controller = {
                 then(function(){ // twitter app is available, so launch the twitter app with the specified profile page
                     startApp.set({ /* params */
                         "action": "ACTION_VIEW",
-                        "uri": "twitter://user?screen_name=theODCapp"
+                        "uri": "twitter://user?screen_name=postcash_ng"
                     }).start();
                 }).
                 catch(function(){ // open the twitter page in the native web browser
 
-                    cordova.InAppBrowser.open("https://twitter.com/theODCapp?apptimestamp=" +
+                    cordova.InAppBrowser.open("https://twitter.com/postcash_ng?apptimestamp=" +
                         Date.now(), '_system');
                 });
 
