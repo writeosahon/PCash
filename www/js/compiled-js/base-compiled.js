@@ -74,7 +74,7 @@ var utopiasoftware = {
                         for (var i = 0; i < 6; i++) {
                             randomNumber += "" + randomGen.integer(0, 9);
                         }
-                        SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, reject3);
+                        SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, reject3); //todo
                     });
                 }).then(function () {
                     smsWatcherTimer = setTimeout(function () {
