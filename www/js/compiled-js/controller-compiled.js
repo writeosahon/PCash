@@ -342,7 +342,7 @@ $('#create-account-page [data-hint]').removeClass("hint--always hint--info hint-
 utopiasoftware.saveup.controller.createAccountPageViewModel.formValidator.destroy();}catch(err){}},/**
          * method is triggered when sign-up form is successfully validated
          */createAccountFormValidated:function createAccountFormValidated(){// tell the user that phoe number verification is necessary
-new Promise(function(resolve,reject){ons.notification.confirm('To complete sign up, your phone number must be verified. <br>'+'Usual SMS charge from your phone network provider will apply',{title:'Verify Phone Number',buttonLabels:['Cancel','Ok']})// Ask for confirmation
+new Promise(function(resolve,reject){ons.notification.confirm('To complete sign up, your phone number must be verified. <br>'+'Usual SMS charge from your phone network provider will apply.<br> '+'Please ensure you have sufficient airtime to send/receive one SMS',{title:'Verify Phone Number',buttonLabels:['Cancel','Ok']})// Ask for confirmation
 .then(function(index){if(index===1){// OK button
 resolve();}else{reject("your phone number could not be verified");}});}).then(function(){// verify the user's phone number
 //return null;
