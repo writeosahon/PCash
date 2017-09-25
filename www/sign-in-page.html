@@ -41,10 +41,10 @@
             <ons-col>
                 <ons-icon icon="md-saveup-icon-saveup-phone" size="28px" class="first" style="color: #8a2be2; margin-right: 0.2em;"></ons-icon>
                 <ons-input id="user-phone" type="tel" required modifier="underbar" placeholder="Phone Number" float
-                           pattern="(0[1-9]{1}[0-9]{9}|\+234[1-9]{1}[0-9]{9})" required float
+                           pattern="((0[1-9]{1}[0-9]{9}|\+234[1-9]{1}[0-9]{9})|\+[1-9]{1}[0-9]{4,})" required float
                            data-parsley-required-message="your phone number is required"
-                           data-parsley-pattern-message="incorrect phone number format. only Nigerian phone numbers are accepted"
-                           data-parsley-type-message="incorrect phone number format. only Nigerian phone numbers are accepted"
+                           data-parsley-pattern-message="incorrect phone number format. phone number must be in international format (starting with '+')"
+                           data-parsley-type-message="incorrect phone number format. phone number must be in international format (starting with '+')"
                            style="color: #311b92; text-align: center !important;" class="hint--top"></ons-input>
             </ons-col>
         </ons-row>

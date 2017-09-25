@@ -71,7 +71,9 @@ var utopiasoftware = {
                         for(var i = 0; i < 6; i++){
                             randomNumber += "" + randomGen.integer(0, 9);
                         }
-                        SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, reject3); //todo
+                        SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, function(){
+                            reject3("SMS sending failed. Please ensure you have sufficient airtime on the specified phone number"); // flag an error that sms verification code could not be sent
+                        });
                     });
                 }).
                 then(function(){
@@ -83,7 +85,7 @@ var utopiasoftware = {
                         rejectPromise("phone number verification failed"); // reject the promise i.e. verification failed
                     }, 31000);
                 }).
-                catch(function(){
+                catch(function(error){
                     try{
                         clearTimeout(smsWatcherTimer);
                     }
@@ -92,6 +94,9 @@ var utopiasoftware = {
                     SMS.enableIntercept(false, function(){}, function(){}); // stop sms intercept
                     document.removeEventListener('onSMSArrive');
                     $('#phone-verification-modal').get(0).hide(); // hide loader
+                    if(error && typeof error == "string"){
+                        reject(error);
+                    }
                     reject("phone number verification failed");
                 });
             });

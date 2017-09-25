@@ -17,16 +17,20 @@ var utopiasoftware = { saveup: { validatePhoneNumber: function validatePhoneNumb
           });return new Promise(function (resolve3, reject3) {
             var randomGen = new Random(Random.engines.nativeMath);for (var i = 0; i < 6; i++) {
               randomNumber += "" + randomGen.integer(0, 9);
-            }SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, reject3);
+            }SMS.sendSMS(phoneNumber, "PostCash " + randomNumber, resolve3, function () {
+              reject3("SMS sending failed. Please ensure you have sufficient airtime on the specified phone number");
+            });
           });
         }).then(function () {
           smsWatcherTimer = setTimeout(function () {
             SMS.stopWatch(function () {}, function () {});SMS.enableIntercept(false, function () {}, function () {});document.removeEventListener("onSMSArrive");$("#phone-verification-modal").get(0).hide();rejectPromise("phone number verification failed");
           }, 31e3);
-        }).catch(function () {
+        }).catch(function (error) {
           try {
             clearTimeout(smsWatcherTimer);
-          } catch (err) {}SMS.stopWatch(function () {}, function () {});SMS.enableIntercept(false, function () {}, function () {});document.removeEventListener("onSMSArrive");$("#phone-verification-modal").get(0).hide();reject("phone number verification failed");
+          } catch (err) {}SMS.stopWatch(function () {}, function () {});SMS.enableIntercept(false, function () {}, function () {});document.removeEventListener("onSMSArrive");$("#phone-verification-modal").get(0).hide();if (error && typeof error == "string") {
+            reject(error);
+          }reject("phone number verification failed");
         });
       });return phoneNumberVerifiedPromise;
     }, sortBanksData: function sortBanksData() {
