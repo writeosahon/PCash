@@ -24,7 +24,7 @@ utopiasoftware.saveup.controller = {
         ons.ready(function () {
             // set the default handler for the app
             ons.setDefaultDeviceBackButtonListener(function(){
-                console.log("DEFAULT BACK BUTTON LISTENER");
+                // does nothing for now!!
 
             });
 
@@ -239,6 +239,10 @@ utopiasoftware.saveup.controller = {
         }).
         then(function(deviceUUID){
             utopiasoftware.saveup.model.deviceUUID = deviceUUID;
+            return;
+        }).
+        then(function(){ // use the Microsoft Code-Push platform to sync
+            codePush.sync();
             return;
         }).
         then(function(){ // load the securely stored / encrypted data into the app

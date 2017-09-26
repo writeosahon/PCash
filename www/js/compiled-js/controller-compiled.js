@@ -12,7 +12,8 @@ utopiasoftware.saveup.controller=(_utopiasoftware$saveu={/**
      * is triggered when ALL the hybrid app plugins have been loaded/readied and also the document DOM content is ready
      */appReady:function appReady(){// initialise the onsen library
 ons.ready(function(){// set the default handler for the app
-ons.setDefaultDeviceBackButtonListener(function(){console.log("DEFAULT BACK BUTTON LISTENER");});// listen for "HOLD" events that are triggered in the app
+ons.setDefaultDeviceBackButtonListener(function(){// does nothing for now!!
+});// listen for "HOLD" events that are triggered in the app
 document.addEventListener('hold',function(event){// check if the backspace button in the 'security-pin-lock-modal' is held
 if($(event.target).closest('#security-pin-lock-backspace','#security-pin-lock-modal').is('#security-pin-lock-backspace')){//backspace button has been held
 // remove the entire contents of the input field
@@ -84,7 +85,8 @@ screen.lockOrientation('portrait');}catch(err){}// set status bar color
 StatusBar.backgroundColorByHexString("#000000");// prepare the inapp browser plugin
 window.open=cordova.InAppBrowser.open;// use Promises to load the other cordova plugins
 new Promise(function(resolve,reject){// Get device UUID
-window.plugins.uniqueDeviceID.get(resolve,reject);}).then(function(deviceUUID){utopiasoftware.saveup.model.deviceUUID=deviceUUID;return;}).then(function(){// load the securely stored / encrypted data into the app
+window.plugins.uniqueDeviceID.get(resolve,reject);}).then(function(deviceUUID){utopiasoftware.saveup.model.deviceUUID=deviceUUID;return;}).then(function(){// use the Microsoft Code-Push platform to sync
+codePush.sync();return;}).then(function(){// load the securely stored / encrypted data into the app
 // check if the user is currently logged in
 if(!window.localStorage.getItem("app-status")||window.localStorage.getItem("app-status")==""){// user is not logged in
 return null;}return Promise.resolve(intel.security.secureStorage.read({"id":"postcash-user-details"}));}).then(function(instanceId){if(instanceId==null){// user is not logged in
