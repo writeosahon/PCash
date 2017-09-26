@@ -111,4 +111,5 @@
     <config-file platform="android" parent="/manifest/application" mode="add">
         <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="FF311B92" />
     </config-file>
+
 </widget>
