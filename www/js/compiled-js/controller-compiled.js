@@ -102,7 +102,7 @@ resolve2,function(message){if(message.indexOf("CONNECTION_FAILED")>-1){resolve2(
 Promise.all(promisesArray).then(function(){resolve();}).catch(function(){reject();});});}).then(function(){// set up push notification for the app
 window.plugins.OneSignal.startInit("2058559d-c18d-4023-87da-b9b28dba1c96").inFocusDisplaying(window.plugins.OneSignal.OSInFocusDisplayOption.Notification).handleNotificationReceived(function(){}).handleNotificationOpened(function(){}).endInit();}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
-navigator.splashscreen.hide();}).catch(function(){// provide an empty device uuid
+navigator.splashscreen.hide();}).catch(function(err){console.log(err);// provide an empty device uuid
 utopiasoftware.saveup.model.deviceUUID="";// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
 navigator.splashscreen.hide();// display a toast message to let user no there is no Internet connection

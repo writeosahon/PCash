@@ -330,7 +330,7 @@ utopiasoftware.saveup.controller = {
             // hide the splash screen
             navigator.splashscreen.hide();
         }).
-        catch(function(){
+        catch(function(err){
             // provide an empty device uuid
             utopiasoftware.saveup.model.deviceUUID = "";
             // notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
