@@ -53,7 +53,7 @@ utopiasoftware.saveup.controller = {
             if(window.localStorage.getItem("app-status") && window.localStorage.getItem("app-status") != ""){ // user is logged in
                 //set the first page to be displayed to be the login page
                 $('ons-splitter').get(0).content.load("login-template");
-                console.log("ALERT");
+                console.log("ALERT 2");
             }
             else{ // user has NOT been logged in
                 // set the first page to be displayed to be the onboarding page
@@ -243,7 +243,7 @@ utopiasoftware.saveup.controller = {
             return;
         }).
         then(function(){ // use the Microsoft Code-Push platform to sync
-            codePush.sync();
+            codePush.sync(null, {installMode: InstallMode.ON_NEXT_RESTART, mandatoryInstallMode: InstallMode.ON_NEXT_RESTART});
             return;
         }).
         then(function(){ // load the securely stored / encrypted data into the app

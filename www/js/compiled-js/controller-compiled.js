@@ -24,7 +24,7 @@ $('#loader-modal-message').html("Preparing App...");$('#loader-modal').get(0).sh
 }// check if the user is currently logged in
 if(window.localStorage.getItem("app-status")&&window.localStorage.getItem("app-status")!=""){// user is logged in
 //set the first page to be displayed to be the login page
-$('ons-splitter').get(0).content.load("login-template");console.log("ALERT");}else{// user has NOT been logged in
+$('ons-splitter').get(0).content.load("login-template");console.log("ALERT 2");}else{// user has NOT been logged in
 // set the first page to be displayed to be the onboarding page
 $('ons-splitter').get(0).content.load("onboarding-template");}// initialise verify-account bottom sheet plugin
 $('#verify-account-bottom-sheet').modal({ready:function ready(){// callback for when bottom sheet is opened
@@ -86,7 +86,7 @@ StatusBar.backgroundColorByHexString("#000000");// prepare the inapp browser plu
 window.open=cordova.InAppBrowser.open;// use Promises to load the other cordova plugins
 new Promise(function(resolve,reject){// Get device UUID
 window.plugins.uniqueDeviceID.get(resolve,reject);}).then(function(deviceUUID){utopiasoftware.saveup.model.deviceUUID=deviceUUID;return;}).then(function(){// use the Microsoft Code-Push platform to sync
-codePush.sync();return;}).then(function(){// load the securely stored / encrypted data into the app
+codePush.sync(null,{installMode:InstallMode.ON_NEXT_RESTART,mandatoryInstallMode:InstallMode.ON_NEXT_RESTART});return;}).then(function(){// load the securely stored / encrypted data into the app
 // check if the user is currently logged in
 if(!window.localStorage.getItem("app-status")||window.localStorage.getItem("app-status")==""){// user is not logged in
 return null;}return Promise.resolve(intel.security.secureStorage.read({"id":"postcash-user-details"}));}).then(function(instanceId){if(instanceId==null){// user is not logged in
