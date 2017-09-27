@@ -198,4 +198,3 @@ $(document).on("init", "#app-info-page", utopiasoftware.saveup.controller.appInf
 
 // listen for when the App Info page is shown
 $(document).on("show", "#app-info-page", utopiasoftware.saveup.controller.appInfoPageViewModel.pageShow);
-Date;
