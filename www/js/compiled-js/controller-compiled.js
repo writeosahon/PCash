@@ -24,7 +24,7 @@ $('#loader-modal-message').html("Preparing App...");$('#loader-modal').get(0).sh
 }// check if the user is currently logged in
 if(window.localStorage.getItem("app-status")&&window.localStorage.getItem("app-status")!=""){// user is logged in
 //set the first page to be displayed to be the login page
-$('ons-splitter').get(0).content.load("login-template");}else{// user has NOT been logged in
+$('ons-splitter').get(0).content.load("login-template");console.log("ALERT");}else{// user has NOT been logged in
 // set the first page to be displayed to be the onboarding page
 $('ons-splitter').get(0).content.load("onboarding-template");}// initialise verify-account bottom sheet plugin
 $('#verify-account-bottom-sheet').modal({ready:function ready(){// callback for when bottom sheet is opened
@@ -102,7 +102,7 @@ resolve2,function(message){if(message.indexOf("CONNECTION_FAILED")>-1){resolve2(
 Promise.all(promisesArray).then(function(){resolve();}).catch(function(){reject();});});}).then(function(){// set up push notification for the app
 window.plugins.OneSignal.startInit("2058559d-c18d-4023-87da-b9b28dba1c96").inFocusDisplaying(window.plugins.OneSignal.OSInFocusDisplayOption.Notification).handleNotificationReceived(function(){}).handleNotificationOpened(function(){}).endInit();}).then(function(){// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
-navigator.splashscreen.hide();}).catch(function(err){console.log(err);// provide an empty device uuid
+navigator.splashscreen.hide();}).catch(function(err){// provide an empty device uuid
 utopiasoftware.saveup.model.deviceUUID="";// notify the app that the app has been successfully initialised and is ready for further execution (set app ready flag to true)
 utopiasoftware.saveup.model.isAppReady=true;// hide the splash screen
 navigator.splashscreen.hide();// display a toast message to let user no there is no Internet connection

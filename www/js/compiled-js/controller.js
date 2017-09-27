@@ -53,6 +53,7 @@ utopiasoftware.saveup.controller = {
             if(window.localStorage.getItem("app-status") && window.localStorage.getItem("app-status") != ""){ // user is logged in
                 //set the first page to be displayed to be the login page
                 $('ons-splitter').get(0).content.load("login-template");
+                console.log("ALERT");
             }
             else{ // user has NOT been logged in
                 // set the first page to be displayed to be the onboarding page
