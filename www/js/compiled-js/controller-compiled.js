@@ -2770,6 +2770,6 @@ $('ons-splitter-side').attr("swipeable",true);},/**
 $('#privacy-policy-fixed-modal').modal('open');// open the privacy policy fixed modal
 return;}if(label=="terms of use"){// 'terms of use' list item was clicked
 $('#terms-of-use-fixed-modal').modal('open');// open the privacy policy fixed modal
-return;}}}),_utopiasoftware$saveu);
+return;}}}),_utopiasoftware$saveu);Date;
 
 //# sourceMappingURL=controller-compiled.js.map
