@@ -87,7 +87,7 @@
 </platform>
 
 <platform name="android" >
-    <preference name="CodePushDeploymentKey" value="DJSGMy6UKNyPLp9hHvNeVdavQS0Kf84a5d3a-cd65-48fa-8186-1d4c553b8f18" />
+    <preference name="CodePushDeploymentKey" value="ZeqkiiuB3zdRnK1QBK3v6JQe_EkYf84a5d3a-cd65-48fa-8186-1d4c553b8f18" />
 </platform>
 
 <icon platform="android" src="package-assets/ldpi_icon.png" width="36" height="36" qualifier="ldpi"/>
