@@ -37,7 +37,7 @@
 <plugin name="com-intel-security-cordova-plugin" spec="https://github.com/AppSecurityApi/com-intel-security-cordova-plugin.git"/>
 <plugin name="ionic-plugin-keyboard" spec="2.2.1"/>
 <plugin name="cordova-plugin-inappbrowser" spec="1.4.0"/>
-<plugin name="cordova-plugin-file" spec="4.2.0"/>
+<plugin name="cordova-plugin-file" spec="4.3.0"/>
 <plugin name="cordova-plugin-file-opener2" spec="2.0.19"/>
 <plugin name="cordova-plugin-customurlscheme" spec="4.2.0">
     <variable name="URL_SCHEME" value="postcash"/>
