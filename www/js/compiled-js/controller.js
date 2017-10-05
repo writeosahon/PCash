@@ -242,7 +242,7 @@ utopiasoftware.saveup.controller = {
             return;
         }).
         then(function(){ // use the Microsoft Code-Push platform to sync
-            //codePush.sync(null, {installMode: InstallMode.ON_NEXT_RESTART, mandatoryInstallMode: InstallMode.ON_NEXT_RESTART});
+            codePush.sync(null, {installMode: InstallMode.ON_NEXT_RESTART, mandatoryInstallMode: InstallMode.ON_NEXT_RESTART});
             return;
         }).
         then(function(){ // load the securely stored / encrypted data into the app

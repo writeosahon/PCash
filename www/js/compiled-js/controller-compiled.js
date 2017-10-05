@@ -86,8 +86,7 @@ StatusBar.backgroundColorByHexString("#000000");// prepare the inapp browser plu
 window.open=cordova.InAppBrowser.open;// use Promises to load the other cordova plugins
 new Promise(function(resolve,reject){// Get device UUID
 window.plugins.uniqueDeviceID.get(resolve,reject);}).then(function(deviceUUID){utopiasoftware.saveup.model.deviceUUID=deviceUUID;return;}).then(function(){// use the Microsoft Code-Push platform to sync
-//codePush.sync(null, {installMode: InstallMode.ON_NEXT_RESTART, mandatoryInstallMode: InstallMode.ON_NEXT_RESTART});
-return;}).then(function(){// load the securely stored / encrypted data into the app
+codePush.sync(null,{installMode:InstallMode.ON_NEXT_RESTART,mandatoryInstallMode:InstallMode.ON_NEXT_RESTART});return;}).then(function(){// load the securely stored / encrypted data into the app
 // check if the user is currently logged in
 if(!window.localStorage.getItem("app-status")||window.localStorage.getItem("app-status")==""){// user is not logged in
 return null;}return Promise.resolve(intel.security.secureStorage.read({"id":"postcash-user-details"}));}).then(function(instanceId){if(instanceId==null){// user is not logged in
