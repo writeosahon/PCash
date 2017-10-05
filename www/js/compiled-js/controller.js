@@ -242,7 +242,7 @@ utopiasoftware.saveup.controller = {
             return;
         }).
         then(function(){ // use the Microsoft Code-Push platform to sync
-            codePush.sync(null, {installMode: InstallMode.ON_NEXT_RESTART, mandatoryInstallMode: InstallMode.ON_NEXT_RESTART});
+            //codePush.sync(null, {installMode: InstallMode.ON_NEXT_RESTART, mandatoryInstallMode: InstallMode.ON_NEXT_RESTART});
             return;
         }).
         then(function(){ // load the securely stored / encrypted data into the app
@@ -3274,13 +3274,13 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                <!--<ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
                                 data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
-                                </ons-button>
+                                </ons-button>-->
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
@@ -3374,13 +3374,13 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                <!--<ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
                                 data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
-                                </ons-button>
+                                </ons-button>-->
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
@@ -3493,13 +3493,13 @@ utopiasoftware.saveup.controller = {
                                 color: #464646; padding-bottom: 0.5em;">${banksAcctsArray[index].bankName}</div>
                                 <div class="card-action" style="padding: 0;">
                                 <div style="display: inline-block; margin-left: auto; margin-right: auto">
-                                <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
+                                <!--<ons-button data-id="${banksAcctsArray[index].uniqueAccountId}"
                                 data-acct-object='${JSON.stringify({senderAccountName: banksAcctsArray[index].bankAccountName, senderAccount: banksAcctsArray[index].bankAccountNumber,senderBankCode:banksAcctsArray[index].flutterwave_bankCode})}' modifier="quiet" disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em; margin-right: 1em;"
                                         onclick="utopiasoftware.saveup.controller.myAccountsPageViewModel.transferCashButtonClicked(this);">
                                 <ons-icon icon="md-saveup-icon-saveup-transfer-cash" size="29px">
                                 </ons-icon>
-                                </ons-button>
+                                </ons-button>-->
                                 <ons-button data-id="${banksAcctsArray[index].uniqueAccountId}" modifier="quiet"
                                 disable-auto-styling class="right"
                                         style="color: #464646; padding:0; margin-top: 0.5em; margin-left: 1em;"
