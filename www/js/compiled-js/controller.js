@@ -9207,3 +9207,4 @@ utopiasoftware.saveup.controller = {
         }
     }
 };
+window;
