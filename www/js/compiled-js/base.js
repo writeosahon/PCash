@@ -1345,5 +1345,3 @@ var utopiasoftware = {
         }
     }
 };
-
-window;
