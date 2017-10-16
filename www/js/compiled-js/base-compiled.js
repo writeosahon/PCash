@@ -1304,6 +1304,5 @@ var utopiasoftware = {
         }
     }
 };
-new Date();
 
 //# sourceMappingURL=base-compiled.js.map

@@ -1345,4 +1345,3 @@ var utopiasoftware = {
         }
     }
 };
-new Date();
