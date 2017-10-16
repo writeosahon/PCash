@@ -537,6 +537,6 @@ var utopiasoftware = { saveup: { validatePhoneNumber: function validatePhoneNumb
         });
       }, transferWalletCash: function transferWalletCash(transferData) {
         return Kinvey.CustomEndpoint.execute("wallet-transfer", transferData);
-      } } } };
+      } } } };new Date();
 
 //# sourceMappingURL=base-compiled.min-compiled.js.map

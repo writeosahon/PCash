@@ -293,7 +293,7 @@ utopiasoftware.saveup.controller = {
                             }
                         },
                         "https://live.moneywaveapi.co",
-                        "c2 b1 e6 b9 64 3c 12 d7 1b 57 8e 2c 81 63 5c 7f 8a 78 8e 60");
+                        "42 cc 15 61 7d 0e a9 a0 21 26 ef 9a 26 74 b4 27 2a 16 44 41");
                 }));
 
                 promisesArray.push(new Promise(function(resolve2, reject2){
