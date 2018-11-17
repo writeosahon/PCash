@@ -64,13 +64,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 </config-file>
 
-<edit-config file="AndroidManifest.xml" target="/manifest/uses-permission" mode="merge">
+<!--<edit-config file="AndroidManifest.xml" target="/manifest/uses-permission" mode="merge">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 </edit-config>
 
 <edit-config file="AndroidManifest.xml" target="/manifest/uses-permission/[@android:name='android.permission.WRITE_EXTERNAL_STORAGE']" mode="overwrite">
     <uses-permission xmlns:tools="http://schemas.android.com/tools" android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="replace" />
-</edit-config>
+</edit-config>-->
 
 <preference  name="AutoHideSplashScreen" value="true"/>
 <preference  name="SplashShowOnlyFirstTime" value="false"/>
@@ -86,7 +86,7 @@
 
 <platform name="android" >
 <preference name="android-minSdkVersion" value="21"/>
-<preference name="android-targetSdkVersion" value="26"/>
+<preference name="android-targetSdkVersion" value="27"/>
 <preference name="android-installLocation" value="auto"/>
 <preference name="android-signed" value="true"/>
 <preference name="Orientation" value="portrait"/>
